@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KARAR — Hukuk Blog & Danışmanlık Platformu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0D1B2A;
+            --light: #F4F1EB;
+            --accent: #C9A84C;
+            --text-dark: #1a1a1a;
+            --text-light: #666;
+            --border-light: #e0dcd5;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--light);
+            line-height: 1.6;
+        }
+
+        /* HEADER & NAV */
+        header {
+            background-color: var(--primary);
+            color: var(--light);
+            padding: 1.5rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--accent);
+        }
+
+        .tagline {
+            font-size: 0.85rem;
+            color: rgba(244, 241, 235, 0.8);
+            font-style: italic;
+            margin-top: 0.2rem;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        .cta-button {
+            background-color: var(--accent);
+            color: var(--primary);
+            padding: 0.6rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            background-color: #e0b85a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(201, 168, 76, 0.3);
+        }
+
+        .cta-button.outline {
+            background-color: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+        }
+
+        .cta-button.outline:hover {
+            background-color: var(--accent);
+            color: var(--primary);
+        }
+
+        /* HERO SECTION */
+        #hero {
+            background: linear-gradient(135deg, var(--primary) 0%, #132a47 100%);
+            background-attachment: fixed;
+            color: var(--light);
+            padding: 8rem 5% 6rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.03) 2px,
+                    rgba(255, 255, 255, 0.03) 4px
+                );
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: rgba(244, 241, 235, 0.95);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* FEATURED POST */
+        #featured {
+            padding: 5rem 5%;
+            background-color: var(--light);
+        }
+
+        .featured-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .featured-card {
+            background-color: white;
+            padding: 3rem;
+            border-left: 5px solid var(--accent);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .featured-label {
+            display: inline-block;
+            background-color: var(--accent);
+            color: var(--primary);
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .featured-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            line-height: 1.3;
+        }
+
+        .meta {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .featured-card p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        .read-more {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .read-more:hover {
+            color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        /* POSTS GRID */
+        #posts {
+            padding: 5rem 5%;
+            background-color: white;
+        }
+
+        .posts-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: var(--primary);
+            text-align: center;
+        }
+
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .post-card {
+            background-color: var(--light);
+            border-radius: 4px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .post-card:nth-child(1) { animation-delay: 0.1s; }
+        .post-card:nth-child(2) { animation-delay: 0.2s; }
+        .post-card:nth-child(3) { animation-delay: 0.3s; }
+
+        .post-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .post-header {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .post-category {
+            display: inline-block;
+            background-color: var(--accent);
+            color: var(--primary);
+            padding: 0.3rem 0.7rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            width: fit-content;
+            letter-spacing: 0.5px;
+        }
+
+        .post-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: var(--primary);
+            line-height: 1.4;
+        }
+
+        .post-excerpt {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+            line-height: 1.6;
+        }
+
+        .post-meta {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            border-top: 1px solid var(--border-light);
+            padding-top: 1rem;
+        }
+
+        /* FEATURES BAND */
+        #features {
+            background-color: var(--primary);
+            color: var(--light);
+            padding: 4rem 5%;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            text-align: center;
+        }
+
+        .feature-item h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-item p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: rgba(244, 241, 235, 0.9);
+        }
+
+        /* CONSULTATION CTA */
+        #consultation {
+            padding: 5rem 5%;
+            background-color: var(--light);
+        }
+
+        .consultation-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .consultation-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .consultation-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            line-height: 1.3;
+        }
+
+        .consultation-header p {
+            font-size: 1.05rem;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        .consultation-form {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 4px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-note {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 1.5rem;
+            font-style: italic;
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 0.9rem;
+            margin-top: 1.5rem;
+            font-size: 1rem;
+        }
+
+        /* ABOUT SECTION */
+        #about {
+            padding: 5rem 5%;
+            background-color: white;
+        }
+
+        .about-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        #about h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--primary);
+            text-align: center;
+        }
+
+        #about p {
+            font-size: 1.05rem;
+            color: var(--text-light);
+            line-height: 1.8;
+            text-align: center;
+            border-left: 4px solid var(--accent);
+            padding-left: 2rem;
+            margin-left: 2rem;
+        }
+
+        /* FOOTER */
+        footer {
+            background-color: var(--primary);
+            color: var(--light);
+            padding: 3rem 5%;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section a {
+            color: rgba(244, 241, 235, 0.8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(244, 241, 235, 0.2);
+            padding-top: 2rem;
+            text-align: center;
+            color: rgba(244, 241, 235, 0.6);
+            font-size: 0.85rem;
+        }
+
+        .legal-note {
+            line-height: 1.6;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+                width: 100%;
+            }
+
+            nav a {
+                display: block;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .hero-buttons button,
+            .hero-buttons a {
+                width: 100%;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .featured-card {
+                padding: 1.5rem;
+            }
+
+            .featured-card h2 {
+                font-size: 1.5rem;
+            }
+
+            .posts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .consultation-form {
+                padding: 1.5rem;
+            }
+
+            #about p {
+                margin-left: 0;
+                padding-left: 1.5rem;
+                text-align: left;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 1rem 5%;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            #hero {
+                padding: 4rem 5% 3rem;
+            }
+
+            .hero-content h1 {
+                font-size: 1.5rem;
+            }
+
+            .hero-content p {
+                font-size: 0.95rem;
+            }
+
+            nav {
+                font-size: 0.85rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            #featured,
+            #posts,
+            #consultation,
+            #about {
+                padding: 2.5rem 5%;
+            }
+
+            .featured-card h2 {
+                font-size: 1.3rem;
+            }
+
+            .consultation-header h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="header-container">
+            <div>
+                <div class="logo">KARAR</div>
+                <p class="tagline">Hukuku anla. Hakkını bil.</p>
+            </div>
+            <nav>
+                <a href="#posts">Yazılar</a>
+                <a href="#about">Hakkında</a>
+                <a href="#consultation">Danışmanlık</a>
+                <a href="#contact">İletişim</a>
+                <button class="cta-button" onclick="document.getElementById('consultation').scrollIntoView({behavior: 'smooth'})">Danışmanlık Al</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="hero">
+        <div class="hero-content">
+            <h1>Yıllarca mahkemede oturdum. Şimdi sizin için yazıyorum.</h1>
+            <p>Türkiye'nin hukuk sistemini, haklarınızı ve kendinizi nasıl koruyacağınızı anlatan bağımsız bir platform. Hukuku herkes anlamalı—gereksiz jargonlar olmadan.</p>
+            <div class="hero-buttons">
+                <a href="#posts" class="cta-button outline">Yazıları Oku</a>
+                <button class="cta-button" onclick="document.getElementById('consultation').scrollIntoView({behavior: 'smooth'})">Danışmanlık Al</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURED POST -->
+    <section id="featured">
+        <div class="featured-container">
+            <div class="featured-card">
+                <span class="featured-label">Öne Çıkan Yazı</span>
+                <h2>Gözaltına Alındığınızda İlk 24 Saatte Yapmanız Gereken 5 Şey</h2>
+                <div class="meta">
+                    <span>📅 5 Mayıs 2025</span>
+                    <span>⏱️ 8 dakika okuma</span>
+                    <span>📂 Ceza Hukuku</span>
+                </div>
+                <p>Gözaltına almalar, sıradan bir vatandaşın karşılaşabileceği en stresli anlardan biridir. Panikte karar vermek yerine, bilmemiz gerekenler nelerdir? Bu yazıda, mahkemede yüzlerce vakaya bakan birinin perspektifinden, gözaltında bulunduğunuz ilk 24 saatin kritik adımlarını anlatıyorum. Sessiz kalma hakkından avukat talep etme hususiyetlerine kadar her detay önemli.</p>
+                <a href="#" class="read-more">Devamını Oku →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- POSTS GRID -->
+    <section id="posts">
+        <div class="posts-container">
+            <h2 class="section-title">Son Yazılar</h2>
+            <div class="posts-grid">
+                <article class="post-card">
+                    <div class="post-header">
+                        <span class="post-category">Mali Hukuk</span>
+                        <h3>Avukat Tutamayanlar İçin: Adli Yardım Nasıl Alınır?</h3>
+                        <p class="post-excerpt">Ekonomik zorluk yaşayan kişiler dava açmak istediğinde "avukat pahalı" diyerek vazgeçiyor. Oysa Türk hukuk sistemi adli yardım kurumunun aracılığıyla bunu olası kılıyor. Süreci, şartları ve başvuru yollarını detaylı anlatıyorum.</p>
+                        <div class="post-meta">📅 2 Mayıs 2025 • ⏱️ 6 dakika</div>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-header">
+                        <span class="post-category">Hukuk Temelleri</span>
+                        <h3>Mahkemede Kendinizi İfade Etme Hakkı</h3>
+                        <p class="post-excerpt">Davalar belgelere, tanıklara ve kanıtlara dayanır—ama sizin açıklamanız da önemlidir. Mahkemede "kendini ifade etme hakkı" nedir, ne zaman kullanılır ve nasıl etkili bir şekilde sunabilirsiniz? Bu yazıda pratik ipuçları bulacaksınız.</p>
+                        <div class="post-meta">📅 29 Nisan 2025 • ⏱️ 7 dakika</div>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-header">
+                        <span class="post-category">Ceza Hukuku</span>
+                        <h3>Ceza Davalarında Zamanaşımı: Bilmeniz Gerekenler</h3>
+                        <p class="post-excerpt">Bir suç işlenmişse, ne kadar zaman sonra takibat başlatılamaz? Zamanaşımı süresi hangi suçlar için ne kadar? Bu hukuki koruma mekanizmasını detaylı olarak inceliyorum, örneklerle açıklıyorum.</p>
+                        <div class="post-meta">📅 25 Nisan 2025 • ⏱️ 9 dakika</div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES BAND -->
+    <section id="features">
+        <div class="features-container">
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">📖</div>
+                    <h3>Derinlemesine Analizler</h3>
+                    <p>Meseleler için tek bir cümlelik yanıt yoktur. Kaynaklarını, karşılığında olanları, pratik çıkarımlarını iç içe dokuyorum.</p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">⚖️</div>
+                    <h3>Pratik Rehberler</h3>
+                    <p>Teoriden çıkıp, elinizi tutuyor gibi adım adım rehberlik ediyorum. Her yazı bir durumda nasıl hareket edeceğinizi gösteriyor.</p>
+                </div>
+
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Özel Danışmanlık</h3>
+                    <p>Genel bilgi yeterli değilse, kişisel durumunuzu değerlendirelim. Gizli, bağımsız ve deneyim sahibi bir gözden geçen.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONSULTATION CTA -->
+    <section id="consultation">
+        <div class="consultation-container">
+            <div class="consultation-header">
+                <h2>Hukuki Sorunlarınız İçin Bağımsız Bir Bakış Açısına mı İhtiyacınız Var?</h2>
+                <p>Yıllarca ağır ceza davalarına bakan bir hakimin deneyiminden yararlanın. Kimliğiniz gizli kalır. Kişisel durumunuz değerlendirilerek tavsiye alabilirsiniz.</p>
+            </div>
+
+            <form class="consultation-form" onsubmit="handleFormSubmit(event)">
+                <div class="form-group">
+                    <label for="name">Ad (Opsiyonel)</label>
+                    <input type="text" id="name" name="name" placeholder="Adınız">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-posta *</label>
+                    <input type="email" id="email" name="email" placeholder="ornek@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="subject">Konusu *</label>
+                    <input type="text" id="subject" name="subject" placeholder="Hukuki sorunun başlığı" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Mesajınız *</label>
+                    <textarea id="message" name="message" placeholder="Durumunuzu kısaca anlatınız..." required></textarea>
+                </div>
+
+                <div class="form-note">⏱️ Yanıt süresi: 48-72 saat içinde</div>
+
+                <button type="submit" class="cta-button">Gönder</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about">
+        <div class="about-container">
+            <h2>Hakkında</h2>
+            <p>KARAR, Türk hukuk sisteminde onlarca yıl görev yapmış bir ağır ceza hakimi tarafından kurulmuştur. Buradaki yazılar içtihat bilgisi ve sahadan deneyimiyle kaleme alınmaktadır. Amacımız: hukuki süreçleri gizemden arındırmak ve her vatandaşın kendi haklarını bilmesini sağlamak. Kurucu kimliği gizli olsa da, platform ve içeriği tamamen gerçektir, işlevseldir ve sizi bilgilendirmek için var.</p>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>KARAR</h4>
+                <p style="margin-bottom: 1rem; color: rgba(244, 241, 235, 0.8); font-size: 0.9rem;">Hukuku anla. Hakkını bil.</p>
+                <p style="color: rgba(244, 241, 235, 0.6); font-size: 0.85rem;">Bağımsız hukuk danışmanlığı ve eğitim platformu.</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Hızlı Linkler</h4>
+                <ul>
+                    <li><a href="#posts">Yazılar</a></li>
+                    <li><a href="#about">Hakkında</a></li>
+                    <li><a href="#consultation">Danışmanlık</a></li>
+                    <li><a href="#consultation">İletişim</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Yardımcı Bilgiler</h4>
+                <ul>
+                    <li><a href="#">Gizlilik Politikası</a></li>
+                    <li><a href="#">Kullanım Şartları</a></li>
+                    <li><a href="#">KVKK Bildirimi</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p class="legal-note">Bu site hukuki danışmanlık hizmeti değil, bilgi amaçlıdır. Özel danışmanlık için yukarıdaki form vasıtasıyla iletişime geçiniz. © 2025 KARAR — Tüm Hakları Saklıdır.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll-triggered fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.animation = 'fadeInUp 0.8s ease-out';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards and sections
+        document.querySelectorAll('.featured-card, .post-card').forEach(el => {
+            el.style.opacity = '0';
+            observer.observe(el);
+        });
+
+        // Form submission handler
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value || 'Değerli Ziyaretçi';
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+
+            alert(`Teşekkür ederiz ${name}!\n\nMesajınız alındı:\n"${subject}"\n\nSize ${email} adresine 48-72 saat içinde yanıt döneceğiz.`);
+
+            // Reset form
+            event.target.reset();
+        }
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#' && document.querySelector(href)) {
+                    e.preventDefault();
+                    document.querySelector(href).scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add hover effects to post cards
+        document.querySelectorAll('.post-card').forEach(card => {
+            card.addEventListener('click', () => {
+                alert('Yazının tam metni için lütfen bağlantıya tıklayınız. Bu bir demo platformdur.');
+            });
+        });
+    </script>
+</body>
+</html>
