@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 TOKEN = os.getenv('TELEGRAM_TOKEN', '')
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN', '')
 REPO = os.getenv('GITHUB_REPO', 'erdemkapkara/Kurt')
-ALLOWED_ID = int(os.getenv('ALLOWED_USER_ID', '0'))
+ALLOWED_ID = int(os.getenv('ALLOWED_USER_ID', '0').strip())
 
 MONTHS = ['', 'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
           'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık']
@@ -191,7 +191,7 @@ def main():
     app.add_handler(CommandHandler("sil", cmd_sil))
     app.add_handler(CommandHandler("liste", cmd_liste))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-    logging.info("Bot başlatıldı.")
+    logging.info(f"Bot başlatıldı. ALLOWED_ID={ALLOWED_ID}")
     app.run_polling()
 
 
