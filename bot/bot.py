@@ -10,10 +10,10 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-TOKEN = os.environ['TELEGRAM_TOKEN']
-GITHUB_TOKEN = os.environ['GITHUB_TOKEN']
-REPO = os.environ.get('GITHUB_REPO', 'erdemkapkara/Kurt')
-ALLOWED_ID = int(os.environ['ALLOWED_USER_ID'])
+TOKEN = os.getenv('TELEGRAM_TOKEN', '')
+GITHUB_TOKEN = os.getenv('GITHUB_TOKEN', '')
+REPO = os.getenv('GITHUB_REPO', 'erdemkapkara/Kurt')
+ALLOWED_ID = int(os.getenv('ALLOWED_USER_ID', '0'))
 
 MONTHS = ['', 'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
           'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık']
