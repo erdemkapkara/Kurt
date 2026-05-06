@@ -1146,18 +1146,8 @@
             <div class="featured-img">
                 <span class="featured-badge">Editörün Seçimi</span>
             </div>
-            <div class="featured-body">
-                <div class="featured-category">Ceza Hukuku</div>
-                <h2>Gözaltına Alındığınızda İlk 24 Saatte Yapmanız Gereken 5 Şey</h2>
-                <p>Gözaltına alınmak, sıradan bir vatandaşın karşılaşabileceği en stresli deneyimlerden biridir. Panikte alınan yanlış kararlar, ilerleyen süreçte telafisi güç sonuçlara yol açabilir. Mahkemede yüzlerce gözaltı vakasına bakan bir hakimin perspektifinden, kritik 24 saati adım adım anlatıyorum.</p>
-                <div class="featured-meta">
-                    <span><i class="far fa-calendar-alt"></i> 5 Mayıs 2025</span>
-                    <span><i class="far fa-clock"></i> 8 dakika okuma</span>
-                    <span><i class="fas fa-eye"></i> 4.2K görüntülenme</span>
-                </div>
-                <a href="#" class="read-link" onclick="openModal('featured'); return false;">
-                    Devamını Oku <i class="fas fa-arrow-right"></i>
-                </a>
+            <div class="featured-body" id="featured-body">
+                <!-- posts.json'dan yüklenir -->
             </div>
         </div>
     </div>
@@ -1186,115 +1176,8 @@
         </div>
 
         <div class="posts-grid" id="posts-grid">
-            <!-- Kart 1 -->
-            <article class="post-card fade-in" data-cat="Mali Hukuk" data-title="Avukat Tutamayanlar İçin: Adli Yardım Nasıl Alınır?">
-                <div class="card-accent-bar"></div>
-                <div class="card-body">
-                    <div class="card-cat">Mali Hukuk</div>
-                    <h3>Avukat Tutamayanlar İçin: Adli Yardım Nasıl Alınır?</h3>
-                    <p class="card-excerpt">Ekonomik zorluk yaşayan vatandaşlar dava açmak istediğinde "avukat pahalı" diyerek vazgeçiyor. Oysa adli yardım sistemi tam da bu durum için tasarlanmış. Süreci ve başvuru yollarını detaylı anlattım.</p>
-                </div>
-                <div class="card-footer">
-                    <div class="card-meta">2 May 2025 · 6 dk</div>
-                    <div class="card-shares">
-                        <button class="share-ico" onclick="share('Avukat Tutamayanlar İçin: Adli Yardım Nasıl Alınır?','twitter'); event.stopPropagation();" title="Twitter"><i class="fab fa-twitter"></i></button>
-                        <button class="share-ico" onclick="share('Avukat Tutamayanlar İçin: Adli Yardım Nasıl Alınır?','whatsapp'); event.stopPropagation();" title="WhatsApp"><i class="fab fa-whatsapp"></i></button>
-                        <button class="share-ico" onclick="copyLink(); event.stopPropagation();" title="Kopyala"><i class="fas fa-link"></i></button>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Kart 2 -->
-            <article class="post-card fade-in" data-cat="Ceza Hukuku" data-title="Ceza Davalarında Zamanaşımı: Bilmeniz Gerekenler">
-                <div class="card-accent-bar"></div>
-                <div class="card-body">
-                    <div class="card-cat">Ceza Hukuku</div>
-                    <h3>Ceza Davalarında Zamanaşımı: Bilmeniz Gerekenler</h3>
-                    <p class="card-excerpt">Bir suç işlenmişse, ne kadar zaman sonra takibat başlatılamaz? Zamanaşımı hangi suçlar için kaç yıl? Bu hukuki koruma mekanizmasını somut örneklerle açıklıyorum.</p>
-                </div>
-                <div class="card-footer">
-                    <div class="card-meta">25 Nis 2025 · 9 dk</div>
-                    <div class="card-shares">
-                        <button class="share-ico" onclick="share('Ceza Davalarında Zamanaşımı','twitter'); event.stopPropagation();" title="Twitter"><i class="fab fa-twitter"></i></button>
-                        <button class="share-ico" onclick="share('Ceza Davalarında Zamanaşımı','whatsapp'); event.stopPropagation();" title="WhatsApp"><i class="fab fa-whatsapp"></i></button>
-                        <button class="share-ico" onclick="copyLink(); event.stopPropagation();" title="Kopyala"><i class="fas fa-link"></i></button>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Kart 3 -->
-            <article class="post-card fade-in" data-cat="Aile Hukuku" data-title="Boşanma Sürecinde Haklarınız: Mülk, Nafaka, Velayet">
-                <div class="card-accent-bar"></div>
-                <div class="card-body">
-                    <div class="card-cat">Aile Hukuku</div>
-                    <h3>Boşanma Sürecinde Haklarınız: Mülk, Nafaka, Velayet</h3>
-                    <p class="card-excerpt">Boşanma davası açmadan önce bilmeniz gerekenler: mal paylaşımı nasıl işler, nafaka şartları nelerdir ve çocukların velayeti nasıl belirlenir?</p>
-                </div>
-                <div class="card-footer">
-                    <div class="card-meta">18 Nis 2025 · 11 dk</div>
-                    <div class="card-shares">
-                        <button class="share-ico" onclick="share('Boşanma Sürecinde Haklarınız','twitter'); event.stopPropagation();" title="Twitter"><i class="fab fa-twitter"></i></button>
-                        <button class="share-ico" onclick="share('Boşanma Sürecinde Haklarınız','whatsapp'); event.stopPropagation();" title="WhatsApp"><i class="fab fa-whatsapp"></i></button>
-                        <button class="share-ico" onclick="copyLink(); event.stopPropagation();" title="Kopyala"><i class="fas fa-link"></i></button>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Kart 4 -->
-            <article class="post-card fade-in" data-cat="İdare Hukuku" data-title="İdareye Karşı Nasıl Dava Açılır?">
-                <div class="card-accent-bar"></div>
-                <div class="card-body">
-                    <div class="card-cat">İdare Hukuku</div>
-                    <h3>İdareye Karşı Nasıl Dava Açılır?</h3>
-                    <p class="card-excerpt">Bir devlet kurumunun hatalı işlemi size zarar verdi mi? İdare mahkemelerinde dava açma hakkınız, süresi ve adımları hakkında kapsamlı bir rehber.</p>
-                </div>
-                <div class="card-footer">
-                    <div class="card-meta">10 Nis 2025 · 7 dk</div>
-                    <div class="card-shares">
-                        <button class="share-ico" onclick="share('İdareye Karşı Nasıl Dava Açılır?','twitter'); event.stopPropagation();" title="Twitter"><i class="fab fa-twitter"></i></button>
-                        <button class="share-ico" onclick="share('İdareye Karşı Nasıl Dava Açılır?','whatsapp'); event.stopPropagation();" title="WhatsApp"><i class="fab fa-whatsapp"></i></button>
-                        <button class="share-ico" onclick="copyLink(); event.stopPropagation();" title="Kopyala"><i class="fas fa-link"></i></button>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Kart 5 -->
-            <article class="post-card fade-in" data-cat="Ceza Hukuku" data-title="Mahkemede Kendinizi İfade Etme Hakkı">
-                <div class="card-accent-bar"></div>
-                <div class="card-body">
-                    <div class="card-cat">Ceza Hukuku</div>
-                    <h3>Mahkemede Kendinizi İfade Etme Hakkı</h3>
-                    <p class="card-excerpt">Mahkemede susma hakkı ne zaman kullanılır, beyan nasıl verilir? Avukat olmaksızın kendinizi savunmak zorunda kalırsanız nelere dikkat etmelisiniz?</p>
-                </div>
-                <div class="card-footer">
-                    <div class="card-meta">2 Nis 2025 · 7 dk</div>
-                    <div class="card-shares">
-                        <button class="share-ico" onclick="share('Mahkemede Kendinizi İfade Etme Hakkı','twitter'); event.stopPropagation();" title="Twitter"><i class="fab fa-twitter"></i></button>
-                        <button class="share-ico" onclick="share('Mahkemede Kendinizi İfade Etme Hakkı','whatsapp'); event.stopPropagation();" title="WhatsApp"><i class="fab fa-whatsapp"></i></button>
-                        <button class="share-ico" onclick="copyLink(); event.stopPropagation();" title="Kopyala"><i class="fas fa-link"></i></button>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Kart 6 -->
-            <article class="post-card fade-in" data-cat="Mali Hukuk" data-title="İş Yerinde Haksız Fesih: Tazminat Haklarınız">
-                <div class="card-accent-bar"></div>
-                <div class="card-body">
-                    <div class="card-cat">Mali Hukuk</div>
-                    <h3>İş Yerinde Haksız Fesih: Tazminat Haklarınız</h3>
-                    <p class="card-excerpt">İşten çıkarıldınız ve bunun haksız olduğunu düşünüyorsunuz. Kıdem tazminatı, ihbar tazminatı ve işe iade davası konusunda bilmeniz gerekenler.</p>
-                </div>
-                <div class="card-footer">
-                    <div class="card-meta">20 Mar 2025 · 10 dk</div>
-                    <div class="card-shares">
-                        <button class="share-ico" onclick="share('İş Yerinde Haksız Fesih','twitter'); event.stopPropagation();" title="Twitter"><i class="fab fa-twitter"></i></button>
-                        <button class="share-ico" onclick="share('İş Yerinde Haksız Fesih','whatsapp'); event.stopPropagation();" title="WhatsApp"><i class="fab fa-whatsapp"></i></button>
-                        <button class="share-ico" onclick="copyLink(); event.stopPropagation();" title="Kopyala"><i class="fas fa-link"></i></button>
-                    </div>
-                </div>
-            </article>
-
-            <div class="posts-no-result" id="no-result">
+            <!-- JS tarafından posts.json'dan doldurulur -->
+            <div class="posts-no-result" id="no-result" style="display:none;">
                 <i class="fas fa-search" style="font-size:2rem;margin-bottom:0.8rem;opacity:0.4;"></i><br>
                 Aradığınız kriterlere uygun yazı bulunamadı.
             </div>
@@ -1491,29 +1374,12 @@
 <!-- BLOG POST MODAL -->
 <div id="modal-overlay" onclick="closeModal(event)">
     <div class="modal-box">
-        <button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">
-            <i class="fas fa-times"></i>
-        </button>
-        <div class="modal-cat">Ceza Hukuku</div>
-        <h2>Gözaltına Alındığınızda İlk 24 Saatte Yapmanız Gereken 5 Şey</h2>
-        <div class="modal-meta">
-            <span><i class="far fa-calendar-alt"></i> 5 Mayıs 2025</span>
-            <span><i class="far fa-clock"></i> 8 dakika okuma</span>
-        </div>
+        <button class="modal-close"><i class="fas fa-times"></i></button>
+        <div class="modal-cat" id="modal-cat"></div>
+        <h2 id="modal-title"></h2>
+        <div class="modal-meta" id="modal-meta"></div>
         <div class="modal-divider"></div>
-        <div class="modal-content">
-            <p>Gözaltına alınmak, önceden planlanmış bir şey değildir. Stres, korku ve belirsizlik içinde doğru kararlar vermek son derece güçtür. Oysa bu ilk 24 saat, davanın gidişatını büyük ölçüde şekillendirir.</p>
-            <h3>1. Susmak Bir Hak, Hem de Korunmanız</h3>
-            <p>Gözaltına alındığınızda ifade verme yükümlülüğünüz yoktur. "Avukatım olmadan konuşmayacağım" demek hakkınızdır ve bu asla suçluluk belirtisi sayılamaz. Aksine, en sık yapılan hata: panik halinde bilmeden suç sayılabilecek ifadeler vermektir.</p>
-            <h3>2. Avukat Talep Edin — Derhal</h3>
-            <p>Avukat talep etme hakkınız gözaltının ilk anından geçerlidir. Ekonomik gücünüz yoksa adli yardım kapsamında baro tarafından ücretsiz avukat atanması talep edilebilir. Bu talebi sözlü yapın ve tutanağa geçmesini isteyin.</p>
-            <h3>3. Gözaltı Gerekçesini Öğrenin</h3>
-            <p>Hangi suçlama ile gözaltına alındığınızı öğrenmek hakkınızdır. Yazılı bir belge talep edin. Bu bilgi hem sizi hem de avukatınızı yönlendirecektir.</p>
-            <h3>4. Bir Yakınınızı Haberdar Edin</h3>
-            <p>Gözaltına alındığınızı bir yakınınıza bildirme hakkınız bulunmaktadır. Bu talep engellenemez. İsim ve adres bilgisi vererek yetkililerin bildirim yapmasını isteyin.</p>
-            <h3>5. Her Şeyi Aklınızda Tutun, Not Alın</h3>
-            <p>Serbest bırakıldığınızda ya da görüşme fırsatı bulduğunuzda: saat, yer, size söylenenler, tanık isimler ve kimlik numaraları dahil her detayı yazın. Bu bilgiler ilerleyen süreçte kritik kanıt niteliği taşıyabilir.</p>
-        </div>
+        <div class="modal-content" id="modal-content"></div>
     </div>
 </div>
 
@@ -1623,41 +1489,99 @@
     statsObserver.observe(document.getElementById('stats'));
 
     /* =============================================
-       FILTER + SEARCH
+       POSTS — dinamik yükleme
     ============================================= */
-    const pills = document.querySelectorAll('.pill');
-    const cards = document.querySelectorAll('.post-card');
-    const searchInput = document.getElementById('search-input');
-    const noResult = document.getElementById('no-result');
-
+    let allPosts = [];
     let activeCat = 'all';
 
-    function filterCards() {
-        const query = searchInput.value.toLowerCase().trim();
-        let visible = 0;
-        cards.forEach(card => {
-            const cat = card.dataset.cat;
-            const title = card.dataset.title.toLowerCase();
-            const excerpt = card.querySelector('.card-excerpt').textContent.toLowerCase();
-            const catMatch = activeCat === 'all' || cat === activeCat;
-            const queryMatch = !query || title.includes(query) || excerpt.includes(query);
-            const show = catMatch && queryMatch;
-            card.style.display = show ? 'flex' : 'none';
-            if (show) visible++;
-        });
-        noResult.style.display = visible === 0 ? 'block' : 'none';
+    async function loadPosts() {
+        try {
+            const res = await fetch('posts.json?_=' + Date.now());
+            allPosts = await res.json();
+            const featured = allPosts.find(p => p.featured) || allPosts[0];
+            if (featured) renderFeatured(featured);
+            renderCards(allPosts);
+            initFilter();
+        } catch(e) {
+            console.error('posts.json yüklenemedi:', e);
+        }
     }
 
-    pills.forEach(pill => {
-        pill.addEventListener('click', () => {
-            pills.forEach(p => p.classList.remove('active'));
-            pill.classList.add('active');
-            activeCat = pill.dataset.cat;
-            filterCards();
-        });
-    });
+    function renderFeatured(post) {
+        document.getElementById('featured-body').innerHTML =
+            '<div class="featured-category">' + post.category + '</div>' +
+            '<h2>' + post.title + '</h2>' +
+            '<p>' + post.excerpt + '</p>' +
+            '<div class="featured-meta">' +
+                '<span><i class="far fa-calendar-alt"></i> ' + post.date + '</span>' +
+                '<span><i class="far fa-clock"></i> ' + post.readTime + '</span>' +
+                (post.views ? '<span><i class="fas fa-eye"></i> ' + post.views + ' görüntülenme</span>' : '') +
+            '</div>' +
+            '<a href="#" class="read-link" onclick="openPost(\'' + post.id + '\'); return false;">' +
+                'Devamını Oku <i class="fas fa-arrow-right"></i></a>';
+    }
 
-    searchInput.addEventListener('input', filterCards);
+    function renderCards(posts) {
+        const grid = document.getElementById('posts-grid');
+        const noResult = document.getElementById('no-result');
+        grid.querySelectorAll('.post-card').forEach(c => c.remove());
+        posts.forEach(post => {
+            const art = document.createElement('article');
+            art.className = 'post-card fade-in';
+            art.dataset.cat = post.category;
+            art.dataset.id = post.id;
+            art.dataset.title = post.title;
+            art.innerHTML =
+                '<div class="card-accent-bar"></div>' +
+                '<div class="card-body">' +
+                    '<div class="card-cat">' + post.category + '</div>' +
+                    '<h3>' + post.title + '</h3>' +
+                    '<p class="card-excerpt">' + post.excerpt + '</p>' +
+                '</div>' +
+                '<div class="card-footer">' +
+                    '<div class="card-meta">' + post.date + ' · ' + post.readTime + '</div>' +
+                    '<div class="card-shares">' +
+                        '<button class="share-ico" onclick="share(this.closest(\'.post-card\').dataset.title,\'twitter\');event.stopPropagation();" title="Twitter"><i class="fab fa-twitter"></i></button>' +
+                        '<button class="share-ico" onclick="share(this.closest(\'.post-card\').dataset.title,\'whatsapp\');event.stopPropagation();" title="WhatsApp"><i class="fab fa-whatsapp"></i></button>' +
+                        '<button class="share-ico" onclick="copyLink();event.stopPropagation();" title="Kopyala"><i class="fas fa-link"></i></button>' +
+                    '</div>' +
+                '</div>';
+            art.addEventListener('click', (e) => {
+                if (!e.target.closest('.card-footer')) openPost(post.id);
+            });
+            grid.insertBefore(art, noResult);
+            io.observe(art);
+        });
+    }
+
+    function initFilter() {
+        const searchInput = document.getElementById('search-input');
+        function filterCards() {
+            const query = searchInput.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.post-card');
+            const noResult = document.getElementById('no-result');
+            let visible = 0;
+            cards.forEach(card => {
+                const catMatch = activeCat === 'all' || card.dataset.cat === activeCat;
+                const title = card.dataset.title.toLowerCase();
+                const excerpt = card.querySelector('.card-excerpt').textContent.toLowerCase();
+                const queryMatch = !query || title.includes(query) || excerpt.includes(query);
+                const show = catMatch && queryMatch;
+                card.style.display = show ? 'flex' : 'none';
+                if (show) visible++;
+            });
+            noResult.style.display = visible === 0 ? 'block' : 'none';
+        }
+        document.querySelectorAll('.pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+                activeCat = pill.dataset.cat;
+                filterCards();
+            });
+        });
+        searchInput.addEventListener('input', filterCards);
+    }
 
     /* =============================================
        SHARE
@@ -1692,27 +1616,32 @@
     /* =============================================
        MODAL
     ============================================= */
-    function openModal(id) {
+    function openPost(id) {
+        const post = allPosts.find(p => p.id === id);
+        if (!post) return;
+        document.getElementById('modal-cat').textContent = post.category;
+        document.getElementById('modal-title').textContent = post.title;
+        document.getElementById('modal-meta').innerHTML =
+            '<span><i class="far fa-calendar-alt"></i> ' + post.date + '</span>' +
+            '<span><i class="far fa-clock"></i> ' + post.readTime + '</span>';
+        document.getElementById('modal-content').innerHTML = post.content || '<p>' + post.excerpt + '</p>';
         document.getElementById('modal-overlay').classList.add('open');
         document.body.style.overflow = 'hidden';
     }
+
     function closeModal(e) {
         if (e.target === document.getElementById('modal-overlay')) {
             document.getElementById('modal-overlay').classList.remove('open');
             document.body.style.overflow = '';
         }
     }
+
     document.querySelector('.modal-close').addEventListener('click', () => {
         document.getElementById('modal-overlay').classList.remove('open');
         document.body.style.overflow = '';
     });
 
-    // Post cards click → modal
-    cards.forEach(card => {
-        card.addEventListener('click', e => {
-            if (!e.target.closest('.card-footer')) openModal('post');
-        });
-    });
+    loadPosts();
 
     /* =============================================
        FORMS
