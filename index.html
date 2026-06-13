@@ -543,6 +543,11 @@
             height: 3px;
             background: linear-gradient(90deg, var(--accent), var(--bg-dark-2));
         }
+        .card-img {
+            height: 165px;
+            background-size: cover;
+            background-position: center;
+        }
         .card-body { padding: 1.4rem 1.4rem 0; flex-grow: 1; display: flex; flex-direction: column; }
         .card-cat {
             font-size: 0.78rem;
@@ -1518,6 +1523,12 @@
     }
 
     function renderFeatured(post) {
+        if (post.image) {
+            const img = document.querySelector('.featured-img');
+            img.style.backgroundImage = 'url(' + post.image + ')';
+            img.style.backgroundSize = 'cover';
+            img.style.backgroundPosition = 'center';
+        }
         document.getElementById('featured-body').innerHTML =
             '<div class="featured-category">' + post.category + '</div>' +
             '<h2>' + post.title + '</h2>' +
@@ -1542,7 +1553,9 @@
             art.dataset.id = post.id;
             art.dataset.title = post.title;
             art.innerHTML =
-                '<div class="card-accent-bar"></div>' +
+                (post.image
+                    ? '<div class="card-img" style="background-image:url(' + post.image + ');"></div>'
+                    : '<div class="card-accent-bar"></div>') +
                 '<div class="card-body">' +
                     '<div class="card-cat">' + post.category + '</div>' +
                     '<h3>' + post.title + '</h3>' +
@@ -1634,7 +1647,10 @@
         document.getElementById('modal-meta').innerHTML =
             '<span><i class="far fa-calendar-alt"></i> ' + post.date + '</span>' +
             '<span><i class="far fa-clock"></i> ' + post.readTime + '</span>';
-        document.getElementById('modal-content').innerHTML = post.content || '<p>' + post.excerpt + '</p>';
+        const imgHtml = post.image
+            ? '<img src="' + post.image + '" style="width:100%;border-radius:4px;margin-bottom:1.2rem;object-fit:cover;max-height:320px;">'
+            : '';
+        document.getElementById('modal-content').innerHTML = imgHtml + (post.content || '<p>' + post.excerpt + '</p>');
         document.getElementById('modal-overlay').classList.add('open');
         document.body.style.overflow = 'hidden';
     }

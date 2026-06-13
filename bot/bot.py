@@ -56,6 +56,20 @@ HELP_TEXT = (
 
 # ── GitHub API ──────────────────────────────────────────────────────────────
 
+def upload_image(data: bytes, filename: str) -> str:
+    url = f"https://api.github.com/repos/{REPO}/contents/images/{filename}"
+    headers = {"Authorization": f"token {GITHUB_TOKEN}"}
+    res = requests.get(url, headers=headers, timeout=15)
+    sha = res.json().get('sha') if res.status_code == 200 else None
+    payload = {"message": f"Görsel: {filename}", "content": base64.b64encode(data).decode()}
+    if sha:
+        payload["sha"] = sha
+    res = requests.put(url, headers=headers, json=payload, timeout=30)
+    if res.status_code not in (200, 201):
+        raise Exception(f"GitHub görsel hatası: {res.status_code}")
+    return f"https://raw.githubusercontent.com/{REPO}/main/images/{filename}"
+
+
 def get_posts():
     url = f"https://api.github.com/repos/{REPO}/contents/posts.json"
     headers = {"Authorization": f"token {GITHUB_TOKEN}"}
@@ -159,6 +173,47 @@ def confirm_keyboard():
         InlineKeyboardButton("✏️ Düzenle", callback_data="edit"),
         InlineKeyboardButton("❌ İptal",  callback_data="cancel"),
     ]])
+
+
+# ── Fotoğraflı mesaj ────────────────────────────────────────────────────────
+
+async def handle_photo(update: Update, context):
+    if update.effective_user.id not in ALLOWED_IDS:
+        return
+    caption = (update.message.caption or '').strip()
+    if not caption:
+        await update.message.reply_text("📷 Fotoğrafla birlikte yazı metnini de gönder (caption olarak).")
+        return
+
+    photo = update.message.photo[-1]
+    file = await context.bot.get_file(photo.file_id)
+    data = bytes(await file.download_as_bytearray())
+    filename = f"{make_slug(caption[:40])}-{photo.file_unique_id}.jpg"
+
+    try:
+        image_url = upload_image(data, filename)
+    except Exception as e:
+        await update.message.reply_text(f"❌ Görsel yüklenemedi: {e}")
+        return
+
+    post = parse_structured(caption) or parse_auto(caption)
+    if not post or not post.get('title'):
+        await update.message.reply_text("❌ Yazı çok kısa. Daha uzun bir metin ekle.")
+        return
+
+    post['image'] = image_url
+    pending[update.effective_user.id] = post
+
+    preview = (
+        f"📝 *Şu şekilde yayınlayayım mı?*\n\n"
+        f"🖼️ *Görsel:* ✓ Yüklendi\n"
+        f"📌 *Başlık:* {post['title']}\n"
+        f"🏷️ *Kategori:* {post['category']}\n"
+        f"⏱️ *Okuma süresi:* {post['readTime']}\n"
+        f"📅 *Tarih:* {post['date']}\n\n"
+        f"📋 *Özet:*\n{post['excerpt']}"
+    )
+    await update.message.reply_text(preview, parse_mode='Markdown', reply_markup=confirm_keyboard())
 
 
 # ── Komutlar ────────────────────────────────────────────────────────────────
@@ -290,6 +345,7 @@ def main():
     app.add_handler(CommandHandler("liste", cmd_liste))
     app.add_handler(CommandHandler("sil", cmd_sil))
     app.add_handler(CallbackQueryHandler(handle_callback))
+    app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     logging.info(f"Bot başlatıldı. ALLOWED_IDS={ALLOWED_IDS}")
     app.run_polling()
