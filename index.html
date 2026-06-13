@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>KURT — Hukuk Blog & Danışmanlık Platformu</title>
+    <title>Yargı Kalemi — Hukuk Blog & Danışmanlık Platformu</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -107,9 +107,9 @@
         .brand { flex-shrink: 0; }
         .brand-logo {
             font-family: 'Playfair Display', serif;
-            font-size: 1.85rem;
+            font-size: 1.45rem;
             font-weight: 700;
-            letter-spacing: 3px;
+            letter-spacing: 0.5px;
             color: var(--accent);
             line-height: 1;
         }
@@ -1071,7 +1071,7 @@
 <div id="header">
     <div class="header-inner">
         <a href="#" class="brand">
-            <div class="brand-logo">KURT</div>
+            <div class="brand-logo">Yargı Kalemi</div>
             <div class="brand-tagline">Hukuku anla. Hakkını bil.</div>
         </a>
 
@@ -1201,7 +1201,7 @@
 <section id="features">
     <div class="features-inner">
         <div class="section-header fade-in" style="text-align:center;">
-            <div class="section-label">Neden KURT?</div>
+            <div class="section-label">Neden Yargı Kalemi?</div>
             <h2 class="section-title">Platformun Farkı</h2>
         </div>
         <div class="features-grid">
@@ -1275,20 +1275,21 @@
             <p class="section-sub">Yıllarca ağır ceza davalarına bakan bir hakimin deneyiminden yararlanın. Kimliğiniz gizli kalır.</p>
         </div>
         <div class="form-card fade-in">
-            <form onsubmit="handleConsult(event)">
+            <form id="consult-form" onsubmit="handleConsult(event)">
+                <input type="hidden" name="_subject" value="Yeni Danışmanlık Talebi — Yargı Kalemi">
                 <div class="form-row">
                     <div class="form-group">
                         <label>Ad (Opsiyonel)</label>
-                        <input type="text" placeholder="Adınız">
+                        <input type="text" name="ad" placeholder="Adınız">
                     </div>
                     <div class="form-group">
                         <label>E-posta *</label>
-                        <input type="email" id="c-email" placeholder="ornek@mail.com" required>
+                        <input type="email" name="email" id="c-email" placeholder="ornek@mail.com" required>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Konu Türü *</label>
-                    <select required>
+                    <select name="konu" required>
                         <option value="">Seçiniz...</option>
                         <option>Ceza Hukuku</option>
                         <option>Mali / İş Hukuku</option>
@@ -1299,7 +1300,7 @@
                 </div>
                 <div class="form-group">
                     <label>Mesajınız *</label>
-                    <textarea id="c-msg" placeholder="Durumunuzu kısaca anlatınız..." required></textarea>
+                    <textarea name="mesaj" id="c-msg" placeholder="Durumunuzu kısaca anlatınız..." required></textarea>
                 </div>
                 <div class="form-note"><i class="fas fa-shield-alt"></i> Mesajınız gizli tutulur. Yanıt süresi: 48–72 saat içinde.</div>
                 <button type="submit" class="form-submit">Danışmanlık Talebi Gönder</button>
@@ -1313,10 +1314,10 @@
     <div class="about-inner">
         <div class="fade-in">
             <div class="section-label">Platform</div>
-            <h2 class="section-title">KURT Nedir?</h2>
+            <h2 class="section-title">Yargı Kalemi Nedir?</h2>
         </div>
         <blockquote class="about-quote fade-in">
-            KURT, Türk hukuk sisteminde onlarca yıl görev yapmış bir ağır ceza hakimi tarafından kurulmuştur.
+            Yargı Kalemi, Türk hukuk sisteminde onlarca yıl görev yapmış bir ağır ceza hakimi tarafından kurulmuştur.
             Buradaki yazılar içtihat bilgisi ve sahadan deneyimiyle kaleme alınmaktadır. Amacımız:
             hukuki süreçleri gizemden arındırmak ve her vatandaşın kendi haklarını bilmesini sağlamak.
             Kurucu kimliği gizli olsa da platform tamamen gerçektir, işlevseldir ve sizi bilgilendirmek için vardır.
@@ -1329,7 +1330,7 @@
     <div class="footer-inner">
         <div class="footer-grid">
             <div class="footer-brand">
-                <div class="brand-logo" style="margin-bottom:0.5rem;">KURT</div>
+                <div class="brand-logo" style="margin-bottom:0.5rem;">Yargı Kalemi</div>
                 <p>Türkiye'nin hukuk sistemini, haklarınızı ve kendinizi nasıl koruyacağınızı anlatan bağımsız bir platform.</p>
             </div>
             <div class="footer-col">
@@ -1361,7 +1362,7 @@
         </div>
         <div class="footer-bottom">
             <p class="footer-legal">Bu site hukuki danışmanlık hizmeti değildir; yalnızca bilgi amaçlıdır. Özel danışmanlık için formu doldurunuz.</p>
-            <span class="footer-copy">© 2025 KURT — Tüm Hakları Saklıdır</span>
+            <span class="footer-copy">© 2025 Yargı Kalemi — Tüm Hakları Saklıdır</span>
         </div>
     </div>
 </footer>
@@ -1588,7 +1589,7 @@
     ============================================= */
     function share(title, platform) {
         const url = window.location.href;
-        const text = `"${title}" — KURT platformundan`;
+        const text = `"${title}" — Yargı Kalemi platformundan`;
         const urls = {
             twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
             linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
@@ -1644,19 +1645,65 @@
     loadPosts();
 
     /* =============================================
-       FORMS
+       FORMS — Formspree entegrasyonu
+       Formspree'den ücretsiz hesap aç → formspree.io
+       Aşağıdaki ID'leri kendi form ID'lerinle değiştir
     ============================================= */
-    function handleNewsletter(e) {
+    const FORMSPREE_DANISMANLIK = 'https://formspree.io/f/DANISMANLIK_FORM_ID';
+    const FORMSPREE_BULTEN      = 'https://formspree.io/f/BULTEN_FORM_ID';
+
+    async function handleConsult(e) {
         e.preventDefault();
-        const email = e.target.querySelector('input').value;
-        e.target.innerHTML = `<p style="color:var(--accent);font-weight:700;font-size:1rem;">✓ ${email} adresi başarıyla eklendi!</p>`;
+        const btn = e.target.querySelector('.form-submit');
+        const original = btn.textContent;
+        btn.textContent = 'Gönderiliyor...';
+        btn.disabled = true;
+        try {
+            const res = await fetch(FORMSPREE_DANISMANLIK, {
+                method: 'POST',
+                body: new FormData(e.target),
+                headers: { 'Accept': 'application/json' }
+            });
+            if (res.ok) {
+                document.getElementById('consult-form').innerHTML =
+                    '<p style="text-align:center;padding:2.5rem 0;color:var(--accent);font-weight:700;font-size:1.1rem;">' +
+                    '✓ Talebiniz alındı!<br>' +
+                    '<span style="font-weight:400;font-size:0.93rem;color:var(--text-secondary);">48–72 saat içinde e-posta adresinize yanıt verilecektir.</span></p>';
+            } else {
+                throw new Error();
+            }
+        } catch {
+            btn.textContent = original;
+            btn.disabled = false;
+            alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+        }
     }
 
-    function handleConsult(e) {
+    async function handleNewsletter(e) {
         e.preventDefault();
-        const email = document.getElementById('c-email').value;
-        alert(`Mesajınız alındı!\n\n${email} adresine 48–72 saat içinde yanıt verilecektir.\n\nGizliliğiniz korunmaktadır.`);
-        e.target.reset();
+        const btn = e.target.querySelector('button');
+        const input = e.target.querySelector('input');
+        const email = input.value;
+        btn.textContent = '...';
+        btn.disabled = true;
+        const data = new FormData();
+        data.append('email', email);
+        data.append('_subject', 'Yeni Bülten Aboneliği — Yargı Kalemi');
+        try {
+            const res = await fetch(FORMSPREE_BULTEN, {
+                method: 'POST',
+                body: data,
+                headers: { 'Accept': 'application/json' }
+            });
+            if (res.ok) {
+                e.target.innerHTML = '<p style="color:var(--accent);font-weight:700;font-size:1rem;">✓ ' + email + ' adresi başarıyla eklendi!</p>';
+            } else {
+                throw new Error();
+            }
+        } catch {
+            btn.textContent = 'Abone Ol';
+            btn.disabled = false;
+        }
     }
 </script>
 </body>
