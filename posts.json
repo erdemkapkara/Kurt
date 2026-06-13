@@ -1,18 +1,7 @@
 [
   {
-    "id": "baslik-miyav-kategori-ceyceyceyceyceyceyceyceyceyc",
-    "featured": true,
-    "title": "Baslik: Miyav\nKategori: CeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCey\nOzet: CeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCey",
-    "category": "Ceza Hukuku",
-    "excerpt": "Baslik: Miyav\nKategori: CeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCey\nOzet: CeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCey\nicerik: CeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCey…",
-    "date": "13 Haziran 2026",
-    "readTime": "1 dk",
-    "content": "<p>Baslik: Miyav Kategori: CeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCey Ozet: CeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCey icerik: CeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCeyCey</p>",
-    "image": "https://raw.githubusercontent.com/yargikalemi/yargikalemi.github.io/main/images/baslik-miyav-kategori-ceyceyceyceyceyc-AQADiRBrG6efaVF9.jpg"
-  },
-  {
     "id": "baslik-medeni-hukuk-okuyucu-icin",
-    "featured": false,
+    "featured": true,
     "title": "Başlık\nMedeni hukuk\nOkuyucu için",
     "category": "Ceza Hukuku",
     "excerpt": "Yazı burada",
