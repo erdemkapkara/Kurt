@@ -399,6 +399,7 @@
             padding: 2rem;
             position: relative;
             overflow: hidden;
+            min-width: 0;
         }
         .featured-img::before {
             content: '§';
@@ -421,7 +422,7 @@
             padding: 0.35rem 0.85rem;
             border-radius: 3px;
         }
-        .featured-body { padding: 2.8rem; display: flex; flex-direction: column; justify-content: center; }
+        .featured-body { padding: 2.8rem; display: flex; flex-direction: column; justify-content: center; min-width: 0; overflow: hidden; }
         .featured-category {
             font-size: 0.72rem;
             font-weight: 700;
@@ -437,6 +438,8 @@
             line-height: 1.3;
             margin-bottom: 1rem;
             color: var(--text-primary);
+            overflow-wrap: break-word;
+            word-break: break-word;
         }
         .featured-body p {
             color: var(--text-secondary);
@@ -1524,10 +1527,9 @@
 
     function renderFeatured(post) {
         if (post.image) {
-            const img = document.querySelector('.featured-img');
-            img.style.backgroundImage = 'url(' + post.image + ')';
-            img.style.backgroundSize = 'cover';
-            img.style.backgroundPosition = 'center';
+            const panel = document.querySelector('.featured-img');
+            panel.style.cssText += ';background-image:url(' + post.image + ');background-size:cover;background-position:center;';
+            panel.querySelector('::before') && (panel.querySelector('::before').style.display = 'none');
         }
         document.getElementById('featured-body').innerHTML =
             '<div class="featured-category">' + post.category + '</div>' +
