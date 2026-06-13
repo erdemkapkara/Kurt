@@ -66,7 +66,8 @@ def upload_image(data: bytes, filename: str) -> str:
         payload["sha"] = sha
     res = requests.put(url, headers=headers, json=payload, timeout=30)
     if res.status_code not in (200, 201):
-        raise Exception(f"GitHub görsel hatası: {res.status_code}")
+        msg = res.json().get('message', res.text[:100]) if res.content else ''
+        raise Exception(f"GitHub görsel hatası: {res.status_code} — {msg}")
     return f"https://raw.githubusercontent.com/{REPO}/main/images/{filename}"
 
 
