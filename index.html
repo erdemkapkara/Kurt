@@ -1068,7 +1068,7 @@
     <div class="header-inner">
         <a href="#" class="brand">
             <div style="display:flex;align-items:center;gap:0.55rem;">
-                <img src="logo.png" alt="Yargı Kalemi" style="height:40px;width:auto;flex-shrink:0;">
+                <img src="logo.png" alt="Yargı Kalemi" style="height:48px;width:auto;flex-shrink:0;">
                 <div>
                     <div class="brand-logo">Yargı Kalemi</div>
                     <div class="brand-tagline">Hukuku anla. Hakkını bil.</div>
@@ -1278,7 +1278,7 @@
                     <label>Mesajınız *</label>
                     <textarea name="mesaj" id="c-msg" placeholder="Durumunuzu kısaca anlatınız..." required></textarea>
                 </div>
-                <div class="form-note"><i class="fas fa-shield-alt"></i> Mesajınız gizli tutulur. Yanıt süresi: 48–72 saat içinde.</div>
+                <div class="form-note"><i class="fas fa-shield-alt"></i> Mesajınız gizli tutulur. Yanıt süresi: 24-48 saat içinde.</div>
                 <button type="submit" class="form-submit">Danışmanlık Talebi Gönder</button>
             </form>
         </div>
@@ -1306,7 +1306,8 @@
     <div class="footer-inner">
         <div class="footer-grid">
             <div class="footer-brand">
-                <div style="margin-bottom:0.8rem;">
+                <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.9rem;">
+                    <img src="logo.png" alt="Yargı Kalemi" style="height:52px;width:auto;flex-shrink:0;">
                     <div class="brand-logo" style="font-size:1.3rem;">Yargı Kalemi</div>
                 </div>
                 <p>Türkiye'nin hukuk sistemini, haklarınızı ve kendinizi nasıl koruyacağınızı anlatan bağımsız bir platform.</p>
@@ -1632,7 +1633,7 @@
                 document.getElementById('consult-form').innerHTML =
                     '<p style="text-align:center;padding:2.5rem 0;color:var(--accent);font-weight:700;font-size:1.1rem;">' +
                     '✓ Talebiniz alındı!<br>' +
-                    '<span style="font-weight:400;font-size:0.93rem;color:var(--text-secondary);">48–72 saat içinde e-posta adresinize yanıt verilecektir.</span></p>';
+                    '<span style="font-weight:400;font-size:0.93rem;color:var(--text-secondary);">24-48 saat içinde e-posta adresinize yanıt verilecektir.</span></p>';
             } else {
                 throw new Error();
             }
