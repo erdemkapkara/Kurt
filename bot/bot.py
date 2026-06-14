@@ -97,10 +97,16 @@ def upload_image(data: bytes, filename: str) -> str:
 
 
 def get_posts():
+    import time
     url = f"https://api.github.com/repos/{REPO}/contents/posts.json"
     headers = {"Authorization": f"token {GITHUB_TOKEN}"}
-    res = requests.get(url, headers=headers, timeout=15)
-    if res.status_code != 200:
+    for attempt in range(3):
+        res = requests.get(url, headers=headers, timeout=15)
+        if res.status_code == 200:
+            break
+        if attempt < 2:
+            time.sleep(2)
+    else:
         raise Exception(f"GitHub okuma hatası: {res.status_code}")
     data = res.json()
     content = base64.b64decode(data['content']).decode('utf-8')
