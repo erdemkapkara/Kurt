@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 TOKEN = os.getenv('TELEGRAM_TOKEN', '')
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN', '')
 REPO = os.getenv('GITHUB_REPO', 'yargikalemi/yargikalemi.github.io')
-ALLOWED_IDS = {7284939267, 8092559336} | set(
+ALLOWED_IDS = {7284939267, 8092559336, 8855943051} | set(
     int(x.strip()) for x in os.getenv('ALLOWED_USER_ID', '').split(',') if x.strip().isdigit()
 )
 
