@@ -35,12 +35,14 @@ CATEGORY_KEYWORDS = {
 
 # Onay bekleyen yazılar
 pending = {}
+pending_edit = {}
 
 HELP_TEXT = (
-    "👨‍⚖️ *KURT Blog Botu*\n\n"
+    "👨‍⚖️ *Yargı Kalemi Blog Botu*\n\n"
     "Herhangi bir yazı gönder — başlık, kategori ve özeti otomatik çıkarırım, "
     "onayını aldıktan sonra yayınlarım.\n\n"
-    "*Ya da yapılandırılmış format:*\n"
+    "📷 *Fotoğraflı yazı:* Fotoğraf gönder, açıklamaya yazıyı yaz.\n\n"
+    "*Yapılandırılmış format:*\n"
     "```\n"
     "Başlık: Yazı başlığı\n"
     "Kategori: Ceza Hukuku\n"
@@ -50,7 +52,11 @@ HELP_TEXT = (
     "*Kategoriler:* Ceza Hukuku · Mali Hukuk · Aile Hukuku · İdare Hukuku\n\n"
     "*Komutlar:*\n"
     "/liste — yayındaki yazılar\n"
-    "/sil yazı\\-id — yazı sil"
+    "/sil yazı\\-id — yazı sil\n"
+    "/duzenle yazı\\-id — yazı güncelle\n"
+    "/onecikart yazı\\-id — yazıyı öne çıkar\n"
+    "/istatistik — yazı sayısı ve kategoriler\n"
+    "/iptal — düzenlemeyi iptal et"
 )
 
 
@@ -266,13 +272,119 @@ async def cmd_sil(update: Update, context):
         await update.message.reply_text(f"❌ Hata: {e}")
 
 
+async def cmd_duzenle(update: Update, context):
+    if update.effective_user.id not in ALLOWED_IDS:
+        return
+    if not context.args:
+        await update.message.reply_text("Kullanım: /duzenle <yazı-id>")
+        return
+    post_id = context.args[0]
+    try:
+        posts, _ = get_posts()
+        post = next((p for p in posts if p['id'] == post_id), None)
+        if not post:
+            await update.message.reply_text(f"❌ '{post_id}' bulunamadı.")
+            return
+        pending_edit[update.effective_user.id] = post_id
+        await update.message.reply_text(
+            f"✏️ *{post['title']}* düzenleniyor\\.\n\n"
+            f"Yeni içeriği gönder:\n"
+            f"`Başlık: ...`\n`Kategori: ...`\n`Özet: ...`\n\nİçerik\\.\\.\\.\n\n"
+            f"İptal için /iptal",
+            parse_mode='MarkdownV2'
+        )
+    except Exception as e:
+        await update.message.reply_text(f"❌ Hata: {e}")
+
+
+async def cmd_onecikart(update: Update, context):
+    if update.effective_user.id not in ALLOWED_IDS:
+        return
+    if not context.args:
+        await update.message.reply_text("Kullanım: /onecikart <yazı-id>")
+        return
+    post_id = context.args[0]
+    try:
+        posts, sha = get_posts()
+        found = False
+        for p in posts:
+            if p['id'] == post_id:
+                p['featured'] = True
+                found = True
+            else:
+                p['featured'] = False
+        if not found:
+            await update.message.reply_text(f"❌ '{post_id}' bulunamadı.")
+            return
+        posts.insert(0, posts.pop(next(i for i, p in enumerate(posts) if p['id'] == post_id)))
+        save_posts(posts, sha, f"Öne çıkarıldı: {post_id}")
+        await update.message.reply_text(f"⭐ '{post_id}' öne çıkarıldı.")
+    except Exception as e:
+        await update.message.reply_text(f"❌ Hata: {e}")
+
+
+async def cmd_istatistik(update: Update, context):
+    if update.effective_user.id not in ALLOWED_IDS:
+        return
+    try:
+        posts, _ = get_posts()
+        if not posts:
+            await update.message.reply_text("Henüz yazı yok.")
+            return
+        cat_counts = {}
+        for p in posts:
+            cat = p.get('category', 'Diğer')
+            cat_counts[cat] = cat_counts.get(cat, 0) + 1
+        lines = [f"📊 *İstatistikler*\n", f"📝 Toplam yazı: {len(posts)}\n"]
+        for cat, count in sorted(cat_counts.items(), key=lambda x: -x[1]):
+            lines.append(f"  • {cat}: {count}")
+        featured = next((p for p in posts if p.get('featured')), None)
+        if featured:
+            lines.append(f"\n⭐ Öne çıkan: {featured['title']}")
+        await update.message.reply_text('\n'.join(lines), parse_mode='Markdown')
+    except Exception as e:
+        await update.message.reply_text(f"❌ Hata: {e}")
+
+
+async def cmd_iptal(update: Update, context):
+    if update.effective_user.id not in ALLOWED_IDS:
+        return
+    pending_edit.pop(update.effective_user.id, None)
+    pending.pop(update.effective_user.id, None)
+    await update.message.reply_text("❌ İptal edildi.")
+
+
 # ── Mesaj işleme ────────────────────────────────────────────────────────────
 
 async def handle_message(update: Update, context):
     if update.effective_user.id not in ALLOWED_IDS:
         return
 
+    uid = update.effective_user.id
     text = update.message.text
+
+    # Düzenleme modu
+    if uid in pending_edit:
+        post_id = pending_edit.pop(uid)
+        new_post = parse_structured(text) or parse_auto(text)
+        if not new_post or not new_post.get('title'):
+            await update.message.reply_text("❌ Yazı çok kısa.")
+            return
+        try:
+            posts, sha = get_posts()
+            idx = next((i for i, p in enumerate(posts) if p['id'] == post_id), None)
+            if idx is None:
+                await update.message.reply_text(f"❌ '{post_id}' artık bulunamadı.")
+                return
+            new_post['id'] = post_id
+            new_post['featured'] = posts[idx].get('featured', False)
+            posts[idx] = new_post
+            save_posts(posts, sha, f"Güncellendi: {post_id}")
+            await update.message.reply_text(f"✅ *{new_post['title']}* güncellendi.", parse_mode='Markdown')
+        except Exception as e:
+            await update.message.reply_text(f"❌ Hata: {e}")
+        return
+
     post = parse_structured(text) or parse_auto(text)
 
     if not post or not post.get('title'):
@@ -345,6 +457,10 @@ def main():
     app.add_handler(CommandHandler("start", cmd_start))
     app.add_handler(CommandHandler("liste", cmd_liste))
     app.add_handler(CommandHandler("sil", cmd_sil))
+    app.add_handler(CommandHandler("duzenle", cmd_duzenle))
+    app.add_handler(CommandHandler("onecikart", cmd_onecikart))
+    app.add_handler(CommandHandler("istatistik", cmd_istatistik))
+    app.add_handler(CommandHandler("iptal", cmd_iptal))
     app.add_handler(CallbackQueryHandler(handle_callback))
     app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
