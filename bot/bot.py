@@ -21,23 +21,37 @@ MONTHS = ['', 'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
           'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık']
 
 CATEGORY_KEYWORDS = {
-    'Ceza Hukuku':  ['gözaltı', 'tutuklama', 'suç', 'hapis', 'ceza', 'sanık', 'beraat',
-                     'savcı', 'kovuşturma', 'soruşturma', 'adli', 'cezai', 'iddianame',
-                     'susma', 'ifade', 'zamanaşımı', 'mahkeme', 'duruşma'],
-    'Mali Hukuk':   ['tazminat', 'işçi', 'işveren', 'ücret', 'vergi', 'borç', 'alacak',
-                     'sözleşme', 'kira', 'icra', 'iflas', 'kıdem', 'ihbar', 'fesih',
-                     'adli yardım', 'baro', 'harç'],
-    'Aile Hukuku':  ['boşanma', 'nafaka', 'velayet', 'evlilik', 'çocuk', 'miras',
-                     'aile', 'eş', 'nişan', 'evlat', 'mal paylaşımı'],
-    'İdare Hukuku': ['idare', 'devlet', 'belediye', 'kamu', 'ihale', 'disiplin',
-                     'memur', 'yönetim', 'bakanlık', 'kurum', 'iptal', 'danıştay'],
+    'Ceza Hukuku':              ['gözaltı', 'tutuklama', 'suç', 'hapis', 'ceza', 'sanık', 'beraat',
+                                  'savcı', 'kovuşturma', 'soruşturma', 'adli', 'cezai', 'iddianame',
+                                  'susma', 'ifade', 'zamanaşımı'],
+    'Ticaret Hukuku':           ['ticaret', 'şirket', 'ticari', 'ortaklık', 'hisse', 'tacir',
+                                  'ticaret sicili', 'limited', 'anonim', 'ticari uyuşmazlık'],
+    'Tüketici Hukuku':          ['tüketici', 'ayıplı', 'iade', 'garanti', 'satın alma', 'sipariş',
+                                  'tüketim', 'üretici', 'satıcı', 'hakkaniyetsiz şart'],
+    'Medeni Hukuk':             ['mülkiyet', 'eşya', 'hak', 'medeni', 'kişilik', 'vasiyet', 'vasi'],
+    'Aile Hukuku':              ['boşanma', 'nafaka', 'velayet', 'evlilik', 'çocuk', 'miras',
+                                  'aile', 'eş', 'nişan', 'evlat', 'mal paylaşımı'],
+    'Ceza Muhakemeleri Hukuku': ['muhakeme', 'yargılama', 'delil', 'itiraz', 'kanun yolu', 'temyiz',
+                                  'istinaf', 'uzlaşma', 'duruşma', 'müdafi', 'savunma'],
+    'İdare Hukuku':             ['idare', 'devlet', 'belediye', 'kamu', 'ihale', 'disiplin',
+                                  'memur', 'yönetim', 'bakanlık', 'kurum', 'iptal', 'danıştay'],
+    'Borçlar Hukuku':           ['borç', 'alacak', 'sözleşme', 'tazminat', 'haksız fiil', 'edim',
+                                  'ifa', 'borca aykırılık', 'zarar'],
+    'KVKK':                     ['kvkk', 'kişisel veri', 'gizlilik', 'veri koruma', 'gdpr',
+                                  'veri ihlali', 'aydınlatma yükümlülüğü', 'açık rıza'],
+    'Gayrimenkul / Kira':       ['kira', 'kiracı', 'ev sahibi', 'gayrimenkul', 'tapu',
+                                  'kat mülkiyeti', 'irtifak', 'ipotek', 'kira artışı'],
+    'İcra ve İflas':            ['icra', 'iflas', 'haciz', 'konkordato', 'borçlu',
+                                  'icra takibi', 'ödeme emri'],
+    'Anayasa Mahkemesi':        ['anayasa', 'bireysel başvuru', 'temel hak', 'anayasa mahkemesi',
+                                  'özgürlük', 'hak ihlali'],
+    'AİHM':                     ['aihm', 'avrupa', 'insan hakları mahkemesi', 'strasbourg',
+                                  'avrupa insan', 'avrupa sözleşmesi'],
 }
 
 # Onay bekleyen yazılar
 pending = {}
 pending_edit = {}
-
-DEFAULT_CATS = ["Ceza Hukuku", "Mali Hukuk", "Aile Hukuku", "İdare Hukuku"]
 
 HELP_TEXT = (
     "👨‍⚖️ *Yargı Kalemi Blog Botu*\n\n"
@@ -51,16 +65,16 @@ HELP_TEXT = (
     "Özet: Kısa açıklama\n\n"
     "Yazı içeriği...\n"
     "```\n\n"
-    "*Kategoriler:* Ceza Hukuku · Mali Hukuk · Aile Hukuku · İdare Hukuku\n\n"
+    "*Kategoriler:*\n"
+    "Ceza Hukuku · Ticaret Hukuku · Tüketici Hukuku · Medeni Hukuk · Aile Hukuku\n"
+    "Ceza Muhakemeleri Hukuku · İdare Hukuku · Borçlar Hukuku · KVKK\n"
+    "Gayrimenkul / Kira · İcra ve İflas · Anayasa Mahkemesi · AİHM\n\n"
     "*Komutlar:*\n"
     "/liste — yayındaki yazılar (ID numaralarıyla)\n"
     "/sil 3 — 3 numaralı yazıyı sil\n"
     "/duzenle 3 — 3 numaralı yazıyı güncelle\n"
     "/onecikart 3 — 3 numaralı yazıyı öne çıkar\n"
-    "/istatistik — yazı sayısı ve kategoriler\n"
     "/migrate — eski yazı ID'lerini 1\\-2\\-3 formatına çevir\n"
-    "/kategoriekle <isim> — yeni kategori ekle\n"
-    "/kategorisil <isim> — kategori sil\n"
     "/iptal — düzenlemeyi iptal et"
 )
 
@@ -91,32 +105,6 @@ def get_posts():
     data = res.json()
     content = base64.b64decode(data['content']).decode('utf-8')
     return json.loads(content), data['sha']
-
-
-def get_categories():
-    url = f"https://api.github.com/repos/{REPO}/contents/categories.json"
-    headers = {"Authorization": f"token {GITHUB_TOKEN}"}
-    res = requests.get(url, headers=headers, timeout=15)
-    if res.status_code == 404:
-        return ["Ceza Hukuku", "Mali Hukuk", "Aile Hukuku", "İdare Hukuku"], None
-    if res.status_code != 200:
-        raise Exception(f"GitHub okuma hatası: {res.status_code}")
-    data = res.json()
-    return json.loads(base64.b64decode(data['content']).decode('utf-8')), data['sha']
-
-
-def save_categories(cats, sha, message):
-    url = f"https://api.github.com/repos/{REPO}/contents/categories.json"
-    headers = {"Authorization": f"token {GITHUB_TOKEN}", "Content-Type": "application/json"}
-    encoded = base64.b64encode(
-        json.dumps(cats, ensure_ascii=False, indent=2).encode('utf-8')
-    ).decode('utf-8')
-    payload = {"message": message, "content": encoded}
-    if sha:
-        payload["sha"] = sha
-    res = requests.put(url, headers=headers, json=payload, timeout=15)
-    if res.status_code not in (200, 201):
-        raise Exception(f"GitHub yazma hatası: {res.status_code}")
 
 
 def save_posts(posts, sha, title):
@@ -354,77 +342,6 @@ async def cmd_onecikart(update: Update, context):
         await update.message.reply_text(f"❌ Hata: {e}")
 
 
-async def cmd_istatistik(update: Update, context):
-    if update.effective_user.id not in ALLOWED_IDS:
-        return
-    try:
-        posts, _ = get_posts()
-        if not posts:
-            await update.message.reply_text("Henüz yazı yok.")
-            return
-        cat_counts = {}
-        for p in posts:
-            cat = p.get('category', 'Diğer')
-            cat_counts[cat] = cat_counts.get(cat, 0) + 1
-        lines = [f"📊 *İstatistikler*\n", f"📝 Toplam yazı: {len(posts)}\n"]
-        for cat, count in sorted(cat_counts.items(), key=lambda x: -x[1]):
-            lines.append(f"  • {cat}: {count}")
-        featured = next((p for p in posts if p.get('featured')), None)
-        if featured:
-            lines.append(f"\n⭐ Öne çıkan: {featured['title']}")
-        await update.message.reply_text('\n'.join(lines), parse_mode='Markdown')
-    except Exception as e:
-        await update.message.reply_text(f"❌ Hata: {e}")
-
-
-async def cmd_kategoriekle(update: Update, context):
-    if update.effective_user.id not in ALLOWED_IDS:
-        return
-    if not context.args:
-        await update.message.reply_text("Kullanım: /kategoriekle <kategori adı>\nÖrnek: /kategoriekle Tüketici Hukuku")
-        return
-    yeni = ' '.join(context.args).strip()
-    try:
-        cats, sha = get_categories()
-        if yeni in cats:
-            await update.message.reply_text(f"❌ '{yeni}' zaten mevcut.")
-            return
-        cats.append(yeni)
-        save_categories(cats, sha, f"Kategori eklendi: {yeni}")
-        await update.message.reply_text(
-            f"✅ *{yeni}* eklendi\\.\n\n📂 Kategoriler:\n" +
-            '\n'.join(f"• {c}" for c in cats),
-            parse_mode='MarkdownV2'
-        )
-    except Exception as e:
-        await update.message.reply_text(f"❌ Hata: {e}")
-
-
-async def cmd_kategorisil(update: Update, context):
-    if update.effective_user.id not in ALLOWED_IDS:
-        return
-    if not context.args:
-        await update.message.reply_text("Kullanım: /kategorisil <kategori adı>\nÖrnek: /kategorisil Mali Hukuk")
-        return
-    kat = ' '.join(context.args).strip()
-    try:
-        cats, sha = get_categories()
-        if kat not in cats:
-            await update.message.reply_text(
-                f"❌ '{kat}' bulunamadı.\n\nMevcut kategoriler:\n" + '\n'.join(f"• {c}" for c in cats)
-            )
-            return
-        cats.remove(kat)
-        save_categories(cats, sha, f"Kategori silindi: {kat}")
-        await update.message.reply_text(
-            f"✅ *{kat}* silindi\\.\n\n📂 Kalan kategoriler:\n" +
-            ('\n'.join(f"• {c}" for c in cats) if cats else 'Hiç kategori yok'),
-            parse_mode='MarkdownV2'
-        )
-    except Exception as e:
-        await update.message.reply_text(f"❌ Hata: {e}")
-
-
 async def cmd_migrate(update: Update, context):
     if update.effective_user.id not in ALLOWED_IDS:
         return
@@ -558,9 +475,6 @@ def main():
     app.add_handler(CommandHandler("sil", cmd_sil))
     app.add_handler(CommandHandler("duzenle", cmd_duzenle))
     app.add_handler(CommandHandler("onecikart", cmd_onecikart))
-    app.add_handler(CommandHandler("istatistik", cmd_istatistik))
-    app.add_handler(CommandHandler("kategoriekle", cmd_kategoriekle))
-    app.add_handler(CommandHandler("kategorisil", cmd_kategorisil))
     app.add_handler(CommandHandler("migrate", cmd_migrate))
     app.add_handler(CommandHandler("iptal", cmd_iptal))
     app.add_handler(CallbackQueryHandler(handle_callback))

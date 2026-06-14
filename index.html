@@ -1030,7 +1030,8 @@
             .header-nav { display: none; }
             #hamburger { display: flex; }
             .header-actions .btn-cta { display: none; }
-            .brand-tagline { display: none; }
+            .brand { flex-shrink: 1; min-width: 0; }
+            .brand-tagline { display: block; font-size: 0.63rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
             .featured-card { grid-template-columns: 1fr; }
             .featured-img { min-height: 200px; }
@@ -1088,7 +1089,7 @@
                 <img src="logo1.png" alt="Yargı Kalemi" style="height:64px;width:auto;flex-shrink:0;">
                 <div>
                     <div class="brand-logo">Yargı Kalemi</div>
-                    <div class="brand-tagline">Hukuku anla. Hakkını bil.</div>
+                    <div class="brand-tagline">Yılların getirdiği hukuki birikimi, karmaşık terimlerden arındırarak en açık ve erişilebilir haliyle sunuyoruz.</div>
                 </div>
             </div>
         </a>
@@ -1285,9 +1286,18 @@
                     <select name="konu" required>
                         <option value="">Seçiniz...</option>
                         <option>Ceza Hukuku</option>
-                        <option>Mali / İş Hukuku</option>
+                        <option>Ticaret Hukuku</option>
+                        <option>Tüketici Hukuku</option>
+                        <option>Medeni Hukuk</option>
                         <option>Aile Hukuku</option>
+                        <option>Ceza Muhakemeleri Hukuku</option>
                         <option>İdare Hukuku</option>
+                        <option>Borçlar Hukuku</option>
+                        <option>KVKK</option>
+                        <option>Gayrimenkul / Kira</option>
+                        <option>İcra ve İflas</option>
+                        <option>Anayasa Mahkemesi</option>
+                        <option>AİHM</option>
                         <option>Diğer</option>
                     </select>
                 </div>
@@ -1311,9 +1321,9 @@
             <p class="about-vision">"Bilgiyle güçlenen hak arayışı."</p>
         </div>
         <div class="about-mission fade-in">
-            <p>Hukuki belirsizlik, toplumun her kesimini etkileyen sessiz bir kriz hâline gelmiştir. Kişiler, temel haklarını bilmeden yargı süreçlerine girmekte; bazen telafisi güç sonuçlarla karşılaşmaktadır.</p>
-            <p>Yargı Kalemi bu boşluğu kapamak için kurulmuştur. Buradaki her yazı; sahadan alınan deneyimle ve yargı içtihatlarına dayanan bağımsız bir perspektifle kaleme alınmaktadır. Bu bir hukuk danışmanlığı değil, bir farkındalık platformudur.</p>
-            <p>Haklarını bilen bireyler hem kendilerini hem de toplumu korur. Amacımız hukuku yalnızca hukukçulara değil, hukuku yaşayan herkese anlaşılır kılmaktır.</p>
+            <p>Hukuki sorunlar çoğu zaman insanı belirsizlik içinde bırakır. Hakkını korumak isteyen pek çok kişi, nereden başlayacağını veya hangi yolu izleyeceğini kestiremediği için kendisini bir çıkmaz sokağın içinde bulabilir.</p>
+            <p>Bu platform; kürsüde geçen yılların kazandırdığı bilgi, birikim ve tecrübeyi herkes için erişilebilir kılmak amacıyla kuruldu. Amacımız; hukukun çoğu zaman karmaşık görünen dünyasını, sade ve anlaşılır bir dille erişilebilir hale getirmektir. Bireylerin hukuki meselelerini daha iyi değerlendirmesine, kararlarını daha sağlam temellere dayandırmasına ve hak arayışında daha güçlü adımlar atmasına katkı sunmayı hedefliyoruz.</p>
+            <p>Çünkü hak arayışında en güçlü dayanak doğru bilgidir; doğru bilgi ise tecrübeyle anlam kazanır.</p>
         </div>
     </div>
 </section>
