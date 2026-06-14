@@ -1477,6 +1477,13 @@
     let allPosts = [];
     let activeCat = 'all';
     const DEFAULT_IMG = 'yazifoto.jpg';
+    const CATEGORY_IMG = {
+        'Ceza Hukuku':   'cezahukuku.jpg',
+        'İdare Hukuku':  'idarehukuku.jpeg',
+    };
+    function postImg(post) {
+        return post.image || CATEGORY_IMG[post.category] || DEFAULT_IMG;
+    }
 
     async function loadPosts() {
         try {
@@ -1509,7 +1516,7 @@
     function renderFeatured(post) {
         {
             const panel = document.querySelector('.featured-img');
-            const img = post.image || DEFAULT_IMG;
+            const img = postImg(post);
             panel.style.cssText += ';background-image:url(' + img + ');background-size:cover;background-position:center;';
             panel.querySelector('::before') && (panel.querySelector('::before').style.display = 'none');
         }
@@ -1537,7 +1544,7 @@
             art.dataset.id = post.id;
             art.dataset.title = post.title;
             art.innerHTML =
-                '<div class="card-img" style="background-image:url(' + (post.image || DEFAULT_IMG) + ');"></div>' +
+                '<div class="card-img" style="background-image:url(' + postImg(post) + ');"></div>' +
                 '<div class="card-body">' +
                     '<div class="card-cat">' + post.category + '</div>' +
                     '<h3>' + post.title + '</h3>' +
@@ -1629,7 +1636,7 @@
         document.getElementById('modal-meta').innerHTML =
             '<span><i class="far fa-calendar-alt"></i> ' + post.date + '</span>' +
             '<span><i class="far fa-clock"></i> ' + post.readTime + '</span>';
-        const imgHtml = '<img src="' + (post.image || DEFAULT_IMG) + '" style="width:100%;border-radius:4px;margin-bottom:1.2rem;object-fit:cover;max-height:320px;">';
+        const imgHtml = '<img src="' + postImg(post) + '" style="width:100%;border-radius:4px;margin-bottom:1.2rem;object-fit:cover;max-height:320px;">';
         document.getElementById('modal-content').innerHTML = imgHtml + (post.content || '<p>' + post.excerpt + '</p>');
         document.getElementById('modal-overlay').classList.add('open');
         document.body.style.overflow = 'hidden';
