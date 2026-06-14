@@ -113,7 +113,14 @@ def get_posts():
     return json.loads(content), data['sha']
 
 
+def renumber(posts):
+    for i, p in enumerate(posts, 1):
+        p['id'] = str(i)
+    return posts
+
+
 def save_posts(posts, sha, title):
+    renumber(posts)
     url = f"https://api.github.com/repos/{REPO}/contents/posts.json"
     headers = {"Authorization": f"token {GITHUB_TOKEN}", "Content-Type": "application/json"}
     encoded = base64.b64encode(
@@ -256,6 +263,19 @@ async def cmd_start(update: Update, context):
     await update.message.reply_text(HELP_TEXT, parse_mode='Markdown')
 
 
+def liste_message(posts):
+    lines = [f"📋 *Yayındaki Yazılar ({len(posts)})*\n"]
+    keyboard = []
+    for p in posts:
+        star = "⭐ " if p.get('featured') else ""
+        lines.append(f"{star}*{p['id']}* — {p['title']}")
+        row = [InlineKeyboardButton(f"🗑 {p['id']}. Sil", callback_data=f"del_{p['id']}")]
+        if not p.get('featured'):
+            row.append(InlineKeyboardButton("⭐ Öne Çıkar", callback_data=f"feat_{p['id']}"))
+        keyboard.append(row)
+    return '\n'.join(lines), InlineKeyboardMarkup(keyboard)
+
+
 async def cmd_liste(update: Update, context):
     if update.effective_user.id not in ALLOWED_IDS:
         return
@@ -264,11 +284,8 @@ async def cmd_liste(update: Update, context):
         if not posts:
             await update.message.reply_text("Henüz yazı yok.")
             return
-        lines = [f"📋 *Yayındaki Yazılar ({len(posts)})*\n"]
-        for p in posts:
-            star = "⭐ " if p.get('featured') else ""
-            lines.append(f"{star}*{p['id']}* — {p['title']}")
-        await update.message.reply_text('\n'.join(lines), parse_mode='Markdown')
+        text, markup = liste_message(posts)
+        await update.message.reply_text(text, parse_mode='Markdown', reply_markup=markup)
     except Exception as e:
         await update.message.reply_text(f"❌ Hata: {e}")
 
@@ -447,6 +464,54 @@ async def handle_callback(update: Update, context):
         )
         return
 
+    if query.data.startswith("del_"):
+        post_id = query.data[4:]
+        try:
+            posts, sha = get_posts()
+            deleted = next((p for p in posts if p['id'] == post_id), None)
+            if not deleted:
+                await query.answer("Bu yazı zaten silinmiş.", show_alert=True)
+                return
+            posts = [p for p in posts if p['id'] != post_id]
+            if posts:
+                for p in posts:
+                    p['featured'] = False
+                posts[0]['featured'] = True
+            save_posts(posts, sha, f"Silindi: {deleted['title']}")
+            if posts:
+                text, markup = liste_message(posts)
+                await query.edit_message_text(
+                    f"✅ *{deleted['title']}* silindi.\n\n" + text,
+                    parse_mode='Markdown', reply_markup=markup
+                )
+            else:
+                await query.edit_message_text("✅ Silindi. Artık yazı yok.")
+        except Exception as e:
+            await query.edit_message_text(f"❌ Hata: {e}")
+        return
+
+    if query.data.startswith("feat_"):
+        post_id = query.data[5:]
+        try:
+            posts, sha = get_posts()
+            featured = next((p for p in posts if p['id'] == post_id), None)
+            if not featured:
+                await query.answer("Yazı bulunamadı.", show_alert=True)
+                return
+            for p in posts:
+                p['featured'] = p['id'] == post_id
+            idx = next(i for i, p in enumerate(posts) if p['id'] == post_id)
+            posts.insert(0, posts.pop(idx))
+            save_posts(posts, sha, f"Öne çıkarıldı: {featured['title']}")
+            text, markup = liste_message(posts)
+            await query.edit_message_text(
+                f"⭐ *{featured['title']}* öne çıkarıldı.\n\n" + text,
+                parse_mode='Markdown', reply_markup=markup
+            )
+        except Exception as e:
+            await query.edit_message_text(f"❌ Hata: {e}")
+        return
+
     post = pending.pop(uid, None)
     if not post:
         await query.edit_message_text("❌ Bekleyen yazı bulunamadı.")
@@ -454,8 +519,6 @@ async def handle_callback(update: Update, context):
 
     try:
         posts, sha = get_posts()
-        nums = [int(p['id']) for p in posts if str(p['id']).isdigit()]
-        post['id'] = str(max(nums, default=0) + 1)
         for p in posts:
             p['featured'] = False
         post['featured'] = True
