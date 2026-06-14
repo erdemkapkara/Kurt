@@ -1120,7 +1120,7 @@
 <section id="hero">
     <div class="hero-inner fade-in">
         <h1>Hukuku anlamak,<br>hakkını korumanın<br>ilk adımıdır.</h1>
-        <p>Hukuki süreçleri anlamak için bağımsız, güvenilir bir kaynak. Yargı içtihatları ve saha deneyimiyle yazılmış yazılar — herkese açık, yalın ve anlaşılır.</p>
+        <p>Hukuki süreçleri anlamak için güvenilir bir kaynak. Yargı içtihatları ve saha deneyimiyle yazılmış yazılar — herkese açık, yalın ve anlaşılır.</p>
         <div class="hero-btns">
             <button class="btn-outline" onclick="scrollToSection('#posts')">Yazıları Oku</button>
             <button class="btn-filled" onclick="scrollToSection('#consultation')">Danışmanlık Al</button>
@@ -1155,7 +1155,7 @@
         </div>
 
         <div class="posts-toolbar fade-in">
-            <div class="filter-pills">
+            <div class="filter-pills" id="cat-pills">
                 <button class="pill active" data-cat="all">Tümü</button>
                 <button class="pill" data-cat="Ceza Hukuku">Ceza Hukuku</button>
                 <button class="pill" data-cat="Mali Hukuk">Mali Hukuk</button>
@@ -1469,15 +1469,30 @@
 
     async function loadPosts() {
         try {
-            const res = await fetch('posts.json?_=' + Date.now());
-            allPosts = await res.json();
+            const [postsRes, catsRes] = await Promise.all([
+                fetch('posts.json?_=' + Date.now()),
+                fetch('categories.json?_=' + Date.now())
+            ]);
+            allPosts = await postsRes.json();
+            if (catsRes.ok) {
+                const cats = await catsRes.json();
+                renderPills(cats);
+            }
             const featured = allPosts.find(p => p.featured) || allPosts[0];
             if (featured) renderFeatured(featured);
             renderCards(allPosts);
             initFilter();
         } catch(e) {
-            console.error('posts.json yüklenemedi:', e);
+            console.error('Yükleme hatası:', e);
         }
+    }
+
+    function renderPills(cats) {
+        const container = document.getElementById('cat-pills');
+        if (!container) return;
+        container.innerHTML = '<button class="pill active" data-cat="all">Tümü</button>' +
+            cats.map(c => `<button class="pill" data-cat="${c}">${c}</button>`).join('');
+        activeCat = 'all';
     }
 
     function renderFeatured(post) {

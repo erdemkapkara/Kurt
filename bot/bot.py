@@ -37,6 +37,8 @@ CATEGORY_KEYWORDS = {
 pending = {}
 pending_edit = {}
 
+DEFAULT_CATS = ["Ceza Hukuku", "Mali Hukuk", "Aile Hukuku", "İdare Hukuku"]
+
 HELP_TEXT = (
     "👨‍⚖️ *Yargı Kalemi Blog Botu*\n\n"
     "Herhangi bir yazı gönder — başlık, kategori ve özeti otomatik çıkarırım, "
@@ -57,6 +59,8 @@ HELP_TEXT = (
     "/onecikart 3 — 3 numaralı yazıyı öne çıkar\n"
     "/istatistik — yazı sayısı ve kategoriler\n"
     "/migrate — eski yazı ID'lerini 1\\-2\\-3 formatına çevir\n"
+    "/kategoriekle <isim> — yeni kategori ekle\n"
+    "/kategorisil <isim> — kategori sil\n"
     "/iptal — düzenlemeyi iptal et"
 )
 
@@ -87,6 +91,32 @@ def get_posts():
     data = res.json()
     content = base64.b64decode(data['content']).decode('utf-8')
     return json.loads(content), data['sha']
+
+
+def get_categories():
+    url = f"https://api.github.com/repos/{REPO}/contents/categories.json"
+    headers = {"Authorization": f"token {GITHUB_TOKEN}"}
+    res = requests.get(url, headers=headers, timeout=15)
+    if res.status_code == 404:
+        return ["Ceza Hukuku", "Mali Hukuk", "Aile Hukuku", "İdare Hukuku"], None
+    if res.status_code != 200:
+        raise Exception(f"GitHub okuma hatası: {res.status_code}")
+    data = res.json()
+    return json.loads(base64.b64decode(data['content']).decode('utf-8')), data['sha']
+
+
+def save_categories(cats, sha, message):
+    url = f"https://api.github.com/repos/{REPO}/contents/categories.json"
+    headers = {"Authorization": f"token {GITHUB_TOKEN}", "Content-Type": "application/json"}
+    encoded = base64.b64encode(
+        json.dumps(cats, ensure_ascii=False, indent=2).encode('utf-8')
+    ).decode('utf-8')
+    payload = {"message": message, "content": encoded}
+    if sha:
+        payload["sha"] = sha
+    res = requests.put(url, headers=headers, json=payload, timeout=15)
+    if res.status_code not in (200, 201):
+        raise Exception(f"GitHub yazma hatası: {res.status_code}")
 
 
 def save_posts(posts, sha, title):
@@ -347,6 +377,54 @@ async def cmd_istatistik(update: Update, context):
         await update.message.reply_text(f"❌ Hata: {e}")
 
 
+async def cmd_kategoriekle(update: Update, context):
+    if update.effective_user.id not in ALLOWED_IDS:
+        return
+    if not context.args:
+        await update.message.reply_text("Kullanım: /kategoriekle <kategori adı>\nÖrnek: /kategoriekle Tüketici Hukuku")
+        return
+    yeni = ' '.join(context.args).strip()
+    try:
+        cats, sha = get_categories()
+        if yeni in cats:
+            await update.message.reply_text(f"❌ '{yeni}' zaten mevcut.")
+            return
+        cats.append(yeni)
+        save_categories(cats, sha, f"Kategori eklendi: {yeni}")
+        await update.message.reply_text(
+            f"✅ *{yeni}* eklendi\\.\n\n📂 Kategoriler:\n" +
+            '\n'.join(f"• {c}" for c in cats),
+            parse_mode='MarkdownV2'
+        )
+    except Exception as e:
+        await update.message.reply_text(f"❌ Hata: {e}")
+
+
+async def cmd_kategorisil(update: Update, context):
+    if update.effective_user.id not in ALLOWED_IDS:
+        return
+    if not context.args:
+        await update.message.reply_text("Kullanım: /kategorisil <kategori adı>\nÖrnek: /kategorisil Mali Hukuk")
+        return
+    kat = ' '.join(context.args).strip()
+    try:
+        cats, sha = get_categories()
+        if kat not in cats:
+            await update.message.reply_text(
+                f"❌ '{kat}' bulunamadı.\n\nMevcut kategoriler:\n" + '\n'.join(f"• {c}" for c in cats)
+            )
+            return
+        cats.remove(kat)
+        save_categories(cats, sha, f"Kategori silindi: {kat}")
+        await update.message.reply_text(
+            f"✅ *{kat}* silindi\\.\n\n📂 Kalan kategoriler:\n" +
+            ('\n'.join(f"• {c}" for c in cats) if cats else 'Hiç kategori yok'),
+            parse_mode='MarkdownV2'
+        )
+    except Exception as e:
+        await update.message.reply_text(f"❌ Hata: {e}")
+
+
 async def cmd_migrate(update: Update, context):
     if update.effective_user.id not in ALLOWED_IDS:
         return
@@ -481,6 +559,8 @@ def main():
     app.add_handler(CommandHandler("duzenle", cmd_duzenle))
     app.add_handler(CommandHandler("onecikart", cmd_onecikart))
     app.add_handler(CommandHandler("istatistik", cmd_istatistik))
+    app.add_handler(CommandHandler("kategoriekle", cmd_kategoriekle))
+    app.add_handler(CommandHandler("kategorisil", cmd_kategorisil))
     app.add_handler(CommandHandler("migrate", cmd_migrate))
     app.add_handler(CommandHandler("iptal", cmd_iptal))
     app.add_handler(CallbackQueryHandler(handle_callback))
