@@ -103,8 +103,18 @@
             box-shadow: 0 1px 0 var(--border), 0 4px 16px rgba(0,0,0,0.06);
             transition: background-color var(--transition), box-shadow var(--transition);
         }
+        /* Header + mobile menu her zaman beyaz — dark modda da değişmez */
         [data-theme="dark"] #header {
-            box-shadow: 0 1px 0 var(--border), 0 4px 20px rgba(0,0,0,0.4);
+            background-color: #FFFFFF;
+            box-shadow: 0 1px 0 #E0DBD3, 0 4px 16px rgba(0,0,0,0.06);
+            --text-primary:   #1A2B3C;
+            --text-secondary: #4A5568;
+            --border:         #E0DBD3;
+        }
+        [data-theme="dark"] #mobile-menu {
+            background-color: #FFFFFF;
+            --text-primary:   #1A2B3C;
+            --border:         #E0DBD3;
         }
 
         .header-inner {
