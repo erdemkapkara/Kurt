@@ -133,6 +133,33 @@ def save_posts(posts, sha, title):
         raise Exception(f"GitHub yazma hatası: {res.status_code}")
 
 
+def move_to_trash(posts):
+    """Silinen yazıları trash.json'a taşı (admin panelindeki çöp kutusuyla ortak)."""
+    import time
+    url = f"https://api.github.com/repos/{REPO}/contents/trash.json"
+    headers = {"Authorization": f"token {GITHUB_TOKEN}", "Content-Type": "application/json"}
+    res = requests.get(url, headers=headers, timeout=15)
+    if res.status_code == 200:
+        data = res.json()
+        try:
+            items = json.loads(base64.b64decode(data['content']).decode('utf-8'))
+        except Exception:
+            items = []
+        sha = data['sha']
+    else:
+        items, sha = [], None
+    now = datetime.now().isoformat()
+    stamped = [{**p, "_tid": f"{int(datetime.now().timestamp()*1000)}-{i}", "deletedAt": now}
+               for i, p in enumerate(posts)]
+    encoded = base64.b64encode(
+        json.dumps(stamped + items, ensure_ascii=False, indent=2).encode('utf-8')
+    ).decode('utf-8')
+    payload = {"message": f"Çöpe taşındı: {len(posts)} yazı", "content": encoded}
+    if sha:
+        payload["sha"] = sha
+    requests.put(url, headers=headers, json=payload, timeout=15)
+
+
 # ── Yazı ayrıştırma ─────────────────────────────────────────────────────────
 
 def detect_category(text):
@@ -478,16 +505,20 @@ async def cmd_sil(update: Update, context):
     try:
         posts, sha = get_posts()
         before = len(posts)
+        removed = [p for p in posts if p['id'] == post_id]
         posts = [p for p in posts if p['id'] != post_id]
         if len(posts) == before:
             await update.message.reply_text(f"❌ '{post_id}' bulunamadı.")
             return
+        if removed:
+            try: move_to_trash(removed)
+            except Exception: pass
         if posts:
             for p in posts:
                 p['featured'] = False
             posts[0]['featured'] = True
         save_posts(posts, sha, f"Silindi: {post_id}")
-        await update.message.reply_text(f"✅ '{post_id}' silindi.")
+        await update.message.reply_text(f"🗑️ '{post_id}' çöp kutusuna taşındı (admin panelinden geri yüklenebilir).")
     except Exception as e:
         await update.message.reply_text(f"❌ Hata: {e}")
 
@@ -650,6 +681,8 @@ async def handle_callback(update: Update, context):
             if not deleted:
                 await query.answer("Bu yazı zaten silinmiş.", show_alert=True)
                 return
+            try: move_to_trash([deleted])
+            except Exception: pass
             posts = [p for p in posts if p['id'] != post_id]
             if posts:
                 for p in posts:

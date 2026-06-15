@@ -259,6 +259,19 @@ input:checked+.toggle-sl::before{transform:translateX(17px)}
 .btn-bulk-del:hover{background:#B91C1C}
 .btn-bulk-clear{padding:.45rem .8rem;background:#fff;color:var(--text-secondary);border:1px solid var(--border);border-radius:var(--radius);font-size:.81rem;cursor:pointer}
 
+/* ── TRASH / ÇÖP KUTUSU ── */
+.nav-badge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;background:#DC2626;color:#fff;border-radius:99px;font-size:.66rem;font-weight:700;margin-left:auto}
+.trash-row{display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;background:#fff;border:1px solid var(--border);border-radius:8px;margin-bottom:.6rem}
+.trash-row:last-child{margin-bottom:0}
+.tr-info{flex:1;min-width:0}
+.tr-info strong{display:block;font-size:.88rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tr-meta{font-size:.73rem;color:var(--text-muted);margin-top:.15rem}
+.tr-acts{display:flex;gap:.4rem;flex-shrink:0}
+.btn-restore{display:inline-flex;align-items:center;gap:.4rem;padding:.42rem .8rem;background:var(--accent-light);color:var(--accent);border:1px solid var(--accent);border-radius:var(--radius);font-size:.79rem;font-weight:600;cursor:pointer;transition:all var(--tr)}
+.btn-restore:hover{background:var(--accent);color:#fff}
+.btn-perma{width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:#fff;color:var(--text-muted);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;font-size:.76rem;transition:all var(--tr)}
+.btn-perma:hover{background:#FEF2F2;color:#DC2626;border-color:#FECACA}
+
 /* ── TOAST ── */
 #toast-wrap{position:fixed;bottom:1.3rem;right:1.3rem;z-index:9999;display:flex;flex-direction:column;gap:.38rem}
 .toast{display:flex;align-items:center;gap:.55rem;padding:.65rem .9rem;background:var(--bg-dark);color:#fff;border-radius:8px;font-size:.84rem;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.22);min-width:230px;animation:slideUp .22s ease;transition:opacity .28s,transform .28s}
@@ -403,6 +416,7 @@ input:checked+.toggle-sl::before{transform:translateX(17px)}
             <div class="sb-label">İçerik</div>
             <button class="sb-item active" data-page="posts"><i class="fas fa-newspaper"></i> Yazılar</button>
             <button class="sb-item" id="nav-new"><i class="fas fa-plus-circle"></i> Yeni Yazı</button>
+            <button class="sb-item" data-page="trash"><i class="fas fa-trash-can"></i> Çöp Kutusu <span id="trash-badge" class="nav-badge" style="display:none">0</span></button>
             <div class="sb-label" style="margin-top:.6rem">Sistem</div>
             <button class="sb-item" data-page="settings"><i class="fas fa-cog"></i> Ayarlar</button>
             <a class="sb-item" href="/" target="_blank"><i class="fas fa-external-link-alt"></i> Siteyi Gör</a>
@@ -577,6 +591,18 @@ input:checked+.toggle-sl::before{transform:translateX(17px)}
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- ══ TRASH ══ -->
+        <div class="page" id="page-trash">
+            <div class="page-hdr">
+                <h1 class="page-title">Çöp Kutusu</h1>
+                <button class="btn-warn" id="trash-empty-btn"><i class="fas fa-trash-alt"></i> Çöp Kutusunu Boşalt</button>
+            </div>
+            <p style="font-size:.84rem;color:var(--text-secondary);margin-bottom:1rem;line-height:1.6">
+                Silinen yazılar burada saklanır. İstediğin zaman geri yükleyebilir veya kalıcı olarak silebilirsin.
+            </p>
+            <div id="trash-list"><div class="loading"><div class="spinner"></div> Yükleniyor…</div></div>
         </div>
 
         <!-- ══ SETTINGS ══ -->
@@ -1020,6 +1046,7 @@ async function launchApp() {
     buildCatFilters();
     migrateOldDraft();
     updateDraftCount();
+    updateTrashBadge();
     try {
         const res = await fetch('https://api.github.com/user', { headers: ghH() });
         if (res.ok) {
@@ -1307,20 +1334,151 @@ document.getElementById('bulk-del').addEventListener('click', () => {
     const ids = [...selectedIds];
     if (!ids.length) return;
     showConfirm('Seçilenleri Sil',
-        `${ids.length} yazı kalıcı olarak silinecek. Bu işlem geri alınamaz.`,
+        `${ids.length} yazı çöp kutusuna taşınacak. İstediğin zaman geri yükleyebilirsin.`,
         async () => {
             const removed = allPosts.filter(p => ids.includes(p.id));
             const slugs = removed.map(p => p.slug).filter(Boolean);
-            allPosts = allPosts.filter(p => !ids.includes(p.id));
-            if (allPosts.length && !allPosts.some(p => p.featured)) allPosts[0].featured = true;
-            selectedIds.clear();
-            renderList();
             try {
+                await moveToTrash(removed);            // önce çöpe taşı
+                allPosts = allPosts.filter(p => !ids.includes(p.id));
+                if (allPosts.length && !allPosts.some(p => p.featured)) allPosts[0].featured = true;
+                selectedIds.clear();
+                renderList();
                 await savePosts(`Toplu silindi: ${ids.length} yazı`);
                 renderList();
-                toast(`✅ ${ids.length} yazı silindi`,'success');
                 for (const s of slugs) { try { await deletePostPage(s); } catch(_){} }
+                toast(`🗑️ ${ids.length} yazı çöp kutusuna taşındı`,'success');
+                updateTrashBadge();
             } catch(e) { toast('Hata: '+e.message,'error'); await loadPosts(); }
+        }
+    );
+});
+
+// ════════════════════════════════════════════
+// ÇÖP KUTUSU (trash.json)
+// ════════════════════════════════════════════
+async function readTrash() {
+    const res = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/trash.json`, { headers: ghH() });
+    if (res.status === 404) return { items: [], sha: '' };
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    let items = [];
+    try { items = JSON.parse(b64Dec(data.content.replace(/\n/g,''))); } catch { items = []; }
+    return { items, sha: data.sha };
+}
+
+async function writeTrash(items, sha, msg) {
+    const body = { message: msg, content: b64Enc(JSON.stringify(items, null, 2)) };
+    if (sha) body.sha = sha;
+    const res = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/trash.json`,
+        { method:'PUT', headers: ghH(), body: JSON.stringify(body) });
+    if (!res.ok) { const d = await res.json().catch(()=>({})); throw new Error(d.message || `HTTP ${res.status}`); }
+}
+
+async function moveToTrash(posts) {
+    const { items, sha } = await readTrash();
+    const stamped = posts.map(p => ({
+        ...p,
+        _tid: Date.now() + '-' + Math.random().toString(36).slice(2,7),
+        deletedAt: new Date().toISOString()
+    }));
+    await writeTrash([...stamped, ...items], sha, `Çöpe taşındı: ${posts.length} yazı`);
+}
+
+async function updateTrashBadge() {
+    try {
+        const { items } = await readTrash();
+        const badge = document.getElementById('trash-badge');
+        badge.textContent = items.length;
+        badge.style.display = items.length ? 'inline-flex' : 'none';
+    } catch {}
+}
+
+async function loadTrashPage() {
+    const el = document.getElementById('trash-list');
+    el.innerHTML = '<div class="loading"><div class="spinner"></div> Yükleniyor…</div>';
+    try {
+        const { items } = await readTrash();
+        renderTrashList(items);
+        const badge = document.getElementById('trash-badge');
+        badge.textContent = items.length;
+        badge.style.display = items.length ? 'inline-flex' : 'none';
+    } catch(e) {
+        el.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-circle"></i><p>Yüklenemedi: ${esc(e.message)}</p></div>`;
+    }
+}
+
+function renderTrashList(items) {
+    const el = document.getElementById('trash-list');
+    if (!items.length) {
+        el.innerHTML = '<div class="empty-state"><i class="fas fa-trash-can"></i><p>Çöp kutusu boş.</p></div>';
+        return;
+    }
+    el.innerHTML = items.map(it => `
+        <div class="trash-row">
+            <div class="tr-info">
+                <strong title="${esc(it.title)}">${esc((it.title||'İsimsiz').split('\n')[0])}</strong>
+                <div class="tr-meta">${esc(it.category||'—')} · silindi: ${it.deletedAt ? new Date(it.deletedAt).toLocaleString('tr-TR') : '—'}</div>
+            </div>
+            <div class="tr-acts">
+                <button class="btn-restore" onclick="restoreFromTrash('${it._tid}')"><i class="fas fa-rotate-left"></i> Geri Yükle</button>
+                <button class="btn-perma" title="Kalıcı sil" onclick="askPermaDelete('${it._tid}')"><i class="fas fa-trash"></i></button>
+            </div>
+        </div>`).join('');
+}
+
+async function restoreFromTrash(tid) {
+    try {
+        await loadPosts();                          // güncel allPosts + postsSHA
+        const { items, sha } = await readTrash();
+        const idx = items.findIndex(x => x._tid === tid);
+        if (idx === -1) { toast('Bu öğe artık çöpte değil.','info'); renderTrashList(items); return; }
+        const post = { ...items[idx] };
+        delete post._tid; delete post.deletedAt;
+        post.featured = false;
+        post.slug = generateSlug(post.title, null);  // mevcutlarla çakışmasın
+        post.id = '';
+        allPosts.push(post);
+        await savePosts(`Geri yüklendi: ${post.title}`);
+        try { await savePostPage(post); } catch(_){}
+        items.splice(idx, 1);
+        await writeTrash(items, sha, `Çöpten çıkarıldı: ${post.title}`);
+        renderTrashList(items);
+        updateTrashBadge();
+        toast('♻️ Yazı geri yüklendi','success');
+    } catch(e) { toast('Geri yükleme hatası: '+e.message,'error'); }
+}
+
+function askPermaDelete(tid) {
+    showConfirm('Kalıcı Olarak Sil',
+        'Bu yazı kalıcı olarak silinecek. Bu işlem GERİ ALINAMAZ.',
+        async () => {
+            try {
+                const { items, sha } = await readTrash();
+                const idx = items.findIndex(x => x._tid === tid);
+                if (idx === -1) { renderTrashList(items); return; }
+                const removed = items.splice(idx, 1)[0];
+                await writeTrash(items, sha, `Kalıcı silindi: ${removed.title}`);
+                renderTrashList(items);
+                updateTrashBadge();
+                toast('Kalıcı olarak silindi','info');
+            } catch(e) { toast('Hata: '+e.message,'error'); }
+        }
+    );
+}
+
+document.getElementById('trash-empty-btn').addEventListener('click', () => {
+    showConfirm('Çöp Kutusunu Boşalt',
+        'Çöp kutusundaki TÜM yazılar kalıcı olarak silinecek. Bu işlem GERİ ALINAMAZ.',
+        async () => {
+            try {
+                const { items, sha } = await readTrash();
+                if (!items.length) { toast('Çöp kutusu zaten boş.','info'); return; }
+                await writeTrash([], sha, 'Çöp kutusu boşaltıldı');
+                renderTrashList([]);
+                updateTrashBadge();
+                toast('Çöp kutusu boşaltıldı','info');
+            } catch(e) { toast('Hata: '+e.message,'error'); }
         }
     );
 });
@@ -1383,17 +1541,19 @@ function deletePost(id) {
     const post = allPosts.find(p => p.id === id);
     if (!post) return;
     showConfirm('Yazıyı Sil',
-        `"${post.title}" kalıcı olarak silinecek.`,
+        `"${(post.title||'').split('\n')[0]}" çöp kutusuna taşınacak. İstediğin zaman geri yükleyebilirsin.`,
         async () => {
-            const deletedSlug = post.slug;
-            allPosts = allPosts.filter(p => p.id !== id);
-            if (allPosts.length && !allPosts.some(p => p.featured)) allPosts[0].featured = true;
-            renderList();
             try {
+                await moveToTrash([post]);              // önce çöpe taşı (güvenli)
+                const deletedSlug = post.slug;
+                allPosts = allPosts.filter(p => p.id !== id);
+                if (allPosts.length && !allPosts.some(p => p.featured)) allPosts[0].featured = true;
+                renderList();
                 await savePosts(`Silindi: ${post.title}`);
                 renderList();
-                toast('Yazı silindi','success');
                 if (deletedSlug) { try { await deletePostPage(deletedSlug); } catch(_){} }
+                toast('🗑️ Çöp kutusuna taşındı','success');
+                updateTrashBadge();
             } catch(e) { toast('Hata: '+e.message,'error'); await loadPosts(); }
         }
     );
@@ -1789,7 +1949,7 @@ function updateExcerptCount(){
 // ════════════════════════════════════════════
 // NAVİGASYON
 // ════════════════════════════════════════════
-const PAGE_TITLES={posts:'Yazılar',editor:'Yeni Yazı',settings:'Ayarlar'};
+const PAGE_TITLES={posts:'Yazılar',editor:'Yeni Yazı',settings:'Ayarlar',trash:'Çöp Kutusu'};
 function showPage(name, skipReload){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.getElementById('page-'+name).classList.add('active');
@@ -1799,6 +1959,7 @@ function showPage(name, skipReload){
     if(name!=='editor') document.getElementById('topbar-title').textContent=PAGE_TITLES[name]||'';
     closeSidebar();
     if(name==='posts'){ if(skipReload) renderList(); else loadPosts(); }
+    if(name==='trash') loadTrashPage();
 }
 document.querySelectorAll('.sb-item[data-page]').forEach(btn=>{
     btn.addEventListener('click',()=>showPage(btn.dataset.page));
