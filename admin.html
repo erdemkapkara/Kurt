@@ -1826,7 +1826,7 @@ function showConfirm(title,msg,cb){
 }
 function closeConfirm(){document.getElementById('confirm-overlay').classList.remove('show');confirmCb=null;}
 document.getElementById('cf-cancel').addEventListener('click',closeConfirm);
-document.getElementById('cf-ok').addEventListener('click',()=>{closeConfirm();if(confirmCb)confirmCb();});
+document.getElementById('cf-ok').addEventListener('click',()=>{const cb=confirmCb;closeConfirm();if(cb)cb();});
 document.getElementById('confirm-overlay').addEventListener('click',function(e){if(e.target===this)closeConfirm();});
 
 // ════════════════════════════════════════════
