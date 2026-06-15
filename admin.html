@@ -218,6 +218,46 @@ input:checked+.toggle-sl::before{transform:translateX(17px)}
 .preview-body blockquote{border-left:3px solid var(--accent);padding:.45rem .9rem;color:var(--text-secondary);font-style:italic;background:rgba(13,148,136,.04);margin:.7rem 0}
 .preview-body a{color:var(--accent);text-decoration:underline}
 .preview-body hr{border:none;border-top:2px solid var(--border);margin:1.1rem 0}
+.preview-box.wide{max-width:880px}
+.preview-content.flush{padding:0}
+#preview-frame{width:100%;height:78vh;border:none;display:block;background:#fff;border-radius:0 0 10px 10px}
+
+/* ── EXCERPT META ── */
+.excerpt-meta{display:flex;justify-content:flex-end;margin-top:.3rem;font-size:.7rem;color:var(--text-muted)}
+.excerpt-meta.warn{color:#C2410C;font-weight:600}
+
+/* ── DRAFTS MODAL ── */
+#drafts-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:7500;padding:2rem 1rem;overflow-y:auto}
+#drafts-modal.show{display:flex;align-items:flex-start;justify-content:center}
+.drafts-box{background:#fff;border-radius:10px;width:100%;max-width:520px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.3)}
+.drafts-bar{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.1rem;border-bottom:1px solid var(--border);background:#F9F8F6}
+.drafts-bar span{font-size:.84rem;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:.45rem}
+.drafts-bar button{background:none;border:none;font-size:1.05rem;color:var(--text-muted);cursor:pointer}
+#drafts-list{padding:.6rem;max-height:60vh;overflow-y:auto}
+.draft-item{display:flex;align-items:center;gap:.7rem;padding:.7rem .8rem;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:.5rem;transition:border-color var(--tr)}
+.draft-item:last-child{margin-bottom:0}
+.draft-item:hover{border-color:var(--accent)}
+.draft-info{flex:1;min-width:0}
+.draft-name{font-size:.86rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.draft-date{font-size:.71rem;color:var(--text-muted)}
+.draft-acts{display:flex;gap:.35rem;flex-shrink:0}
+.draft-acts button{padding:.34rem .6rem;font-size:.76rem;border-radius:4px;border:1px solid var(--border);background:#fff;cursor:pointer;transition:all var(--tr);display:flex;align-items:center;gap:.3rem}
+.draft-acts .dl-load{color:var(--accent);border-color:var(--accent)}
+.draft-acts .dl-load:hover{background:var(--accent);color:#fff}
+.draft-acts .dl-del:hover{background:#FEF2F2;color:#DC2626;border-color:#FECACA}
+.drafts-empty{text-align:center;padding:2rem 1rem;color:var(--text-muted);font-size:.86rem}
+.drafts-empty i{font-size:1.8rem;opacity:.25;display:block;margin-bottom:.5rem}
+
+/* ── BULK SELECT ── */
+.pr-check{width:16px;height:16px;flex-shrink:0;cursor:pointer;accent-color:var(--accent)}
+#bulk-bar{display:none;align-items:center;gap:.8rem;padding:.6rem .9rem;margin-bottom:.8rem;background:var(--accent-light);border:1px solid var(--accent);border-radius:8px;flex-wrap:wrap}
+#bulk-bar.show{display:flex}
+#bulk-bar .bulk-info{font-size:.84rem;font-weight:600;color:var(--accent)}
+.bulk-sel-all{display:flex;align-items:center;gap:.4rem;font-size:.81rem;color:var(--text-secondary);cursor:pointer}
+.bulk-sel-all input{width:15px;height:15px;accent-color:var(--accent);cursor:pointer}
+.btn-bulk-del{margin-left:auto;padding:.45rem .9rem;background:#DC2626;color:#fff;border:none;border-radius:var(--radius);font-size:.81rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.4rem;transition:background var(--tr)}
+.btn-bulk-del:hover{background:#B91C1C}
+.btn-bulk-clear{padding:.45rem .8rem;background:#fff;color:var(--text-secondary);border:1px solid var(--border);border-radius:var(--radius);font-size:.81rem;cursor:pointer}
 
 /* ── TOAST ── */
 #toast-wrap{position:fixed;bottom:1.3rem;right:1.3rem;z-index:9999;display:flex;flex-direction:column;gap:.38rem}
@@ -274,12 +314,23 @@ input:checked+.toggle-sl::before{transform:translateX(17px)}
 
 <!-- PREVIEW MODAL -->
 <div id="preview-modal">
-    <div class="preview-box">
+    <div class="preview-box wide">
         <div class="preview-bar">
-            <span><i class="fas fa-eye"></i> Önizleme</span>
+            <span><i class="fas fa-eye"></i> Önizleme — yayınlandığında böyle görünecek</span>
             <button class="btn-preview-close" id="preview-close"><i class="fas fa-times"></i></button>
         </div>
-        <div class="preview-content" id="preview-inner"></div>
+        <div class="preview-content flush" id="preview-inner"></div>
+    </div>
+</div>
+
+<!-- DRAFTS MODAL -->
+<div id="drafts-modal">
+    <div class="drafts-box">
+        <div class="drafts-bar">
+            <span><i class="fas fa-inbox"></i> Kayıtlı Taslaklar</span>
+            <button id="drafts-close"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="drafts-list"></div>
     </div>
 </div>
 
@@ -390,6 +441,12 @@ input:checked+.toggle-sl::before{transform:translateX(17px)}
                     <button class="cf-pill active" data-cat="">Tümü</button>
                 </div>
             </div>
+            <div id="bulk-bar">
+                <label class="bulk-sel-all"><input type="checkbox" id="bulk-all"> Tümünü seç</label>
+                <span class="bulk-info" id="bulk-count">0 seçili</span>
+                <button class="btn-bulk-del" id="bulk-del"><i class="fas fa-trash"></i> Seçilenleri Sil</button>
+                <button class="btn-bulk-clear" id="bulk-clear">Vazgeç</button>
+            </div>
             <div class="posts-table">
                 <div class="tbl-head">
                     <div>Başlık</div><div>Kategori</div><div>Tarih</div><div>Süre</div>
@@ -410,7 +467,8 @@ input:checked+.toggle-sl::before{transform:translateX(17px)}
                         <div class="card-body">
                             <textarea id="inp-title" rows="2" placeholder="Yazı başlığı…"></textarea>
                             <div class="ed-div"></div>
-                            <textarea id="inp-excerpt" placeholder="Kısa özet (2–3 cümle)…"></textarea>
+                            <textarea id="inp-excerpt" placeholder="Kısa özet (2–3 cümle)… — ana sayfada ve arama sonuçlarında görünür"></textarea>
+                            <div class="excerpt-meta"><span id="excerpt-count">0 / 300 karakter</span></div>
                         </div>
                     </div>
                     <div class="card">
@@ -446,10 +504,8 @@ input:checked+.toggle-sl::before{transform:translateX(17px)}
                             <span id="word-count">0 kelime</span>
                             <span id="char-count">0 karakter</span>
                             <div class="ed-footer-right">
-                                <span id="draft-indicator" style="display:none;font-size:.71rem;color:#F59E0B"><span class="draft-dot"></span>Taslak var</span>
-                                <button class="btn-draft" id="btn-load-draft" style="display:none"><i class="fas fa-inbox"></i> Taslağı Yükle</button>
-                                <button class="btn-draft" id="btn-save-draft"><i class="fas fa-save"></i> Taslak Kaydet</button>
-                                <button class="btn-draft" id="btn-clear-draft" style="display:none"><i class="fas fa-trash"></i></button>
+                                <button class="btn-draft" id="btn-save-draft"><i class="fas fa-save"></i> Taslak Olarak Kaydet</button>
+                                <button class="btn-draft" id="btn-open-drafts"><i class="fas fa-inbox"></i> Taslaklar (<span id="draft-count">0</span>)</button>
                             </div>
                         </div>
                     </div>
@@ -753,8 +809,8 @@ footer a{color:var(--accent);font-weight:600;text-decoration:none}
 <script>
 var PU=${JSON.stringify(pageUrl)},PT=${JSON.stringify(pageTitle)};
 var html=document.documentElement,tb=document.getElementById('theme-btn');
-if(localStorage.getItem('yk_theme')==='dark'){html.dataset.theme='dark';tb.innerHTML='<i class="fas fa-sun"><\\/i>';}
-tb.addEventListener('click',function(){var d=html.dataset.theme==='dark';html.dataset.theme=d?'light':'dark';tb.innerHTML=d?'<i class="fas fa-moon"><\\/i>':'<i class="fas fa-sun"><\\/i>';localStorage.setItem('yk_theme',d?'light':'dark');});
+if(localStorage.getItem('yk_theme')==='dark'){html.dataset.theme='dark';tb.innerHTML='<i class="fas fa-sun"></i>';}
+tb.addEventListener('click',function(){var d=html.dataset.theme==='dark';html.dataset.theme=d?'light':'dark';tb.innerHTML=d?'<i class="fas fa-moon"></i>':'<i class="fas fa-sun"></i>';localStorage.setItem('yk_theme',d?'light':'dark');});
 var prog=document.getElementById('prog'),gt=document.getElementById('go-top');
 window.addEventListener('scroll',function(){var s=window.scrollY,t=document.documentElement.scrollHeight-window.innerHeight;prog.style.width=(t>0?(s/t*100):0)+'%';gt.classList.toggle('vis',s>380);},{passive:true});
 function shr(p){var u=encodeURIComponent(PU),t=encodeURIComponent(PT);var m={tw:'https://twitter.com/intent/tweet?text='+t+'&url='+u,wa:'https://wa.me/?text='+encodeURIComponent(PT+' '+PU)};window.open(m[p],'_blank');}
@@ -817,6 +873,8 @@ let filterCat  = '';
 let searchQ    = '';
 let customHash = '';
 let dragSrcIdx = null;
+let loadedDraftId = null;
+let selectedIds = new Set();
 
 // ════════════════════════════════════════════
 // SHA-256
@@ -960,7 +1018,8 @@ async function launchApp() {
     document.getElementById('inp-date').value = todayISO();
     document.getElementById('set-repo').value = GH_REPO;
     buildCatFilters();
-    checkDraft();
+    migrateOldDraft();
+    updateDraftCount();
     try {
         const res = await fetch('https://api.github.com/user', { headers: ghH() });
         if (res.ok) {
@@ -1176,9 +1235,13 @@ function renderList() {
         return;
     }
 
+    // Var olmayan id'leri seçimden temizle
+    selectedIds = new Set([...selectedIds].filter(id => allPosts.some(p => p.id === id)));
+
     list.innerHTML = posts.map((p,i) => `
         <div class="post-row" draggable="true" data-id="${esc(p.id)}" data-idx="${allPosts.indexOf(p)}">
             <div class="pr-title">
+                <input type="checkbox" class="pr-check" data-id="${esc(p.id)}" ${selectedIds.has(p.id)?'checked':''} title="Seç">
                 ${p.featured ? '<span class="pr-star"><i class="fas fa-star"></i></span>' : ''}
                 <div>
                     <strong title="${esc(p.title)}">${esc(p.title)}</strong>
@@ -1196,8 +1259,71 @@ function renderList() {
         </div>
     `).join('');
 
+    // Seçim kutusu olaylarını bağla
+    list.querySelectorAll('.pr-check').forEach(cb => {
+        cb.addEventListener('click', e => e.stopPropagation());   // sürüklemeyi tetikleme
+        cb.addEventListener('change', () => {
+            const id = cb.dataset.id;
+            if (cb.checked) selectedIds.add(id); else selectedIds.delete(id);
+            updateBulkBar();
+        });
+    });
+
     initDragDrop();
+    updateBulkBar();
 }
+
+// ════════════════════════════════════════════
+// TOPLU SEÇİM & SİLME
+// ════════════════════════════════════════════
+function updateBulkBar() {
+    const bar = document.getElementById('bulk-bar');
+    const n = selectedIds.size;
+    bar.classList.toggle('show', n > 0);
+    document.getElementById('bulk-count').textContent = `${n} seçili`;
+    const total = document.querySelectorAll('.pr-check').length;
+    const allCb = document.getElementById('bulk-all');
+    allCb.checked = total > 0 && n >= total;
+    allCb.indeterminate = n > 0 && n < total;
+}
+
+document.getElementById('bulk-all').addEventListener('change', function() {
+    const check = this.checked;
+    document.querySelectorAll('.pr-check').forEach(cb => {
+        cb.checked = check;
+        const id = cb.dataset.id;
+        if (check) selectedIds.add(id); else selectedIds.delete(id);
+    });
+    updateBulkBar();
+});
+
+document.getElementById('bulk-clear').addEventListener('click', () => {
+    selectedIds.clear();
+    document.querySelectorAll('.pr-check').forEach(cb => cb.checked = false);
+    updateBulkBar();
+});
+
+document.getElementById('bulk-del').addEventListener('click', () => {
+    const ids = [...selectedIds];
+    if (!ids.length) return;
+    showConfirm('Seçilenleri Sil',
+        `${ids.length} yazı kalıcı olarak silinecek. Bu işlem geri alınamaz.`,
+        async () => {
+            const removed = allPosts.filter(p => ids.includes(p.id));
+            const slugs = removed.map(p => p.slug).filter(Boolean);
+            allPosts = allPosts.filter(p => !ids.includes(p.id));
+            if (allPosts.length && !allPosts.some(p => p.featured)) allPosts[0].featured = true;
+            selectedIds.clear();
+            renderList();
+            try {
+                await savePosts(`Toplu silindi: ${ids.length} yazı`);
+                renderList();
+                toast(`✅ ${ids.length} yazı silindi`,'success');
+                for (const s of slugs) { try { await deletePostPage(s); } catch(_){} }
+            } catch(e) { toast('Hata: '+e.message,'error'); await loadPosts(); }
+        }
+    );
+});
 
 // ════════════════════════════════════════════
 // SÜRÜKLE-BIRAK SIRALAMA
@@ -1229,8 +1355,8 @@ function initDragDrop() {
             renderList();
             try {
                 await savePosts('Yazı sırası güncellendi');
+                renderList();
                 toast('Sıralama kaydedildi', 'success');
-                await loadPosts();
             } catch(e2) { toast('Hata: ' + e2.message, 'error'); await loadPosts(); }
         });
     });
@@ -1249,7 +1375,7 @@ async function toggleFeat(id) {
         allPosts.splice(idx,1); allPosts.unshift(post);
     } else { post.featured = false; }
     renderList();
-    try { await savePosts(`Öne çıkarıldı: ${post.title}`); toast('⭐ Güncellendi','success'); await loadPosts(); }
+    try { await savePosts(`Öne çıkarıldı: ${post.title}`); renderList(); toast('⭐ Güncellendi','success'); }
     catch(e) { toast('Hata: '+e.message,'error'); await loadPosts(); }
 }
 
@@ -1265,9 +1391,9 @@ function deletePost(id) {
             renderList();
             try {
                 await savePosts(`Silindi: ${post.title}`);
+                renderList();
                 toast('Yazı silindi','success');
                 if (deletedSlug) { try { await deletePostPage(deletedSlug); } catch(_){} }
-                await loadPosts();
             } catch(e) { toast('Hata: '+e.message,'error'); await loadPosts(); }
         }
     );
@@ -1278,16 +1404,20 @@ function deletePost(id) {
 // ════════════════════════════════════════════
 function openNewPost() {
     editingId = null;
+    loadedDraftId = null;
+    showPage('editor');                 // önce sayfayı görünür yap, sonra alanları boyutlandır
     clearEditor();
     setEdTitle('Yeni Yazı');
     document.getElementById('btn-publish').innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Yayınla';
-    showPage('editor');
+    requestAnimationFrame(() => { resizeEditorFields(); document.getElementById('inp-title').focus(); });
 }
 
 function openEdit(id) {
     const post = allPosts.find(p => p.id === id);
     if (!post) return;
     editingId = id;
+    loadedDraftId = null;
+    showPage('editor');                 // önce görünür yap
     document.getElementById('inp-title').value   = post.title   || '';
     document.getElementById('inp-excerpt').value = post.excerpt || '';
     document.getElementById('editor-content').innerHTML = post.content || '';
@@ -1296,12 +1426,11 @@ function openEdit(id) {
     document.getElementById('inp-feat').checked  = !!post.featured;
     document.getElementById('inp-img').value     = post.image || '';
     document.getElementById('inp-date').value    = trToISO(post.date) || todayISO();
-    autoResize(document.getElementById('inp-title'));
-    autoResize(document.getElementById('inp-excerpt'));
-    updateCounts(); previewImg();
+    if (sourceMode) toggleSourceMode();
+    updateCounts(); previewImg(); updateExcerptCount();
     setEdTitle('Yazıyı Düzenle');
     document.getElementById('btn-publish').innerHTML = '<i class="fas fa-save"></i> Kaydet';
-    showPage('editor');
+    requestAnimationFrame(resizeEditorFields);
 }
 
 function clearEditor() {
@@ -1314,9 +1443,8 @@ function clearEditor() {
     document.getElementById('inp-img').value     = '';
     document.getElementById('inp-date').value    = todayISO();
     if (sourceMode) toggleSourceMode();
-    autoResize(document.getElementById('inp-title'));
-    autoResize(document.getElementById('inp-excerpt'));
-    updateCounts(); previewImg();
+    resizeEditorFields();
+    updateCounts(); previewImg(); updateExcerptCount();
 }
 
 function setEdTitle(t) {
@@ -1347,11 +1475,13 @@ async function savePost() {
     if (!rawText.trim() && !content.trim()) { toast('İçerik boş olamaz!','error'); return; }
 
     const btn = document.getElementById('btn-publish');
+    const setBtn = (txt) => { btn.innerHTML = txt; };
     btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Kaydediliyor…';
+    setBtn('<i class="fas fa-circle-notch fa-spin"></i> Yazı kaydediliyor…');
 
     try {
         if (featured) allPosts.forEach(p => { p.featured = false; });
+        let target, msg;
         if (editingId) {
             const idx = allPosts.findIndex(p => p.id === editingId);
             if (idx === -1) throw new Error('Yazı bulunamadı.');
@@ -1360,23 +1490,29 @@ async function savePost() {
             if (!updated.slug) updated.slug = generateSlug(title, editingId);
             allPosts[idx] = updated;
             if (featured) { allPosts.splice(idx,1); allPosts.unshift(updated); }
-            await savePosts(`Güncellendi: ${title}`);
-            toast('✅ Yazı güncellendi','success');
-            try { await savePostPage(updated); } catch(pe) { toast('⚠️ Sayfa güncellenemedi: '+pe.message,'error'); }
+            target = updated; msg = `Güncellendi: ${title}`;
         } else {
             const post = { id:'', featured, title, category, excerpt, date, readTime, content };
             if (image) post.image = image;
             post.slug = generateSlug(title, null);
             if (featured) allPosts.unshift(post); else allPosts.push(post);
-            await savePosts(`Yeni yazı: ${title}`);
-            toast('✅ Yazı yayınlandı','success');
-            try { await savePostPage(post); } catch(pe) { toast('⚠️ Sayfa oluşturulamadı: '+pe.message,'error'); }
+            target = post; msg = `Yeni yazı: ${title}`;
         }
-        clearDraft();
-        await loadPosts();
-        showPage('posts');
+        // posts.json (kritik) ile yazı sayfasını aynı anda yaz → daha hızlı
+        const pagePromise = savePostPage(target).catch(pe =>
+            toast('⚠️ Yazı kaydedildi ama sayfa oluşturulamadı: '+pe.message,'error'));
+        await savePosts(msg);    // kritik: başarısız olursa catch'e düşer
+        await pagePromise;       // sayfa zaten paralel yazılıyordu
+
+        // Yayınlanan taslağı temizle
+        if (loadedDraftId) { removeDraft(loadedDraftId); loadedDraftId = null; }
+
+        toast(editingId ? '✅ Yazı güncellendi' : '✅ Yazı yayınlandı','success');
+        renderList();                       // bellekteki güncel veriyle çiz (tekrar indirme yok)
+        showPage('posts', true);            // skipReload = true → gereksiz ikinci fetch yok
     } catch(e) {
         toast('Kaydetme hatası: ' + e.message,'error');
+        await loadPosts();                  // hata → sunucuyla yeniden eşitle
     } finally {
         btn.disabled = false;
         btn.innerHTML = editingId ? '<i class="fas fa-save"></i> Kaydet' : '<i class="fas fa-cloud-upload-alt"></i> Yayınla';
@@ -1384,7 +1520,7 @@ async function savePost() {
 }
 
 // ════════════════════════════════════════════
-// TASLAK
+// TASLAK SİSTEMİ (çoklu)
 // ════════════════════════════════════════════
 function getDraftData() {
     return {
@@ -1399,39 +1535,107 @@ function getDraftData() {
     };
 }
 
+function getDrafts() {
+    try { return JSON.parse(localStorage.getItem('yk_drafts') || '[]'); }
+    catch { return []; }
+}
+function setDrafts(arr) { localStorage.setItem('yk_drafts', JSON.stringify(arr)); }
+
+// Eski tek-taslak formatını yeni çoklu sisteme taşı
+function migrateOldDraft() {
+    const old = localStorage.getItem('yk_draft');
+    if (old) {
+        try {
+            const d = JSON.parse(old);
+            const drafts = getDrafts();
+            drafts.unshift({ id: Date.now(), name: d.title || 'Eski taslak', savedAt: Date.now(), data: d });
+            setDrafts(drafts);
+        } catch {}
+        localStorage.removeItem('yk_draft');
+    }
+}
+
+function updateDraftCount() {
+    document.getElementById('draft-count').textContent = getDrafts().length;
+}
+
+function removeDraft(id) {
+    setDrafts(getDrafts().filter(d => d.id !== id));
+    updateDraftCount();
+}
+
+// Taslak olarak kaydet — düzenlenen mevcut taslak varsa onu güncelle, yoksa yeni ekle
 document.getElementById('btn-save-draft').addEventListener('click', () => {
-    localStorage.setItem('yk_draft', JSON.stringify(getDraftData()));
-    toast('Taslak kaydedildi','info');
-    checkDraft();
+    const data = getDraftData();
+    const drafts = getDrafts();
+    if (loadedDraftId) {
+        const ex = drafts.find(d => d.id === loadedDraftId);
+        if (ex) { ex.data = data; ex.name = data.title || ex.name; ex.savedAt = Date.now(); setDrafts(drafts); toast('Taslak güncellendi','info'); updateDraftCount(); return; }
+    }
+    const name = (data.title || '').trim() || ('Taslak ' + new Date().toLocaleString('tr-TR'));
+    const id = Date.now();
+    drafts.unshift({ id, name, savedAt: Date.now(), data });
+    setDrafts(drafts);
+    loadedDraftId = id;
+    updateDraftCount();
+    toast('💾 Taslak kaydedildi','success');
 });
 
-document.getElementById('btn-load-draft').addEventListener('click', () => {
-    const raw = localStorage.getItem('yk_draft');
-    if (!raw) return;
-    const d = JSON.parse(raw);
-    document.getElementById('inp-title').value   = d.title    || '';
-    document.getElementById('inp-excerpt').value = d.excerpt  || '';
-    document.getElementById('editor-content').innerHTML = d.content || '';
-    document.getElementById('inp-cat').value     = d.category || '';
-    document.getElementById('inp-date').value    = d.date     || todayISO();
-    document.getElementById('inp-rt').value      = d.readTime || 3;
-    document.getElementById('inp-feat').checked  = !!d.featured;
-    document.getElementById('inp-img').value     = d.image    || '';
-    autoResize(document.getElementById('inp-title'));
-    autoResize(document.getElementById('inp-excerpt'));
-    updateCounts(); previewImg();
-    toast('Taslak yüklendi','info');
-});
+// Taslaklar modalı
+document.getElementById('btn-open-drafts').addEventListener('click', openDraftsModal);
+document.getElementById('drafts-close').addEventListener('click', () => document.getElementById('drafts-modal').classList.remove('show'));
+document.getElementById('drafts-modal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('show'); });
 
-document.getElementById('btn-clear-draft').addEventListener('click', () => { clearDraft(); toast('Taslak silindi','info'); });
+function openDraftsModal() {
+    const drafts = getDrafts();
+    const list = document.getElementById('drafts-list');
+    if (!drafts.length) {
+        list.innerHTML = '<div class="drafts-empty"><i class="fas fa-inbox"></i>Henüz kayıtlı taslak yok.<br>Editörde "Taslak Olarak Kaydet" ile taslak oluşturabilirsin.</div>';
+    } else {
+        list.innerHTML = drafts.map(d => `
+            <div class="draft-item">
+                <div class="draft-info">
+                    <div class="draft-name">${esc(d.name || 'İsimsiz taslak')}</div>
+                    <div class="draft-date">${new Date(d.savedAt).toLocaleString('tr-TR')}</div>
+                </div>
+                <div class="draft-acts">
+                    <button class="dl-load" onclick="loadDraftById(${d.id})"><i class="fas fa-pen"></i> Aç</button>
+                    <button class="dl-del" onclick="deleteDraftById(${d.id})"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>`).join('');
+    }
+    document.getElementById('drafts-modal').classList.add('show');
+}
 
-function clearDraft() { localStorage.removeItem('yk_draft'); checkDraft(); }
+function loadDraftById(id) {
+    const d = getDrafts().find(x => x.id === id);
+    if (!d) return;
+    const data = d.data || {};
+    editingId = null;                       // taslak yeni yazı olarak açılır
+    loadedDraftId = id;
+    showPage('editor');
+    document.getElementById('inp-title').value   = data.title    || '';
+    document.getElementById('inp-excerpt').value = data.excerpt  || '';
+    document.getElementById('editor-content').innerHTML = data.content || '';
+    document.getElementById('inp-cat').value     = data.category || '';
+    document.getElementById('inp-date').value    = data.date     || todayISO();
+    document.getElementById('inp-rt').value      = data.readTime || 3;
+    document.getElementById('inp-feat').checked  = !!data.featured;
+    document.getElementById('inp-img').value     = data.image    || '';
+    if (sourceMode) toggleSourceMode();
+    updateCounts(); previewImg(); updateExcerptCount();
+    setEdTitle('Taslak: ' + (data.title || 'İsimsiz'));
+    document.getElementById('btn-publish').innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Yayınla';
+    document.getElementById('drafts-modal').classList.remove('show');
+    requestAnimationFrame(resizeEditorFields);
+    toast('Taslak açıldı','info');
+}
 
-function checkDraft() {
-    const has = !!localStorage.getItem('yk_draft');
-    document.getElementById('draft-indicator').style.display  = has ? 'inline-flex' : 'none';
-    document.getElementById('btn-load-draft').style.display   = has ? 'inline-flex' : 'none';
-    document.getElementById('btn-clear-draft').style.display  = has ? 'inline-flex' : 'none';
+function deleteDraftById(id) {
+    removeDraft(id);
+    if (loadedDraftId === id) loadedDraftId = null;
+    openDraftsModal();
+    toast('Taslak silindi','info');
 }
 
 // ════════════════════════════════════════════
@@ -1445,27 +1649,30 @@ document.getElementById('preview-modal').addEventListener('click', function(e) {
     if (e.target === this) this.classList.remove('show');
 });
 
-function showPreview() {
-    const title    = document.getElementById('inp-title').value.trim() || 'Başlıksız';
-    const excerpt  = document.getElementById('inp-excerpt').value.trim();
-    const content  = sourceMode ? document.getElementById('html-source').value
-                                : document.getElementById('editor-content').innerHTML;
-    const category = document.getElementById('inp-cat').value || 'Kategori';
-    const date     = isoToTR(document.getElementById('inp-date').value) || isoToTR(todayISO());
-    const readTime = document.getElementById('inp-rt').value || '3';
-    const imgSrc   = document.getElementById('inp-img').value.trim() ||
-                     CAT_IMG[category] || DEFAULT_IMG;
+// Editördeki mevcut alanlardan bir post nesnesi topla (önizleme + kayıt için ortak)
+function collectEditorPost() {
+    const content = sourceMode ? document.getElementById('html-source').value
+                               : document.getElementById('editor-content').innerHTML;
+    return {
+        title:    document.getElementById('inp-title').value.trim() || 'Başlıksız',
+        excerpt:  document.getElementById('inp-excerpt').value.trim(),
+        content:  content,
+        category: document.getElementById('inp-cat').value || 'Kategori',
+        date:     isoToTR(document.getElementById('inp-date').value) || isoToTR(todayISO()),
+        readTime: parseInt(document.getElementById('inp-rt').value,10) || 3,
+        image:    document.getElementById('inp-img').value.trim(),
+        slug:     'onizleme'
+    };
+}
 
-    document.getElementById('preview-inner').innerHTML = `
-        <div class="preview-cat">${esc(category)}</div>
-        <div class="preview-title">${esc(title)}</div>
-        <div class="preview-meta">
-            <span><i class="fas fa-calendar"></i> ${esc(date)}</span>
-            <span><i class="fas fa-clock"></i> ${esc(readTime)} dk okuma</span>
-        </div>
-        <img class="preview-img" src="${esc(imgSrc)}" alt="" onerror="this.style.display='none'">
-        <div class="preview-body">${content}</div>
-    `;
+function showPreview() {
+    const post = collectEditorPost();
+    // Gerçek yayın sayfası HTML'i — yollar /posts/ klasörüne göre (../). Admin kök dizinde
+    // olduğu için önizlemede ../ önekini kaldırıyoruz ki görseller/linkler doğru çözülsün.
+    let html = buildPostHtml(post).replace(/\.\.\//g, '');
+    const inner = document.getElementById('preview-inner');
+    inner.innerHTML = '<iframe id="preview-frame" title="Önizleme"></iframe>';
+    document.getElementById('preview-frame').srcdoc = html;
     document.getElementById('preview-modal').classList.add('show');
 }
 
@@ -1568,14 +1775,22 @@ function toggleSourceMode() {
     }
 }
 document.getElementById('inp-title').addEventListener('input',function(){autoResize(this);autoReadTime();});
-document.getElementById('inp-excerpt').addEventListener('input',function(){autoResize(this);});
-function autoResize(el){el.style.height='auto';el.style.height=el.scrollHeight+'px';}
+document.getElementById('inp-excerpt').addEventListener('input',function(){autoResize(this);updateExcerptCount();});
+// Gizli (display:none) elemanlarda scrollHeight 0 olur; bu durumda yüksekliği sıfırlamayalım
+function autoResize(el){el.style.height='auto';const h=el.scrollHeight;if(h>0)el.style.height=h+'px';}
+function resizeEditorFields(){autoResize(document.getElementById('inp-title'));autoResize(document.getElementById('inp-excerpt'));}
+function updateExcerptCount(){
+    const n=document.getElementById('inp-excerpt').value.length;
+    const el=document.getElementById('excerpt-count');
+    el.textContent=`${n} / 300 karakter`;
+    el.parentElement.classList.toggle('warn',n>300);
+}
 
 // ════════════════════════════════════════════
 // NAVİGASYON
 // ════════════════════════════════════════════
 const PAGE_TITLES={posts:'Yazılar',editor:'Yeni Yazı',settings:'Ayarlar'};
-function showPage(name){
+function showPage(name, skipReload){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.getElementById('page-'+name).classList.add('active');
     document.querySelectorAll('.sb-item[data-page]').forEach(b=>b.classList.remove('active'));
@@ -1583,7 +1798,7 @@ function showPage(name){
     if(m) m.classList.add('active');
     if(name!=='editor') document.getElementById('topbar-title').textContent=PAGE_TITLES[name]||'';
     closeSidebar();
-    if(name==='posts') loadPosts();
+    if(name==='posts'){ if(skipReload) renderList(); else loadPosts(); }
 }
 document.querySelectorAll('.sb-item[data-page]').forEach(btn=>{
     btn.addEventListener('click',()=>showPage(btn.dataset.page));
@@ -1635,7 +1850,7 @@ document.addEventListener('keydown',e=>{
         e.preventDefault();
         if(document.getElementById('page-editor').classList.contains('active')) savePost();
     }
-    if(e.key==='Escape'){closeConfirm();closeSidebar();document.getElementById('preview-modal').classList.remove('show');}
+    if(e.key==='Escape'){closeConfirm();closeSidebar();document.getElementById('preview-modal').classList.remove('show');document.getElementById('drafts-modal').classList.remove('show');}
 });
 </script>
 </body>
