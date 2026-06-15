@@ -12,460 +12,278 @@
     --bg-base:       #F7F5F0;
     --bg-card:       #FFFFFF;
     --bg-dark:       #0D1B2A;
-    --bg-dark-2:     #091524;
     --accent:        #0D9488;
     --accent-hover:  #0F766E;
-    --accent-light:  rgba(13,148,136,0.10);
+    --accent-light:  rgba(13,148,136,.10);
     --text-primary:  #1A2B3C;
     --text-secondary:#4A5568;
     --text-muted:    #8896A4;
     --border:        #E0DBD3;
-    --shadow-sm:     0 2px 8px rgba(0,0,0,0.06);
-    --shadow-md:     0 8px 24px rgba(0,0,0,0.09);
+    --shadow-md:     0 8px 24px rgba(0,0,0,.09);
     --radius:        6px;
-    --transition:    0.22s ease;
+    --tr:            .22s ease;
 }
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px}
+body{font-family:'Inter',sans-serif;background:var(--bg-base);color:var(--text-primary);min-height:100vh}
+img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer;border:none;outline:none}
+input,textarea,select{font-family:inherit;outline:none}
+a{text-decoration:none;color:inherit}
 
-*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
-html { font-size:16px; }
-body { font-family:'Inter',sans-serif; background:var(--bg-base); color:var(--text-primary); min-height:100vh; }
-img { max-width:100%; display:block; }
-button { font-family:inherit; cursor:pointer; border:none; outline:none; }
-input,textarea,select { font-family:inherit; outline:none; }
-a { text-decoration:none; color:inherit; }
+/* ── LOGIN ── */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;background:linear-gradient(135deg,#0D1B2A 0%,#0f3254 100%)}
+.login-box{background:#fff;border-radius:12px;padding:2.5rem;width:100%;max-width:400px;box-shadow:0 24px 64px rgba(0,0,0,.35)}
+.login-logo{display:flex;align-items:center;gap:.75rem;margin-bottom:1.75rem}
+.login-logo img{height:44px;width:auto}
+.login-logo-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;line-height:1.2;color:var(--text-primary)}
+.login-logo-sub{font-size:.68rem;color:var(--text-muted)}
+.login-title{font-size:1.25rem;font-weight:700;margin-bottom:.3rem}
+.login-sub{font-size:.83rem;color:var(--text-secondary);margin-bottom:1.5rem;line-height:1.55}
+.fg{margin-bottom:.85rem}
+.fl{display:block;font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:.3rem}
+.fi-wrap{position:relative}
+.fi{width:100%;padding:.6rem .8rem;border:1.5px solid var(--border);border-radius:var(--radius);font-size:.9rem;color:var(--text-primary);background:var(--bg-base);transition:border-color var(--tr)}
+.fi:focus{border-color:var(--accent)}
+.pw-eye{position:absolute;right:.7rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;padding:.2rem}
+.btn-primary{width:100%;padding:.7rem;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);font-size:.92rem;font-weight:600;cursor:pointer;transition:background var(--tr);margin-top:.25rem;display:flex;align-items:center;justify-content:center;gap:.4rem}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-primary:disabled{opacity:.6;cursor:not-allowed}
+#login-error{display:none;margin-top:.7rem;padding:.58rem .8rem;background:#FEF2F2;border:1px solid #FECACA;color:#DC2626;border-radius:var(--radius);font-size:.83rem}
 
-/* ────────────────────────────────────────────────
-   LOGIN
-──────────────────────────────────────────────── */
-#login-screen {
-    min-height:100vh;
-    display:flex; align-items:center; justify-content:center;
-    padding:2rem;
-    background:linear-gradient(135deg, #0D1B2A 0%, #0f3254 100%);
-}
-.login-box {
-    background:#fff;
-    border-radius:12px;
-    padding:2.5rem;
-    width:100%; max-width:420px;
-    box-shadow:0 24px 64px rgba(0,0,0,0.35);
-}
-.login-logo { display:flex; align-items:center; gap:.75rem; margin-bottom:2rem; }
-.login-logo img { height:48px; width:auto; }
-.login-logo-name { font-family:'Playfair Display',serif; font-size:1.15rem; font-weight:700; line-height:1.2; color:var(--text-primary); }
-.login-logo-sub  { font-size:.7rem; color:var(--text-muted); }
-.login-title { font-size:1.3rem; font-weight:700; margin-bottom:.35rem; }
-.login-sub   { font-size:.84rem; color:var(--text-secondary); margin-bottom:1.75rem; line-height:1.55; }
-.form-group  { margin-bottom:.9rem; }
-.form-label  { display:block; font-size:.76rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); margin-bottom:.35rem; }
-.form-input-wrap { position:relative; }
-.form-input {
-    width:100%; padding:.62rem .82rem;
-    border:1.5px solid var(--border); border-radius:var(--radius);
-    font-size:.9rem; color:var(--text-primary); background:var(--bg-base);
-    transition:border-color var(--transition);
-}
-.form-input:focus { border-color:var(--accent); }
-.pw-eye {
-    position:absolute; right:.75rem; top:50%; transform:translateY(-50%);
-    background:none; border:none; color:var(--text-muted); cursor:pointer; padding:.2rem;
-}
-.btn-primary {
-    width:100%; padding:.72rem;
-    background:var(--accent); color:#fff;
-    border:none; border-radius:var(--radius);
-    font-size:.95rem; font-weight:600; cursor:pointer;
-    transition:background var(--transition); margin-top:.4rem;
-    display:flex; align-items:center; justify-content:center; gap:.4rem;
-}
-.btn-primary:hover  { background:var(--accent-hover); }
-.btn-primary:disabled { opacity:.6; cursor:not-allowed; }
-#login-error {
-    display:none; margin-top:.75rem; padding:.6rem .82rem;
-    background:#FEF2F2; border:1px solid #FECACA;
-    color:#DC2626; border-radius:var(--radius); font-size:.84rem;
-}
+/* ── APP SHELL ── */
+#admin-app{display:none;min-height:100vh}
+#sidebar{position:fixed;top:0;left:0;width:240px;height:100vh;background:var(--bg-dark);display:flex;flex-direction:column;z-index:200;transition:transform var(--tr)}
+.sb-logo{display:flex;align-items:center;gap:.6rem;padding:1.2rem 1.1rem .9rem;border-bottom:1px solid rgba(255,255,255,.07)}
+.sb-logo img{height:32px;width:auto}
+.sb-logo-name{font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:#E8E4DC;line-height:1.2}
+.sb-logo-sub{font-size:.63rem;color:rgba(255,255,255,.35)}
+.sb-nav{flex:1;padding:.8rem .65rem;overflow-y:auto}
+.sb-label{font-size:.61rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.28);padding:.6rem .5rem .3rem}
+.sb-item{display:flex;align-items:center;gap:.6rem;padding:.5rem .7rem;border-radius:var(--radius);color:rgba(255,255,255,.6);font-size:.87rem;font-weight:500;cursor:pointer;transition:all var(--tr);border:none;background:none;width:100%;text-align:left;margin-bottom:2px}
+.sb-item i{width:15px;text-align:center;font-size:.8rem}
+.sb-item:hover{background:rgba(255,255,255,.08);color:#fff}
+.sb-item.active{background:var(--accent);color:#fff}
+.sb-footer{padding:.85rem .65rem;border-top:1px solid rgba(255,255,255,.07)}
+.sb-user{display:flex;align-items:center;gap:.55rem;margin-bottom:.6rem}
+.sb-avatar{width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0}
+.sb-user-name{font-size:.78rem;font-weight:600;color:#E8E4DC;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-user-role{font-size:.66rem;color:rgba(255,255,255,.35)}
+.btn-logout{width:100%;padding:.46rem;background:rgba(255,255,255,.06);color:rgba(255,255,255,.5);border:none;border-radius:var(--radius);font-size:.78rem;cursor:pointer;transition:all var(--tr);display:flex;align-items:center;justify-content:center;gap:.4rem}
+.btn-logout:hover{background:rgba(220,38,38,.15);color:#FCA5A5}
+#sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:199}
+#sb-overlay.show{display:block}
+#main-content{margin-left:240px;min-height:100vh;display:flex;flex-direction:column}
+#topbar{height:56px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1.3rem;gap:.8rem;position:sticky;top:0;z-index:100}
+#topbar-title{font-size:.96rem;font-weight:700;flex:1}
+#ham-btn{display:none;background:none;border:none;font-size:1.05rem;color:var(--text-secondary);cursor:pointer}
+.btn-new{display:flex;align-items:center;gap:.35rem;padding:.42rem .85rem;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);font-size:.81rem;font-weight:600;cursor:pointer;transition:background var(--tr)}
+.btn-new:hover{background:var(--accent-hover)}
 
-/* ────────────────────────────────────────────────
-   APP SHELL
-──────────────────────────────────────────────── */
-#admin-app { display:none; min-height:100vh; }
+/* ── PAGES ── */
+.page{display:none;flex:1;padding:1.5rem}
+.page.active{display:block}
+.page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:.7rem}
+.page-title{font-size:1.2rem;font-weight:700}
 
-/* SIDEBAR */
-#sidebar {
-    position:fixed; top:0; left:0;
-    width:240px; height:100vh;
-    background:var(--bg-dark);
-    display:flex; flex-direction:column;
-    z-index:200; transition:transform var(--transition);
-}
-.sb-logo {
-    display:flex; align-items:center; gap:.6rem;
-    padding:1.2rem 1.1rem .9rem;
-    border-bottom:1px solid rgba(255,255,255,.07);
-}
-.sb-logo img { height:34px; width:auto; }
-.sb-logo-name { font-family:'Playfair Display',serif; font-size:.92rem; font-weight:700; color:#E8E4DC; line-height:1.2; }
-.sb-logo-sub  { font-size:.65rem; color:rgba(255,255,255,.35); }
-.sb-nav { flex:1; padding:.85rem .65rem; overflow-y:auto; }
-.sb-label { font-size:.62rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.28); padding:.65rem .5rem .35rem; }
-.sb-item {
-    display:flex; align-items:center; gap:.6rem;
-    padding:.52rem .7rem; border-radius:var(--radius);
-    color:rgba(255,255,255,.6); font-size:.88rem; font-weight:500;
-    cursor:pointer; transition:all var(--transition);
-    border:none; background:none; width:100%; text-align:left; margin-bottom:2px;
-}
-.sb-item i { width:15px; text-align:center; font-size:.82rem; }
-.sb-item:hover { background:rgba(255,255,255,.08); color:#fff; }
-.sb-item.active { background:var(--accent); color:#fff; }
-.sb-footer { padding:.9rem .65rem; border-top:1px solid rgba(255,255,255,.07); }
-.sb-user { display:flex; align-items:center; gap:.55rem; margin-bottom:.65rem; }
-.sb-avatar {
-    width:32px; height:32px; border-radius:50%;
-    background:var(--accent); color:#fff;
-    display:flex; align-items:center; justify-content:center;
-    font-size:.8rem; font-weight:700; flex-shrink:0;
-}
-.sb-user-name { font-size:.8rem; font-weight:600; color:#E8E4DC; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.sb-user-role { font-size:.68rem; color:rgba(255,255,255,.35); }
-.btn-logout {
-    width:100%; padding:.48rem;
-    background:rgba(255,255,255,.06); color:rgba(255,255,255,.5);
-    border:none; border-radius:var(--radius);
-    font-size:.8rem; cursor:pointer; transition:all var(--transition);
-    display:flex; align-items:center; justify-content:center; gap:.4rem;
-}
-.btn-logout:hover { background:rgba(220,38,38,.15); color:#FCA5A5; }
-#sb-overlay {
-    display:none; position:fixed; inset:0;
-    background:rgba(0,0,0,.45); z-index:199;
-}
-#sb-overlay.show { display:block; }
+/* ── POSTS LIST ── */
+.list-controls{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:180px;max-width:280px}
+.search-wrap i{position:absolute;left:.65rem;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:.8rem;pointer-events:none}
+#search-inp{width:100%;padding:.48rem .75rem .48rem 2rem;border:1.5px solid var(--border);border-radius:99px;font-size:.83rem;background:#fff;transition:border-color var(--tr)}
+#search-inp:focus{border-color:var(--accent)}
+.cat-filters{display:flex;gap:.35rem;flex-wrap:wrap}
+.cf-pill{padding:.28rem .7rem;border:1.5px solid var(--border);border-radius:99px;font-size:.74rem;font-weight:600;cursor:pointer;background:#fff;color:var(--text-secondary);transition:all var(--tr)}
+.cf-pill:hover{border-color:var(--accent);color:var(--accent)}
+.cf-pill.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.stats-row{display:flex;gap:.6rem;flex-wrap:wrap}
+.stat-chip{background:#fff;border:1px solid var(--border);border-radius:99px;padding:.25rem .75rem;font-size:.76rem;color:var(--text-secondary);font-weight:500}
+.stat-chip b{color:var(--accent)}
+.posts-table{background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.tbl-head{display:grid;grid-template-columns:2fr 1.2fr 110px 70px 120px;padding:.52rem 1rem;background:#F9F8F6;border-bottom:1px solid var(--border);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)}
+.post-row{display:grid;grid-template-columns:2fr 1.2fr 110px 70px 120px;padding:.75rem 1rem;border-bottom:1px solid var(--border);align-items:center;transition:background var(--tr);cursor:grab}
+.post-row:last-child{border-bottom:none}
+.post-row:hover{background:#FAFAF8}
+.post-row.dragging{opacity:.45;background:#E8F4F3}
+.post-row.drag-over{border-top:2px solid var(--accent)}
+.pr-title{display:flex;align-items:center;gap:.42rem;min-width:0}
+.pr-star{color:#F59E0B;font-size:.73rem;flex-shrink:0}
+.pr-title strong{font-size:.86rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.pr-id{font-size:.7rem;color:var(--text-muted)}
+.cat-pill{display:inline-block;padding:.17rem .5rem;background:var(--accent-light);color:var(--accent);border-radius:99px;font-size:.69rem;font-weight:600;white-space:nowrap}
+.pr-date,.pr-time{font-size:.78rem;color:var(--text-muted)}
+.pr-actions{display:flex;gap:.26rem;justify-content:flex-end}
+.btn-act{width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:#fff;color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--tr);font-size:.72rem}
+.btn-act:hover{background:var(--bg-base)}
+.btn-act.edit:hover{color:var(--accent);border-color:var(--accent)}
+.btn-act.feat:hover,.btn-act.feat.on{color:#F59E0B;border-color:#FDE68A;background:#FFFBEB}
+.btn-act.del:hover{color:#DC2626;border-color:#FECACA;background:#FEF2F2}
+.empty-state{text-align:center;padding:3rem 2rem;color:var(--text-muted)}
+.empty-state i{font-size:2.2rem;opacity:.22;margin-bottom:.65rem;display:block}
+.loading{display:flex;align-items:center;justify-content:center;padding:2.5rem;gap:.5rem;color:var(--text-muted)}
+.spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .65s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-/* MAIN */
-#main-content { margin-left:240px; min-height:100vh; display:flex; flex-direction:column; }
+/* ── EDITOR ── */
+.editor-grid{display:grid;grid-template-columns:1fr 268px;gap:1.1rem;align-items:start}
+.editor-col{min-width:0}
+.editor-side{position:sticky;top:74px}
+.card{background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:.9rem}
+.card:last-child{margin-bottom:0}
+.card-hdr{padding:.72rem 1rem;border-bottom:1px solid var(--border);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);display:flex;align-items:center;justify-content:space-between}
+.card-body{padding:.95rem}
+#inp-title{width:100%;border:none;outline:none;font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:700;color:var(--text-primary);resize:none;background:transparent;line-height:1.3;overflow:hidden}
+#inp-title::placeholder{color:#D1CCC4}
+.ed-div{height:1px;background:var(--border);margin:.65rem 0}
+#inp-excerpt{width:100%;border:none;outline:none;font-size:.89rem;color:var(--text-secondary);resize:none;background:transparent;line-height:1.65;overflow:hidden;min-height:48px}
+#inp-excerpt::placeholder{color:#D1CCC4}
+.toolbar{display:flex;flex-wrap:wrap;gap:2px;padding:.42rem .65rem;border-bottom:1px solid var(--border);background:#F9F8F6}
+.tb-btn{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:none;background:none;border-radius:4px;color:var(--text-secondary);font-size:.76rem;cursor:pointer;transition:all var(--tr)}
+.tb-btn:hover{background:var(--border);color:var(--text-primary)}
+.tb-sep{width:1px;background:var(--border);margin:4px 2px}
+.tb-sel{height:28px;padding:0 .42rem;border:none;background:none;border-radius:4px;font-size:.76rem;color:var(--text-secondary);cursor:pointer}
+.tb-sel:hover{background:var(--border)}
+.tb-src-btn{font-size:.7rem;background:none;border:1px solid var(--border);border-radius:4px;padding:.17rem .45rem;color:var(--text-muted);cursor:pointer;transition:all var(--tr)}
+.tb-src-btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+#editor-content{min-height:320px;padding:.95rem;outline:none;font-size:.91rem;line-height:1.72;color:var(--text-primary)}
+#editor-content:empty::before{content:attr(data-placeholder);color:#D1CCC4;pointer-events:none}
+#editor-content h2{font-family:'Playfair Display',serif;font-size:1.22rem;font-weight:700;margin:1rem 0 .4rem}
+#editor-content h3{font-family:'Playfair Display',serif;font-size:1.02rem;font-weight:700;margin:.85rem 0 .32rem}
+#editor-content p{margin-bottom:.65rem}
+#editor-content ul,#editor-content ol{padding-left:1.4rem;margin-bottom:.65rem}
+#editor-content li{margin-bottom:.2rem}
+#editor-content blockquote{border-left:3px solid var(--accent);padding:.42rem .85rem;color:var(--text-secondary);font-style:italic;background:rgba(13,148,136,.04);margin:.65rem 0}
+#editor-content a{color:var(--accent);text-decoration:underline}
+#editor-content strong{font-weight:700}
+#editor-content em{font-style:italic}
+#editor-content hr{border:none;border-top:2px solid var(--border);margin:1rem 0}
+#html-source{display:none;width:100%;min-height:320px;padding:.95rem;border:none;font-family:'Courier New',monospace;font-size:.78rem;line-height:1.6;color:var(--text-primary);background:#FAFAF8;resize:none}
+.ed-footer{padding:.4rem .95rem;border-top:1px solid var(--border);background:#F9F8F6;font-size:.71rem;color:var(--text-muted);display:flex;gap:1rem;align-items:center}
+.ed-footer-right{margin-left:auto;display:flex;gap:.5rem}
+.btn-draft{font-size:.71rem;padding:.2rem .5rem;background:none;border:1px solid var(--border);border-radius:4px;color:var(--text-muted);cursor:pointer;transition:all var(--tr)}
+.btn-draft:hover{border-color:var(--accent);color:var(--accent)}
+.draft-dot{width:7px;height:7px;border-radius:50%;background:#F59E0B;display:inline-block;margin-right:3px;vertical-align:middle}
+.field{margin-bottom:.75rem}
+.field:last-child{margin-bottom:0}
+.field-label{display:block;font-size:.71rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:.28rem}
+.field-input,.field-sel{width:100%;padding:.5rem .65rem;border:1.5px solid var(--border);border-radius:var(--radius);font-size:.84rem;color:var(--text-primary);background:#fff;transition:border-color var(--tr)}
+.field-input:focus,.field-sel:focus{border-color:var(--accent)}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.toggle-lbl{font-size:.84rem;font-weight:500}
+.toggle-sub{font-size:.71rem;color:var(--text-muted)}
+.toggle{position:relative;width:38px;height:21px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-sl{position:absolute;inset:0;background:#D1D5DB;border-radius:99px;cursor:pointer;transition:background var(--tr)}
+.toggle-sl::before{content:'';position:absolute;width:15px;height:15px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform var(--tr)}
+input:checked+.toggle-sl{background:var(--accent)}
+input:checked+.toggle-sl::before{transform:translateX(17px)}
+#img-preview{width:100%;height:105px;border-radius:var(--radius);object-fit:cover;margin-top:.42rem;border:1px solid var(--border);display:none}
+.img-ph{width:100%;height:68px;border:2px dashed var(--border);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:.74rem;margin-top:.42rem;gap:.4rem;cursor:pointer;transition:border-color var(--tr)}
+.img-ph:hover{border-color:var(--accent);color:var(--accent)}
+#img-file-inp{display:none}
+.img-upload-progress{display:none;margin-top:.4rem;font-size:.76rem;color:var(--accent);align-items:center;gap:.4rem}
+.img-upload-progress.show{display:flex}
+.btn-save{width:100%;padding:.63rem;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);font-size:.88rem;font-weight:600;cursor:pointer;transition:background var(--tr);margin-bottom:.42rem;display:flex;align-items:center;justify-content:center;gap:.4rem}
+.btn-save:hover{background:var(--accent-hover)}
+.btn-save:disabled{opacity:.6;cursor:not-allowed}
+.btn-preview-post{width:100%;padding:.58rem;background:#fff;color:var(--text-secondary);border:1px solid var(--border);border-radius:var(--radius);font-size:.84rem;font-weight:500;cursor:pointer;transition:all var(--tr);margin-bottom:.42rem;display:flex;align-items:center;justify-content:center;gap:.4rem}
+.btn-preview-post:hover{background:var(--bg-base);border-color:var(--text-muted)}
+.btn-cancel{width:100%;padding:.58rem;background:#fff;color:var(--text-secondary);border:1px solid var(--border);border-radius:var(--radius);font-size:.84rem;font-weight:500;cursor:pointer;transition:all var(--tr)}
+.btn-cancel:hover{background:var(--bg-base)}
 
-/* TOPBAR */
-#topbar {
-    height:58px; background:#fff;
-    border-bottom:1px solid var(--border);
-    display:flex; align-items:center; padding:0 1.4rem; gap:.9rem;
-    position:sticky; top:0; z-index:100;
-}
-#topbar-title { font-size:.98rem; font-weight:700; flex:1; }
-#ham-btn { display:none; background:none; border:none; font-size:1.1rem; color:var(--text-secondary); cursor:pointer; }
-.btn-new {
-    display:flex; align-items:center; gap:.35rem;
-    padding:.45rem .9rem;
-    background:var(--accent); color:#fff;
-    border:none; border-radius:var(--radius);
-    font-size:.83rem; font-weight:600; cursor:pointer;
-    transition:background var(--transition);
-}
-.btn-new:hover { background:var(--accent-hover); }
+/* ── SETTINGS ── */
+.settings-wrap{max-width:500px}
+.btn-danger{padding:.5rem .9rem;background:#FEF2F2;color:#DC2626;border:1px solid #FECACA;border-radius:var(--radius);font-size:.84rem;font-weight:600;cursor:pointer;transition:all var(--tr);display:inline-flex;align-items:center;gap:.4rem}
+.btn-danger:hover{background:#FEE2E2}
+.btn-warn{padding:.5rem .9rem;background:#FFF7ED;color:#C2410C;border:1px solid #FED7AA;border-radius:var(--radius);font-size:.84rem;font-weight:600;cursor:pointer;transition:all var(--tr);display:inline-flex;align-items:center;gap:.4rem}
+.btn-warn:hover{background:#FFEDD5}
 
-/* PAGES */
-.page { display:none; flex:1; padding:1.6rem; }
-.page.active { display:block; }
-.page-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.35rem; flex-wrap:wrap; gap:.75rem; }
-.page-title { font-size:1.25rem; font-weight:700; }
+/* ── PREVIEW MODAL ── */
+#preview-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:7000;overflow-y:auto;padding:2rem 1rem}
+#preview-modal.show{display:flex;align-items:flex-start;justify-content:center}
+.preview-box{background:#fff;border-radius:10px;width:100%;max-width:760px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.3)}
+.preview-bar{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.1rem;border-bottom:1px solid var(--border);background:#F9F8F6}
+.preview-bar span{font-size:.8rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em}
+.btn-preview-close{background:none;border:none;font-size:1.1rem;color:var(--text-muted);cursor:pointer}
+.preview-content{padding:2rem 2.5rem}
+.preview-cat{display:inline-block;padding:.22rem .6rem;background:var(--accent-light);color:var(--accent);border-radius:99px;font-size:.74rem;font-weight:600;margin-bottom:.75rem}
+.preview-title{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:700;line-height:1.25;margin-bottom:.6rem;color:var(--text-primary)}
+.preview-meta{font-size:.8rem;color:var(--text-muted);margin-bottom:1.25rem;display:flex;gap:.75rem;flex-wrap:wrap}
+.preview-img{width:100%;height:280px;object-fit:cover;border-radius:var(--radius);margin-bottom:1.5rem}
+.preview-body{font-size:.93rem;line-height:1.75;color:var(--text-primary)}
+.preview-body h2{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;margin:1.1rem 0 .45rem}
+.preview-body h3{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;margin:.9rem 0 .35rem}
+.preview-body p{margin-bottom:.7rem}
+.preview-body ul,.preview-body ol{padding-left:1.4rem;margin-bottom:.7rem}
+.preview-body blockquote{border-left:3px solid var(--accent);padding:.45rem .9rem;color:var(--text-secondary);font-style:italic;background:rgba(13,148,136,.04);margin:.7rem 0}
+.preview-body a{color:var(--accent);text-decoration:underline}
+.preview-body hr{border:none;border-top:2px solid var(--border);margin:1.1rem 0}
 
-/* ────────────────────────────────────────────────
-   POSTS LIST
-──────────────────────────────────────────────── */
-.stats-row { display:flex; gap:.75rem; flex-wrap:wrap; }
-.stat-chip {
-    background:#fff; border:1px solid var(--border);
-    border-radius:99px; padding:.27rem .8rem;
-    font-size:.78rem; color:var(--text-secondary); font-weight:500;
-}
-.stat-chip b { color:var(--accent); }
-.posts-table { background:#fff; border:1px solid var(--border); border-radius:8px; overflow:hidden; }
-.tbl-head {
-    display:grid; grid-template-columns:2fr 1.2fr 110px 70px 110px;
-    padding:.55rem 1rem; background:#F9F8F6;
-    border-bottom:1px solid var(--border);
-    font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted);
-}
-.post-row {
-    display:grid; grid-template-columns:2fr 1.2fr 110px 70px 110px;
-    padding:.78rem 1rem; border-bottom:1px solid var(--border);
-    align-items:center; transition:background var(--transition);
-}
-.post-row:last-child { border-bottom:none; }
-.post-row:hover { background:#FAFAF8; }
-.pr-title { display:flex; align-items:center; gap:.45rem; min-width:0; }
-.pr-star { color:#F59E0B; font-size:.75rem; flex-shrink:0; }
-.pr-title strong { font-size:.88rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; }
-.pr-id { font-size:.72rem; color:var(--text-muted); }
-.cat-pill {
-    display:inline-block; padding:.18rem .52rem;
-    background:var(--accent-light); color:var(--accent);
-    border-radius:99px; font-size:.7rem; font-weight:600; white-space:nowrap;
-}
-.pr-date,.pr-time { font-size:.8rem; color:var(--text-muted); }
-.pr-actions { display:flex; gap:.28rem; justify-content:flex-end; }
-.btn-act {
-    width:30px; height:30px; border:1px solid var(--border); border-radius:4px;
-    background:#fff; color:var(--text-muted);
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer; transition:all var(--transition); font-size:.74rem;
-}
-.btn-act:hover { background:var(--bg-base); }
-.btn-act.edit:hover   { color:var(--accent); border-color:var(--accent); }
-.btn-act.feat:hover   { color:#F59E0B; border-color:#FDE68A; background:#FFFBEB; }
-.btn-act.feat.on      { color:#F59E0B; border-color:#FDE68A; background:#FFFBEB; }
-.btn-act.del:hover    { color:#DC2626; border-color:#FECACA; background:#FEF2F2; }
-.empty-state { text-align:center; padding:3.5rem 2rem; color:var(--text-muted); }
-.empty-state i { font-size:2.5rem; opacity:.25; margin-bottom:.75rem; display:block; }
-.loading { display:flex; align-items:center; justify-content:center; padding:3rem; gap:.5rem; color:var(--text-muted); }
-.spinner { width:20px; height:20px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .65s linear infinite; }
-@keyframes spin { to { transform:rotate(360deg); } }
+/* ── TOAST ── */
+#toast-wrap{position:fixed;bottom:1.3rem;right:1.3rem;z-index:9999;display:flex;flex-direction:column;gap:.38rem}
+.toast{display:flex;align-items:center;gap:.55rem;padding:.65rem .9rem;background:var(--bg-dark);color:#fff;border-radius:8px;font-size:.84rem;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.22);min-width:230px;animation:slideUp .22s ease;transition:opacity .28s,transform .28s}
+.toast.success{border-left:3px solid #10B981}
+.toast.error{border-left:3px solid #EF4444}
+.toast.info{border-left:3px solid var(--accent)}
+@keyframes slideUp{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
 
-/* ────────────────────────────────────────────────
-   EDITOR
-──────────────────────────────────────────────── */
-.editor-grid { display:grid; grid-template-columns:1fr 272px; gap:1.15rem; align-items:start; }
-.editor-col  { min-width:0; }
-.editor-side { position:sticky; top:76px; }
-.card { background:#fff; border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-bottom:1rem; }
-.card:last-child { margin-bottom:0; }
-.card-hdr {
-    padding:.75rem 1rem; border-bottom:1px solid var(--border);
-    font-size:.74rem; font-weight:700; text-transform:uppercase;
-    letter-spacing:.06em; color:var(--text-muted);
-    display:flex; align-items:center; justify-content:space-between;
-}
-.card-body { padding:1rem; }
+/* ── CONFIRM ── */
+#confirm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:8000;align-items:center;justify-content:center}
+#confirm-overlay.show{display:flex}
+.confirm-box{background:#fff;border-radius:10px;padding:1.6rem;max-width:365px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.25)}
+.confirm-box h3{font-size:.96rem;font-weight:700;margin-bottom:.38rem}
+.confirm-box p{font-size:.84rem;color:var(--text-secondary);margin-bottom:1.15rem;line-height:1.55}
+.confirm-btns{display:flex;gap:.42rem;justify-content:flex-end}
+.btn-cf-cancel{padding:.48rem .88rem;background:#fff;border:1px solid var(--border);border-radius:var(--radius);font-size:.84rem;cursor:pointer}
+.btn-cf-ok{padding:.48rem .88rem;background:#DC2626;color:#fff;border:none;border-radius:var(--radius);font-size:.84rem;font-weight:600;cursor:pointer}
 
-/* Title textarea */
-#inp-title {
-    width:100%; border:none; outline:none;
-    font-family:'Playfair Display',serif;
-    font-size:1.6rem; font-weight:700;
-    color:var(--text-primary); resize:none; background:transparent;
-    line-height:1.3; overflow:hidden;
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+    #sidebar{transform:translateX(-100%)}
+    #sidebar.open{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,.3)}
+    #main-content{margin-left:0}
+    #ham-btn{display:flex}
+    .editor-grid{grid-template-columns:1fr}
+    .editor-side{position:static}
+    .tbl-head{display:none}
+    .post-row{grid-template-columns:1fr;gap:.32rem;padding:.85rem 1rem}
+    .pr-actions{justify-content:flex-start}
 }
-#inp-title::placeholder { color:#D1CCC4; }
-.ed-divider { height:1px; background:var(--border); margin:.7rem 0; }
-
-/* Excerpt */
-#inp-excerpt {
-    width:100%; border:none; outline:none;
-    font-size:.9rem; color:var(--text-secondary);
-    resize:none; background:transparent; line-height:1.65; overflow:hidden;
-    min-height:52px;
-}
-#inp-excerpt::placeholder { color:#D1CCC4; }
-
-/* Toolbar */
-.toolbar {
-    display:flex; flex-wrap:wrap; gap:2px;
-    padding:.45rem .7rem;
-    border-bottom:1px solid var(--border);
-    background:#F9F8F6;
-}
-.tb-btn {
-    width:29px; height:29px;
-    display:flex; align-items:center; justify-content:center;
-    border:none; background:none; border-radius:4px;
-    color:var(--text-secondary); font-size:.78rem;
-    cursor:pointer; transition:all var(--transition);
-}
-.tb-btn:hover { background:var(--border); color:var(--text-primary); }
-.tb-sep { width:1px; background:var(--border); margin:4px 2px; }
-.tb-sel {
-    height:29px; padding:0 .45rem;
-    border:none; background:none; border-radius:4px;
-    font-size:.78rem; color:var(--text-secondary); cursor:pointer;
-}
-.tb-sel:hover { background:var(--border); }
-.tb-src-btn {
-    font-size:.72rem; background:none;
-    border:1px solid var(--border); border-radius:4px;
-    padding:.18rem .48rem; color:var(--text-muted); cursor:pointer;
-    transition:all var(--transition);
-}
-.tb-src-btn.on { background:var(--accent); color:#fff; border-color:var(--accent); }
-
-/* Content editable */
-#editor-content {
-    min-height:340px; padding:1rem;
-    outline:none; font-size:.93rem; line-height:1.72;
-    color:var(--text-primary);
-}
-#editor-content:empty::before {
-    content:attr(data-placeholder); color:#D1CCC4; pointer-events:none;
-}
-#editor-content h2 { font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:700; margin:1.1rem 0 .45rem; }
-#editor-content h3 { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; margin:.9rem 0 .35rem; }
-#editor-content p  { margin-bottom:.7rem; }
-#editor-content ul,
-#editor-content ol { padding-left:1.5rem; margin-bottom:.7rem; }
-#editor-content li { margin-bottom:.22rem; }
-#editor-content blockquote {
-    border-left:3px solid var(--accent); padding:.45rem .9rem;
-    color:var(--text-secondary); font-style:italic;
-    background:rgba(13,148,136,.04); margin:.7rem 0;
-}
-#editor-content a     { color:var(--accent); text-decoration:underline; }
-#editor-content strong{ font-weight:700; }
-#editor-content em    { font-style:italic; }
-#editor-content hr    { border:none; border-top:2px solid var(--border); margin:1.1rem 0; }
-
-/* HTML source */
-#html-source {
-    display:none; width:100%; min-height:340px; padding:1rem;
-    border:none; font-family:'Courier New',monospace;
-    font-size:.8rem; line-height:1.6; color:var(--text-primary);
-    background:#FAFAF8; resize:none;
-}
-
-/* Editor footer */
-.ed-footer {
-    padding:.42rem 1rem; border-top:1px solid var(--border); background:#FAFAF8;
-    font-size:.73rem; color:var(--text-muted); display:flex; gap:1rem;
-}
-
-/* Sidebar fields */
-.field { margin-bottom:.8rem; }
-.field:last-child { margin-bottom:0; }
-.field-label { display:block; font-size:.73rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); margin-bottom:.3rem; }
-.field-input,.field-sel {
-    width:100%; padding:.52rem .68rem;
-    border:1.5px solid var(--border); border-radius:var(--radius);
-    font-size:.86rem; color:var(--text-primary); background:#fff;
-    transition:border-color var(--transition);
-}
-.field-input:focus,.field-sel:focus { border-color:var(--accent); }
-
-/* Toggle */
-.toggle-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:.8rem; }
-.toggle-info .toggle-lbl { font-size:.86rem; font-weight:500; }
-.toggle-info .toggle-sub { font-size:.73rem; color:var(--text-muted); }
-.toggle { position:relative; width:40px; height:22px; flex-shrink:0; }
-.toggle input { opacity:0; width:0; height:0; }
-.toggle-sl { position:absolute; inset:0; background:#D1D5DB; border-radius:99px; cursor:pointer; transition:background var(--transition); }
-.toggle-sl::before { content:''; position:absolute; width:16px; height:16px; left:3px; top:3px; background:#fff; border-radius:50%; transition:transform var(--transition); }
-input:checked + .toggle-sl { background:var(--accent); }
-input:checked + .toggle-sl::before { transform:translateX(18px); }
-
-/* Image preview */
-#img-preview { width:100%; height:110px; border-radius:var(--radius); object-fit:cover; margin-top:.45rem; border:1px solid var(--border); display:none; }
-.img-ph { width:100%; height:72px; border:2px dashed var(--border); border-radius:var(--radius); display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:.76rem; margin-top:.45rem; gap:.4rem; }
-
-/* Publish buttons */
-.btn-save {
-    width:100%; padding:.65rem;
-    background:var(--accent); color:#fff; border:none; border-radius:var(--radius);
-    font-size:.9rem; font-weight:600; cursor:pointer; transition:background var(--transition);
-    margin-bottom:.45rem;
-    display:flex; align-items:center; justify-content:center; gap:.4rem;
-}
-.btn-save:hover { background:var(--accent-hover); }
-.btn-save:disabled { opacity:.6; cursor:not-allowed; }
-.btn-cancel {
-    width:100%; padding:.6rem;
-    background:#fff; color:var(--text-secondary);
-    border:1px solid var(--border); border-radius:var(--radius);
-    font-size:.86rem; font-weight:500; cursor:pointer; transition:all var(--transition);
-}
-.btn-cancel:hover { background:var(--bg-base); }
-
-/* ────────────────────────────────────────────────
-   SETTINGS
-──────────────────────────────────────────────── */
-.settings-wrap { max-width:520px; }
-.btn-danger {
-    padding:.52rem .95rem; background:#FEF2F2; color:#DC2626;
-    border:1px solid #FECACA; border-radius:var(--radius);
-    font-size:.86rem; font-weight:600; cursor:pointer; transition:all var(--transition);
-    display:inline-flex; align-items:center; gap:.4rem;
-}
-.btn-danger:hover { background:#FEE2E2; }
-
-/* ────────────────────────────────────────────────
-   TOAST
-──────────────────────────────────────────────── */
-#toast-wrap {
-    position:fixed; bottom:1.4rem; right:1.4rem;
-    z-index:9999; display:flex; flex-direction:column; gap:.4rem;
-}
-.toast {
-    display:flex; align-items:center; gap:.6rem;
-    padding:.7rem .95rem;
-    background:var(--bg-dark); color:#fff;
-    border-radius:8px; font-size:.86rem; font-weight:500;
-    box-shadow:0 8px 24px rgba(0,0,0,.22); min-width:240px;
-    animation:slideUp .22s ease;
-    transition:opacity .28s ease, transform .28s ease;
-}
-.toast.success { border-left:3px solid #10B981; }
-.toast.error   { border-left:3px solid #EF4444; }
-.toast.info    { border-left:3px solid var(--accent); }
-@keyframes slideUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-
-/* ────────────────────────────────────────────────
-   CONFIRM DIALOG
-──────────────────────────────────────────────── */
-#confirm-overlay {
-    display:none; position:fixed; inset:0;
-    background:rgba(0,0,0,.42); z-index:8000;
-    align-items:center; justify-content:center;
-}
-#confirm-overlay.show { display:flex; }
-.confirm-box {
-    background:#fff; border-radius:10px; padding:1.65rem;
-    max-width:370px; width:90%;
-    box-shadow:0 24px 64px rgba(0,0,0,.25);
-}
-.confirm-box h3 { font-size:.98rem; font-weight:700; margin-bottom:.4rem; }
-.confirm-box p  { font-size:.86rem; color:var(--text-secondary); margin-bottom:1.2rem; line-height:1.55; }
-.confirm-btns { display:flex; gap:.45rem; justify-content:flex-end; }
-.btn-cf-cancel { padding:.5rem .9rem; background:#fff; border:1px solid var(--border); border-radius:var(--radius); font-size:.86rem; cursor:pointer; }
-.btn-cf-ok     { padding:.5rem .9rem; background:#DC2626; color:#fff; border:none; border-radius:var(--radius); font-size:.86rem; font-weight:600; cursor:pointer; }
-
-/* ────────────────────────────────────────────────
-   RESPONSIVE
-──────────────────────────────────────────────── */
-@media (max-width:900px) {
-    #sidebar { transform:translateX(-100%); }
-    #sidebar.open { transform:translateX(0); box-shadow:4px 0 24px rgba(0,0,0,.3); }
-    #main-content { margin-left:0; }
-    #ham-btn { display:flex; }
-    .editor-grid { grid-template-columns:1fr; }
-    .editor-side { position:static; }
-    .tbl-head { display:none; }
-    .post-row { grid-template-columns:1fr; gap:.35rem; padding:.9rem 1rem; }
-    .pr-actions { justify-content:flex-start; }
-}
-@media (max-width:560px) {
-    .page { padding:1rem; }
-    .login-box { padding:1.75rem; }
+@media(max-width:540px){
+    .page{padding:.9rem}
+    .login-box{padding:1.65rem}
+    .preview-content{padding:1.25rem}
+    .preview-title{font-size:1.45rem}
 }
 </style>
 </head>
 <body>
 
-<!-- TOAST -->
 <div id="toast-wrap"></div>
 
-<!-- CONFIRM -->
 <div id="confirm-overlay">
     <div class="confirm-box">
         <h3 id="cf-title">Emin misiniz?</h3>
         <p id="cf-msg"></p>
         <div class="confirm-btns">
             <button class="btn-cf-cancel" id="cf-cancel">Vazgeç</button>
-            <button class="btn-cf-ok" id="cf-ok">Evet, Sil</button>
+            <button class="btn-cf-ok" id="cf-ok">Onayla</button>
         </div>
     </div>
 </div>
 
-<!-- ════════════════════════════════════════════
-     LOGIN
-════════════════════════════════════════════ -->
+<!-- PREVIEW MODAL -->
+<div id="preview-modal">
+    <div class="preview-box">
+        <div class="preview-bar">
+            <span><i class="fas fa-eye"></i> Önizleme</span>
+            <button class="btn-preview-close" id="preview-close"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="preview-content" id="preview-inner"></div>
+    </div>
+</div>
+
+<!-- ════════════ LOGIN ════════════ -->
 <div id="login-screen">
     <div class="login-box">
         <div class="login-logo">
@@ -476,48 +294,41 @@ input:checked + .toggle-sl::before { transform:translateX(18px); }
             </div>
         </div>
 
-        <!-- İLK KURULUM — sadece ilk seferinde gösterilir -->
+        <!-- İlk kez / yeni cihaz: şifre + token -->
         <div id="setup-view">
-            <div class="login-title">İlk Kurulum</div>
-            <div class="login-sub">Bu adımı yalnızca bir kez yapacaksınız. Bundan sonra sadece şifrenizle giriş yapacaksınız.</div>
-
-            <div class="form-group">
-                <label class="form-label" for="inp-pw1">Şifre Belirle</label>
-                <input type="password" id="inp-pw1" class="form-input" placeholder="Kolayca hatırlayacağınız bir şifre" autocomplete="new-password">
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="inp-pw2">Şifre (tekrar)</label>
-                <input type="password" id="inp-pw2" class="form-input" placeholder="Aynı şifreyi tekrar girin" autocomplete="new-password">
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="inp-pat">GitHub Token</label>
-                <div class="form-input-wrap">
-                    <input type="password" id="inp-pat" class="form-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
-                    <button class="pw-eye" id="pw-toggle" tabindex="-1"><i class="fas fa-eye" id="pw-icon"></i></button>
+            <div class="login-title">Giriş Yap</div>
+            <div class="login-sub">İlk kez bu cihazdan giriyorsunuz. Şifrenizi ve GitHub token'ınızı girin.</div>
+            <div class="fg">
+                <label class="fl" for="inp-pw-setup">Şifre</label>
+                <div class="fi-wrap">
+                    <input type="password" id="inp-pw-setup" class="fi" placeholder="Admin şifresi" autocomplete="current-password">
+                    <button class="pw-eye" id="pw-eye-setup" tabindex="-1"><i class="fas fa-eye" id="pw-ico-setup"></i></button>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="form-label" for="inp-repo">GitHub Repo</label>
-                <input type="text" id="inp-repo" class="form-input" value="yargikalemi/yargikalemi.github.io">
+            <div class="fg">
+                <label class="fl" for="inp-pat">GitHub Token</label>
+                <div class="fi-wrap">
+                    <input type="password" id="inp-pat" class="fi" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+                    <button class="pw-eye" id="pw-eye-pat" tabindex="-1"><i class="fas fa-eye" id="pw-ico-pat"></i></button>
+                </div>
             </div>
-            <button class="btn-primary" id="setup-btn"><i class="fas fa-check-circle"></i> Kurulumu Tamamla</button>
+            <button class="btn-primary" id="setup-btn"><i class="fas fa-sign-in-alt"></i> Giriş Yap</button>
         </div>
 
-        <!-- NORMAL GİRİŞ — kurulum sonrası her zaman gösterilir -->
+        <!-- Tanınan cihaz: sadece şifre -->
         <div id="login-view" style="display:none">
             <div class="login-title">Giriş Yap</div>
             <div class="login-sub">Admin şifrenizi girin.</div>
-
-            <div class="form-group">
-                <label class="form-label" for="inp-pw-login">Şifre</label>
-                <div class="form-input-wrap">
-                    <input type="password" id="inp-pw-login" class="form-input" placeholder="Şifreniz" autocomplete="current-password">
-                    <button class="pw-eye" id="pw-toggle-login" tabindex="-1"><i class="fas fa-eye" id="pw-icon-login"></i></button>
+            <div class="fg">
+                <label class="fl" for="inp-pw-login">Şifre</label>
+                <div class="fi-wrap">
+                    <input type="password" id="inp-pw-login" class="fi" placeholder="Şifreniz" autocomplete="current-password">
+                    <button class="pw-eye" id="pw-eye-login" tabindex="-1"><i class="fas fa-eye" id="pw-ico-login"></i></button>
                 </div>
             </div>
             <button class="btn-primary" id="login-btn"><i class="fas fa-sign-in-alt"></i> Giriş Yap</button>
-            <div style="text-align:center; margin-top:.9rem;">
-                <button id="reset-setup-btn" style="background:none;border:none;color:var(--text-muted);font-size:.8rem;cursor:pointer;text-decoration:underline;">Şifre veya token değişti mi? Sıfırla</button>
+            <div style="text-align:center;margin-top:.85rem">
+                <button id="reset-btn" style="background:none;border:none;color:var(--text-muted);font-size:.78rem;cursor:pointer;text-decoration:underline">Token değişti mi? Sıfırla</button>
             </div>
         </div>
 
@@ -525,14 +336,10 @@ input:checked + .toggle-sl::before { transform:translateX(18px); }
     </div>
 </div>
 
-<!-- ════════════════════════════════════════════
-     ADMIN APP
-════════════════════════════════════════════ -->
+<!-- ════════════ ADMIN APP ════════════ -->
 <div id="admin-app">
-
     <div id="sb-overlay"></div>
 
-    <!-- SIDEBAR -->
     <aside id="sidebar">
         <div class="sb-logo">
             <img src="logo1.png" alt="">
@@ -545,81 +352,72 @@ input:checked + .toggle-sl::before { transform:translateX(18px); }
             <div class="sb-label">İçerik</div>
             <button class="sb-item active" data-page="posts"><i class="fas fa-newspaper"></i> Yazılar</button>
             <button class="sb-item" id="nav-new"><i class="fas fa-plus-circle"></i> Yeni Yazı</button>
-            <div class="sb-label" style="margin-top:.65rem">Sistem</div>
+            <div class="sb-label" style="margin-top:.6rem">Sistem</div>
             <button class="sb-item" data-page="settings"><i class="fas fa-cog"></i> Ayarlar</button>
             <a class="sb-item" href="/" target="_blank"><i class="fas fa-external-link-alt"></i> Siteyi Gör</a>
         </nav>
         <div class="sb-footer">
             <div class="sb-user">
-                <div class="sb-avatar" id="sb-avatar">Y</div>
+                <div class="sb-avatar" id="sb-avatar">A</div>
                 <div>
-                    <div class="sb-user-name" id="sb-uname">Yükleniyor…</div>
-                    <div class="sb-user-role">Admin</div>
+                    <div class="sb-user-name" id="sb-uname">Admin</div>
+                    <div class="sb-user-role">Yönetici</div>
                 </div>
             </div>
-            <button class="btn-logout" id="btn-logout"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</button>
+            <button class="btn-logout" id="btn-logout"><i class="fas fa-sign-out-alt"></i> Oturumu Kapat</button>
         </div>
     </aside>
 
-    <!-- MAIN -->
     <main id="main-content">
-
         <div id="topbar">
             <button id="ham-btn"><i class="fas fa-bars"></i></button>
             <div id="topbar-title">Yazılar</div>
-            <div id="topbar-actions">
-                <button class="btn-new" id="topbar-new-btn"><i class="fas fa-plus"></i> Yeni Yazı</button>
-            </div>
+            <button class="btn-new" id="topbar-new-btn"><i class="fas fa-plus"></i> Yeni Yazı</button>
         </div>
 
-        <!-- ── POSTS PAGE ── -->
+        <!-- ══ POSTS ══ -->
         <div class="page active" id="page-posts">
             <div class="page-hdr">
                 <h1 class="page-title">Tüm Yazılar</h1>
                 <div class="stats-row" id="posts-stats"></div>
             </div>
+            <div class="list-controls">
+                <div class="search-wrap">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-inp" placeholder="Yazı ara…">
+                </div>
+                <div class="cat-filters" id="cat-filters">
+                    <button class="cf-pill active" data-cat="">Tümü</button>
+                </div>
+            </div>
             <div class="posts-table">
                 <div class="tbl-head">
-                    <div>Başlık</div>
-                    <div>Kategori</div>
-                    <div>Tarih</div>
-                    <div>Süre</div>
+                    <div>Başlık</div><div>Kategori</div><div>Tarih</div><div>Süre</div>
                     <div style="text-align:right">İşlemler</div>
                 </div>
-                <div id="posts-list">
-                    <div class="loading"><div class="spinner"></div> Yazılar yükleniyor…</div>
-                </div>
+                <div id="posts-list"><div class="loading"><div class="spinner"></div> Yükleniyor…</div></div>
             </div>
         </div>
 
-        <!-- ── EDITOR PAGE ── -->
+        <!-- ══ EDITOR ══ -->
         <div class="page" id="page-editor">
             <div class="page-hdr">
                 <h1 class="page-title" id="ed-page-title">Yeni Yazı</h1>
             </div>
-
             <div class="editor-grid">
-
-                <!-- Left col -->
                 <div class="editor-col">
-                    <!-- Title + excerpt -->
                     <div class="card">
                         <div class="card-body">
                             <textarea id="inp-title" rows="2" placeholder="Yazı başlığı…"></textarea>
-                            <div class="ed-divider"></div>
+                            <div class="ed-div"></div>
                             <textarea id="inp-excerpt" placeholder="Kısa özet (2–3 cümle)…"></textarea>
                         </div>
                     </div>
-
-                    <!-- Rich text editor -->
                     <div class="card">
                         <div class="card-hdr">
                             <span>İçerik</span>
-                            <button class="tb-src-btn" id="src-btn">
-                                <i class="fas fa-code"></i> HTML
-                            </button>
+                            <button class="tb-src-btn" id="src-btn"><i class="fas fa-code"></i> HTML</button>
                         </div>
-
                         <div class="toolbar" id="toolbar">
                             <select class="tb-sel" id="fmt-sel">
                                 <option value="">Biçim</option>
@@ -639,34 +437,32 @@ input:checked + .toggle-sl::before { transform:translateX(18px); }
                             <button class="tb-btn" title="Link" id="btn-link"><i class="fas fa-link"></i></button>
                             <button class="tb-btn" title="Yatay çizgi" data-cmd="insertHorizontalRule"><i class="fas fa-minus"></i></button>
                             <div class="tb-sep"></div>
-                            <button class="tb-btn" title="Geri al (Ctrl+Z)" data-cmd="undo"><i class="fas fa-undo"></i></button>
-                            <button class="tb-btn" title="İleri al (Ctrl+Y)" data-cmd="redo"><i class="fas fa-redo"></i></button>
+                            <button class="tb-btn" title="Geri al" data-cmd="undo"><i class="fas fa-undo"></i></button>
+                            <button class="tb-btn" title="İleri al" data-cmd="redo"><i class="fas fa-redo"></i></button>
                         </div>
-
-                        <div id="editor-content" contenteditable="true"
-                             data-placeholder="Yazınızı buraya yazın…"></div>
+                        <div id="editor-content" contenteditable="true" data-placeholder="Yazınızı buraya yazın…"></div>
                         <textarea id="html-source"></textarea>
                         <div class="ed-footer">
                             <span id="word-count">0 kelime</span>
                             <span id="char-count">0 karakter</span>
+                            <div class="ed-footer-right">
+                                <span id="draft-indicator" style="display:none;font-size:.71rem;color:#F59E0B"><span class="draft-dot"></span>Taslak var</span>
+                                <button class="btn-draft" id="btn-load-draft" style="display:none"><i class="fas fa-inbox"></i> Taslağı Yükle</button>
+                                <button class="btn-draft" id="btn-save-draft"><i class="fas fa-save"></i> Taslak Kaydet</button>
+                                <button class="btn-draft" id="btn-clear-draft" style="display:none"><i class="fas fa-trash"></i></button>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Right col (sidebar) -->
                 <div class="editor-side">
-                    <!-- Publish -->
                     <div class="card">
                         <div class="card-hdr">Yayınla</div>
                         <div class="card-body">
-                            <button class="btn-save" id="btn-publish">
-                                <i class="fas fa-cloud-upload-alt"></i> Yayınla
-                            </button>
+                            <button class="btn-save" id="btn-publish"><i class="fas fa-cloud-upload-alt"></i> Yayınla</button>
+                            <button class="btn-preview-post" id="btn-preview"><i class="fas fa-eye"></i> Önizle</button>
                             <button class="btn-cancel" id="btn-cancel-ed">Vazgeç</button>
                         </div>
                     </div>
-
-                    <!-- Post settings -->
                     <div class="card">
                         <div class="card-hdr">Yazı Ayarları</div>
                         <div class="card-body">
@@ -698,242 +494,230 @@ input:checked + .toggle-sl::before { transform:translateX(18px); }
                                 <input type="number" id="inp-rt" class="field-input" min="1" max="99" value="3">
                             </div>
                             <div class="toggle-row">
-                                <div class="toggle-info">
+                                <div>
                                     <div class="toggle-lbl">⭐ Öne Çıkar</div>
                                     <div class="toggle-sub">Ana sayfada öne çıkar</div>
                                 </div>
-                                <label class="toggle">
-                                    <input type="checkbox" id="inp-feat">
-                                    <span class="toggle-sl"></span>
-                                </label>
+                                <label class="toggle"><input type="checkbox" id="inp-feat"><span class="toggle-sl"></span></label>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Image -->
                     <div class="card">
                         <div class="card-hdr">Kapak Görseli</div>
                         <div class="card-body">
                             <div class="field">
-                                <label class="field-label" for="inp-img">Görsel URL veya dosya adı</label>
+                                <label class="field-label" for="inp-img">URL veya dosya adı</label>
                                 <input type="text" id="inp-img" class="field-input" placeholder="yazifoto.jpg veya https://…">
                             </div>
+                            <input type="file" id="img-file-inp" accept="image/*">
                             <img id="img-preview" alt="Önizleme">
-                            <div class="img-ph" id="img-ph"><i class="fas fa-image"></i> Boş bırakılırsa varsayılan görsel kullanılır</div>
+                            <div class="img-ph" id="img-ph" title="Fotoğraf yüklemek için tıklayın">
+                                <i class="fas fa-cloud-upload-alt"></i> Fotoğraf yükle veya URL gir
+                            </div>
+                            <div class="img-upload-progress" id="img-upload-progress">
+                                <div class="spinner"></div> Yükleniyor…
+                            </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
 
-        <!-- ── SETTINGS PAGE ── -->
+        <!-- ══ SETTINGS ══ -->
         <div class="page" id="page-settings">
-            <div class="page-hdr">
-                <h1 class="page-title">Ayarlar</h1>
-            </div>
+            <div class="page-hdr"><h1 class="page-title">Ayarlar</h1></div>
             <div class="settings-wrap">
                 <div class="card">
-                    <div class="card-hdr">GitHub Bağlantısı</div>
+                    <div class="card-hdr">Bağlantı</div>
                     <div class="card-body">
                         <div class="field">
                             <label class="field-label">Repo</label>
                             <input type="text" class="field-input" id="set-repo" readonly>
                         </div>
                         <div class="field">
-                            <label class="field-label">Bağlantı Durumu</label>
-                            <div id="set-status" style="font-size:.86rem;color:var(--text-secondary)">—</div>
+                            <label class="field-label">Durum</label>
+                            <div id="set-status" style="font-size:.84rem;color:var(--text-secondary)">—</div>
                         </div>
-                        <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.25rem;">
-                            <button class="btn-danger" id="set-logout">
-                                <i class="fas fa-sign-out-alt"></i> Oturumu Kapat
-                            </button>
-                            <button class="btn-danger" id="set-reset" style="background:#FFF7ED;color:#C2410C;border-color:#FED7AA;">
-                                <i class="fas fa-trash-alt"></i> Şifre &amp; Token Sıfırla
-                            </button>
+                        <div style="display:flex;gap:.55rem;flex-wrap:wrap">
+                            <button class="btn-danger" id="set-logout"><i class="fas fa-sign-out-alt"></i> Oturumu Kapat</button>
+                            <button class="btn-warn" id="set-reset"><i class="fas fa-trash-alt"></i> Token Sıfırla</button>
                         </div>
                     </div>
                 </div>
                 <div class="card">
+                    <div class="card-hdr">Şifre Değiştir</div>
+                    <div class="card-body">
+                        <div class="field">
+                            <label class="field-label" for="set-pw-cur">Mevcut Şifre</label>
+                            <input type="password" id="set-pw-cur" class="field-input" placeholder="Mevcut şifreniz">
+                        </div>
+                        <div class="field">
+                            <label class="field-label" for="set-pw-new">Yeni Şifre</label>
+                            <input type="password" id="set-pw-new" class="field-input" placeholder="Yeni şifre">
+                        </div>
+                        <div class="field">
+                            <label class="field-label" for="set-pw-new2">Yeni Şifre (tekrar)</label>
+                            <input type="password" id="set-pw-new2" class="field-input" placeholder="Yeni şifre tekrar">
+                        </div>
+                        <button class="btn-save" id="set-pw-btn" style="width:auto;padding:.5rem 1.1rem"><i class="fas fa-lock"></i> Şifreyi Değiştir</button>
+                        <div id="set-pw-msg" style="display:none;margin-top:.5rem;font-size:.82rem"></div>
+                    </div>
+                </div>
+                <div class="card">
                     <div class="card-hdr">Kısayollar</div>
-                    <div class="card-body" style="font-size:.86rem;color:var(--text-secondary);line-height:1.9">
-                        <div><kbd style="background:#F3F4F6;border:1px solid #D1D5DB;border-radius:3px;padding:1px 5px;font-size:.78rem">Ctrl + S</kbd> — Yazıyı kaydet</div>
-                        <div><kbd style="background:#F3F4F6;border:1px solid #D1D5DB;border-radius:3px;padding:1px 5px;font-size:.78rem">Ctrl + B</kbd> — Kalın</div>
-                        <div><kbd style="background:#F3F4F6;border:1px solid #D1D5DB;border-radius:3px;padding:1px 5px;font-size:.78rem">Ctrl + I</kbd> — İtalik</div>
-                        <div><kbd style="background:#F3F4F6;border:1px solid #D1D5DB;border-radius:3px;padding:1px 5px;font-size:.78rem">Esc</kbd> — Diyalog kapat / Menü kapat</div>
+                    <div class="card-body" style="font-size:.84rem;color:var(--text-secondary);line-height:2">
+                        <div><kbd style="background:#F3F4F6;border:1px solid #D1D5DB;border-radius:3px;padding:1px 5px;font-size:.76rem">Ctrl+S</kbd> Yazıyı kaydet</div>
+                        <div><kbd style="background:#F3F4F6;border:1px solid #D1D5DB;border-radius:3px;padding:1px 5px;font-size:.76rem">Ctrl+B</kbd> Kalın</div>
+                        <div><kbd style="background:#F3F4F6;border:1px solid #D1D5DB;border-radius:3px;padding:1px 5px;font-size:.76rem">Ctrl+I</kbd> İtalik</div>
+                        <div><kbd style="background:#F3F4F6;border:1px solid #D1D5DB;border-radius:3px;padding:1px 5px;font-size:.76rem">Esc</kbd> Kapat / Menü kapat</div>
                     </div>
                 </div>
             </div>
         </div>
-
     </main>
 </div>
 
 <script>
 // ════════════════════════════════════════════
+// SABITLER
+// ════════════════════════════════════════════
+const ADMIN_HASH = '108aecd8932defb306974e840aacdf3e56c755dd29b5780935a7f9f7a89f0f4f';
+const GH_REPO    = 'yargikalemi/yargikalemi.github.io';
+const MONTHS     = ['','Ocak','Şubat','Mart','Nisan','Mayıs','Haziran',
+                    'Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+const CATS       = ['Ceza Hukuku','Ticaret Hukuku','Tüketici Hukuku','Medeni Hukuk',
+                    'Aile Hukuku','Ceza Muhakemeleri Hukuku','İdare Hukuku','Borçlar Hukuku',
+                    'KVKK','Gayrimenkul / Kira','İcra ve İflas','Anayasa Mahkemesi','AİHM'];
+const DEFAULT_IMG = 'yazifoto.jpg';
+const CAT_IMG     = { 'Ceza Hukuku':'cezahukuku.jpg', 'İdare Hukuku':'idarehukuku.jpeg' };
+
+// ════════════════════════════════════════════
 // STATE
 // ════════════════════════════════════════════
-const MONTHS = ['','Ocak','Şubat','Mart','Nisan','Mayıs','Haziran',
-                'Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
-
-let GH_TOKEN  = '';
-let GH_REPO   = '';
-let allPosts  = [];
-let postsSHA  = '';
-let editingId = null;
+let GH_TOKEN   = '';
+let allPosts   = [];
+let postsSHA   = '';
+let editingId  = null;
 let sourceMode = false;
 let confirmCb  = null;
+let filterCat  = '';
+let searchQ    = '';
+let customHash = '';
+let dragSrcIdx = null;
+
+// ════════════════════════════════════════════
+// SHA-256
+// ════════════════════════════════════════════
+async function sha256(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+function getEffectiveHash() {
+    return customHash || ADMIN_HASH;
+}
 
 // ════════════════════════════════════════════
 // BOOT
 // ════════════════════════════════════════════
 (function boot() {
-    const saved   = localStorage.getItem('yk_admin_v2');
+    customHash = localStorage.getItem('yk_custom_hash') || '';
+    const token   = localStorage.getItem('yk_token');
     const session = sessionStorage.getItem('yk_session');
 
-    if (saved && session) {
-        try {
-            const cfg = JSON.parse(saved);
-            if (cfg.passwordHash && cfg.token && cfg.repo) {
-                GH_TOKEN = cfg.token;
-                GH_REPO  = cfg.repo;
-                launchApp();
-                return;
-            }
-        } catch(e) {}
+    if (token && session) {
+        GH_TOKEN = token;
+        launchApp();
+        return;
     }
-
-    // Kurulum yapılmış ama oturum yok → şifre ekranı
-    if (saved) {
-        try {
-            const cfg = JSON.parse(saved);
-            if (cfg.passwordHash) {
-                document.getElementById('setup-view').style.display = 'none';
-                document.getElementById('login-view').style.display = 'block';
-                return;
-            }
-        } catch(e) {}
+    if (token) {
+        // Tanınan cihaz — sadece şifre sor
+        document.getElementById('setup-view').style.display = 'none';
+        document.getElementById('login-view').style.display = 'block';
+        setTimeout(() => document.getElementById('inp-pw-login').focus(), 100);
+    } else {
+        // Yeni cihaz — şifre + token sor
+        setTimeout(() => document.getElementById('inp-pw-setup').focus(), 100);
     }
-
-    // Hiç kurulum yapılmamış → kurulum ekranı (zaten default görünüm)
-    document.getElementById('inp-date').value = todayISO();
 })();
 
-function todayISO() {
-    return new Date().toISOString().split('T')[0];
-}
+// ════════════════════════════════════════════
+// LOGİN: İlk kez / yeni cihaz
+// ════════════════════════════════════════════
+toggleEye('pw-eye-setup','inp-pw-setup','pw-ico-setup');
+toggleEye('pw-eye-pat','inp-pat','pw-ico-pat');
 
-// ════════════════════════════════════════════
-// SHA-256 (Web Crypto API)
-// ════════════════════════════════════════════
-async function sha256(str) {
-    const buf  = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-}
-
-// ════════════════════════════════════════════
-// KURULUM — ilk kez
-// ════════════════════════════════════════════
-document.getElementById('pw-toggle').addEventListener('click', function() {
-    const inp = document.getElementById('inp-pat');
-    const ico = document.getElementById('pw-icon');
-    if (inp.type === 'password') { inp.type = 'text';     ico.className = 'fas fa-eye-slash'; }
-    else                         { inp.type = 'password'; ico.className = 'fas fa-eye'; }
+['inp-pw-setup','inp-pat'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => { if (e.key==='Enter') doSetup(); });
 });
-
 document.getElementById('setup-btn').addEventListener('click', doSetup);
-['inp-pw1','inp-pw2','inp-pat','inp-repo'].forEach(id => {
-    document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') doSetup(); });
-});
 
 async function doSetup() {
-    const pw1  = document.getElementById('inp-pw1').value;
-    const pw2  = document.getElementById('inp-pw2').value;
-    const pat  = document.getElementById('inp-pat').value.trim();
-    const repo = document.getElementById('inp-repo').value.trim();
-    const btn  = document.getElementById('setup-btn');
+    const pw  = document.getElementById('inp-pw-setup').value;
+    const pat = document.getElementById('inp-pat').value.trim();
+    const btn = document.getElementById('setup-btn');
 
-    if (!pw1)        { showLoginErr('Şifre boş olamaz.'); return; }
-    if (pw1 !== pw2) { showLoginErr('Şifreler eşleşmiyor.'); return; }
-    if (!pat)        { showLoginErr('GitHub token boş olamaz.'); return; }
-    if (!repo)       { showLoginErr('Repo adı boş olamaz.'); return; }
-
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Doğrulanıyor…';
-    hideLoginErr();
-
-    try {
-        const res = await fetch(`https://api.github.com/repos/${repo}`, {
-            headers: { 'Authorization': `token ${pat}` }
-        });
-        if      (res.status === 401) { showLoginErr('Token geçersiz. Lütfen kontrol edin.'); return; }
-        else if (res.status === 404) { showLoginErr('Repo bulunamadı. Adı doğru yazdınız mı?'); return; }
-        else if (!res.ok)            { showLoginErr(`GitHub hatası: HTTP ${res.status}`); return; }
-
-        const hash = await sha256(pw1);
-        GH_TOKEN   = pat;
-        GH_REPO    = repo;
-        localStorage.setItem('yk_admin_v2', JSON.stringify({ passwordHash: hash, token: pat, repo }));
-        sessionStorage.setItem('yk_session', '1');
-        launchApp();
-    } catch(e) {
-        showLoginErr('Bağlantı hatası. İnternet bağlantınızı kontrol edin.');
-    } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-check-circle"></i> Kurulumu Tamamla';
-    }
-}
-
-// ════════════════════════════════════════════
-// GİRİŞ — şifre ile
-// ════════════════════════════════════════════
-document.getElementById('pw-toggle-login').addEventListener('click', function() {
-    const inp = document.getElementById('inp-pw-login');
-    const ico = document.getElementById('pw-icon-login');
-    if (inp.type === 'password') { inp.type = 'text';     ico.className = 'fas fa-eye-slash'; }
-    else                         { inp.type = 'password'; ico.className = 'fas fa-eye'; }
-});
-
-document.getElementById('login-btn').addEventListener('click', doLoginPassword);
-document.getElementById('inp-pw-login').addEventListener('keydown', e => {
-    if (e.key === 'Enter') doLoginPassword();
-});
-
-async function doLoginPassword() {
-    const pw  = document.getElementById('inp-pw-login').value;
-    const btn = document.getElementById('login-btn');
-
-    if (!pw) { showLoginErr('Şifre boş olamaz.'); return; }
+    if (!pw)  { showLoginErr('Şifre boş olamaz.'); return; }
+    if (!pat) { showLoginErr('GitHub token boş olamaz.'); return; }
 
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Kontrol ediliyor…';
     hideLoginErr();
 
     try {
-        const cfg  = JSON.parse(localStorage.getItem('yk_admin_v2') || '{}');
         const hash = await sha256(pw);
+        if (hash !== getEffectiveHash()) { showLoginErr('Şifre yanlış.'); return; }
 
-        if (hash !== cfg.passwordHash) {
-            showLoginErr('Şifre yanlış. Lütfen tekrar deneyin.');
-            return;
-        }
+        const res = await fetch(`https://api.github.com/repos/${GH_REPO}`,
+            { headers: { 'Authorization': `token ${pat}` } });
+        if      (res.status === 401) { showLoginErr('Token geçersiz.'); return; }
+        else if (res.status === 404) { showLoginErr('Repo bulunamadı.'); return; }
+        else if (!res.ok)            { showLoginErr(`GitHub hatası: ${res.status}`); return; }
 
-        GH_TOKEN = cfg.token;
-        GH_REPO  = cfg.repo;
+        GH_TOKEN = pat;
+        localStorage.setItem('yk_token', pat);
         sessionStorage.setItem('yk_session', '1');
         launchApp();
     } catch(e) {
-        showLoginErr('Bir hata oluştu: ' + e.message);
+        showLoginErr('Bağlantı hatası: ' + e.message);
     } finally {
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Giriş Yap';
     }
 }
 
-// Sıfırla — kurulum ekranına dön
-document.getElementById('reset-setup-btn').addEventListener('click', function() {
-    if (confirm('Kaydedilen şifre ve token silinecek. Kurulum ekranına döneceksiniz. Emin misiniz?')) {
-        localStorage.removeItem('yk_admin_v2');
+// ════════════════════════════════════════════
+// LOGİN: Tanınan cihaz (sadece şifre)
+// ════════════════════════════════════════════
+toggleEye('pw-eye-login','inp-pw-login','pw-ico-login');
+
+document.getElementById('inp-pw-login').addEventListener('keydown', e => { if (e.key==='Enter') doLoginPw(); });
+document.getElementById('login-btn').addEventListener('click', doLoginPw);
+
+async function doLoginPw() {
+    const pw  = document.getElementById('inp-pw-login').value;
+    const btn = document.getElementById('login-btn');
+    if (!pw) { showLoginErr('Şifre boş olamaz.'); return; }
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Kontrol ediliyor…';
+    hideLoginErr();
+    try {
+        const hash = await sha256(pw);
+        if (hash !== getEffectiveHash()) { showLoginErr('Şifre yanlış.'); return; }
+        GH_TOKEN = localStorage.getItem('yk_token');
+        sessionStorage.setItem('yk_session', '1');
+        launchApp();
+    } catch(e) {
+        showLoginErr('Hata: ' + e.message);
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Giriş Yap';
+    }
+}
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+    if (confirm('Token silinecek, yeniden girilmesi gerekecek. Devam et?')) {
+        localStorage.removeItem('yk_token');
         sessionStorage.removeItem('yk_session');
         location.reload();
     }
@@ -941,12 +725,17 @@ document.getElementById('reset-setup-btn').addEventListener('click', function() 
 
 function showLoginErr(msg) {
     const el = document.getElementById('login-error');
-    el.textContent = msg;
-    el.style.display = 'block';
+    el.textContent = msg; el.style.display = 'block';
 }
+function hideLoginErr() { document.getElementById('login-error').style.display = 'none'; }
 
-function hideLoginErr() {
-    document.getElementById('login-error').style.display = 'none';
+function toggleEye(btnId, inpId, icoId) {
+    document.getElementById(btnId).addEventListener('click', () => {
+        const inp = document.getElementById(inpId);
+        const ico = document.getElementById(icoId);
+        if (inp.type === 'password') { inp.type = 'text'; ico.className = 'fas fa-eye-slash'; }
+        else                         { inp.type = 'password'; ico.className = 'fas fa-eye'; }
+    });
 }
 
 // ════════════════════════════════════════════
@@ -955,158 +744,206 @@ function hideLoginErr() {
 async function launchApp() {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('admin-app').style.display    = 'block';
-
-    // Set today's date in editor
     document.getElementById('inp-date').value = todayISO();
-
-    // Settings page
-    document.getElementById('set-repo').value  = GH_REPO;
-
-    // Fetch GitHub user info
+    document.getElementById('set-repo').value = GH_REPO;
+    buildCatFilters();
+    checkDraft();
     try {
-        const res = await fetch('https://api.github.com/user', {
-            headers: { 'Authorization': `token ${GH_TOKEN}` }
-        });
+        const res = await fetch('https://api.github.com/user', { headers: ghH() });
         if (res.ok) {
             const u = await res.json();
             const name = u.name || u.login || 'Admin';
             document.getElementById('sb-uname').textContent  = name;
             document.getElementById('sb-avatar').textContent = name[0].toUpperCase();
-            document.getElementById('set-status').textContent = `✅ Bağlı — @${u.login}`;
-            document.getElementById('set-status').style.color = '#059669';
+            document.getElementById('set-status').innerHTML  = `<span style="color:#059669">✅ Bağlı</span> — @${esc(u.login)}`;
         }
     } catch(e) {}
-
     await loadPosts();
 }
 
-// Oturumu kapat (şifre & token silinmez, sadece session temizlenir)
-function doLogout() {
-    sessionStorage.removeItem('yk_session');
-    location.reload();
+// ════════════════════════════════════════════
+// LOGOUT / RESET
+// ════════════════════════════════════════════
+function doLogout() { sessionStorage.removeItem('yk_session'); location.reload(); }
+function doReset()  {
+    showConfirm('Token Sıfırla',
+        'Kaydedilen token silinecek. Bir sonraki girişte tekrar girmeniz gerekecek.',
+        () => { localStorage.removeItem('yk_token'); sessionStorage.removeItem('yk_session'); location.reload(); });
 }
 
 document.getElementById('btn-logout').addEventListener('click', doLogout);
 document.getElementById('set-logout').addEventListener('click', doLogout);
+document.getElementById('set-reset').addEventListener('click', doReset);
 
-// Şifre & token sıfırla (her şeyi sil → kurulum ekranına dön)
-document.getElementById('set-reset').addEventListener('click', function() {
-    showConfirm(
-        'Her Şeyi Sıfırla',
-        'Şifreniz ve GitHub token\'ınız silinecek. Yeniden kurulum yapmanız gerekecek. Emin misiniz?',
-        () => {
-            localStorage.removeItem('yk_admin_v2');
-            sessionStorage.removeItem('yk_session');
-            location.reload();
-        }
-    );
+// ════════════════════════════════════════════
+// ŞİFRE DEĞİŞTİR
+// ════════════════════════════════════════════
+document.getElementById('set-pw-btn').addEventListener('click', async () => {
+    const cur  = document.getElementById('set-pw-cur').value;
+    const nw   = document.getElementById('set-pw-new').value;
+    const nw2  = document.getElementById('set-pw-new2').value;
+    const msg  = document.getElementById('set-pw-msg');
+
+    function pwMsg(text, ok) {
+        msg.textContent = text;
+        msg.style.color = ok ? '#059669' : '#DC2626';
+        msg.style.display = 'block';
+    }
+
+    if (!cur || !nw || !nw2) { pwMsg('Tüm alanları doldurun.', false); return; }
+    if (nw !== nw2)           { pwMsg('Yeni şifreler eşleşmiyor.', false); return; }
+    if (nw.length < 6)        { pwMsg('Yeni şifre en az 6 karakter olmalı.', false); return; }
+
+    const curHash = await sha256(cur);
+    if (curHash !== getEffectiveHash()) { pwMsg('Mevcut şifre yanlış.', false); return; }
+
+    const newHash = await sha256(nw);
+    localStorage.setItem('yk_custom_hash', newHash);
+    customHash = newHash;
+    document.getElementById('set-pw-cur').value  = '';
+    document.getElementById('set-pw-new').value  = '';
+    document.getElementById('set-pw-new2').value = '';
+    pwMsg('✅ Şifre başarıyla değiştirildi.', true);
 });
 
 // ════════════════════════════════════════════
 // GITHUB API
 // ════════════════════════════════════════════
-function ghHeaders() {
-    return { 'Authorization': `token ${GH_TOKEN}`, 'Content-Type': 'application/json' };
-}
+function ghH() { return { 'Authorization': `token ${GH_TOKEN}`, 'Content-Type': 'application/json' }; }
 
 async function loadPosts() {
     try {
-        const res = await fetch(
-            `https://api.github.com/repos/${GH_REPO}/contents/posts.json`,
-            { headers: ghHeaders() }
-        );
+        const res = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/posts.json`, { headers: ghH() });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
-        allPosts  = JSON.parse(b64Decode(data.content.replace(/\n/g, '')));
-        postsSHA  = data.sha;
+        allPosts = JSON.parse(b64Dec(data.content.replace(/\n/g,'')));
+        postsSHA = data.sha;
         renderList();
     } catch(e) {
         document.getElementById('posts-list').innerHTML =
-            `<div class="empty-state"><i class="fas fa-exclamation-circle"></i><p>Yazılar yüklenemedi: ${esc(e.message)}</p></div>`;
+            `<div class="empty-state"><i class="fas fa-exclamation-circle"></i><p>Yüklenemedi: ${esc(e.message)}</p></div>`;
         toast('Yükleme hatası: ' + e.message, 'error');
     }
 }
 
-async function savePosts(commitMsg) {
+async function savePosts(msg) {
     renumber(allPosts);
     const body = JSON.stringify(allPosts, null, 2);
-    const res = await fetch(
-        `https://api.github.com/repos/${GH_REPO}/contents/posts.json`,
-        {
-            method: 'PUT',
-            headers: ghHeaders(),
-            body: JSON.stringify({ message: commitMsg, content: b64Encode(body), sha: postsSHA })
-        }
-    );
-    if (!res.ok) {
-        const d = await res.json().catch(() => ({}));
-        throw new Error(d.message || `HTTP ${res.status}`);
-    }
+    const res  = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/posts.json`, {
+        method: 'PUT', headers: ghH(),
+        body: JSON.stringify({ message: msg, content: b64Enc(body), sha: postsSHA })
+    });
+    if (!res.ok) { const d = await res.json().catch(()=>({})); throw new Error(d.message || `HTTP ${res.status}`); }
     const d = await res.json();
     postsSHA = d.content.sha;
 }
 
-// ════════════════════════════════════════════
-// BASE64 (UTF-8 safe)
-// ════════════════════════════════════════════
-function b64Encode(str) {
-    const bytes = new TextEncoder().encode(str);
-    let bin = '';
-    bytes.forEach(b => { bin += String.fromCharCode(b); });
-    return btoa(bin);
+// Görsel yükle → images/ klasörüne
+async function uploadImage(file) {
+    const bytes  = await file.arrayBuffer();
+    const b64    = btoa(String.fromCharCode(...new Uint8Array(bytes)));
+    const fname  = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;
+    const url    = `https://api.github.com/repos/${GH_REPO}/contents/images/${fname}`;
+    const getRes = await fetch(url, { headers: ghH() });
+    const sha    = getRes.ok ? (await getRes.json()).sha : undefined;
+    const body   = { message: `Görsel: ${fname}`, content: b64 };
+    if (sha) body.sha = sha;
+    const res = await fetch(url, { method:'PUT', headers: ghH(), body: JSON.stringify(body) });
+    if (!res.ok) { const d = await res.json().catch(()=>({})); throw new Error(d.message || `HTTP ${res.status}`); }
+    return `images/${fname}`;
 }
 
-function b64Decode(b64) {
-    const bin   = atob(b64);
+// ════════════════════════════════════════════
+// BASE64
+// ════════════════════════════════════════════
+function b64Enc(str) {
+    const bytes = new TextEncoder().encode(str);
+    let bin = ''; bytes.forEach(b => { bin += String.fromCharCode(b); });
+    return btoa(bin);
+}
+function b64Dec(b64) {
+    const bin = atob(b64);
     const bytes = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
     return new TextDecoder('utf-8').decode(bytes);
 }
 
 // ════════════════════════════════════════════
-// HELPERS
+// YARDIMCILAR
 // ════════════════════════════════════════════
-function renumber(posts) {
-    posts.forEach((p, i) => { p.id = String(i + 1); });
-}
-
+function renumber(posts) { posts.forEach((p,i) => { p.id = String(i+1); }); }
 function esc(s) {
     if (!s) return '';
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-
+function todayISO() { return new Date().toISOString().split('T')[0]; }
 function isoToTR(iso) {
     if (!iso) return '';
-    const [y, m, d] = iso.split('-');
-    return `${parseInt(d, 10)} ${MONTHS[parseInt(m, 10)]} ${y}`;
+    const [y,m,d] = iso.split('-');
+    return `${parseInt(d,10)} ${MONTHS[parseInt(m,10)]} ${y}`;
 }
-
 function trToISO(tr) {
     if (!tr) return '';
-    const parts = tr.trim().split(' ');
-    if (parts.length !== 3) return '';
-    const d = parts[0].padStart(2, '0');
-    const m = String(MONTHS.indexOf(parts[1])).padStart(2, '0');
-    return `${parts[2]}-${m}-${d}`;
+    const p = tr.trim().split(' ');
+    if (p.length !== 3) return '';
+    return `${p[2]}-${String(MONTHS.indexOf(p[1])).padStart(2,'0')}-${p[0].padStart(2,'0')}`;
 }
+function postImg(post) { return post.image || CAT_IMG[post.category] || DEFAULT_IMG; }
 
 // ════════════════════════════════════════════
-// RENDER LIST
+// KATEGORİ FİLTRESİ & ARAMA
+// ════════════════════════════════════════════
+function buildCatFilters() {
+    const wrap = document.getElementById('cat-filters');
+    CATS.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = 'cf-pill';
+        btn.dataset.cat = cat;
+        btn.textContent = cat;
+        btn.addEventListener('click', () => {
+            filterCat = btn.dataset.cat;
+            document.querySelectorAll('.cf-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderList();
+        });
+        wrap.appendChild(btn);
+    });
+    wrap.querySelector('[data-cat=""]').addEventListener('click', () => {
+        filterCat = '';
+        document.querySelectorAll('.cf-pill').forEach(b => b.classList.remove('active'));
+        wrap.querySelector('[data-cat=""]').classList.add('active');
+        renderList();
+    });
+}
+
+document.getElementById('search-inp').addEventListener('input', function() {
+    searchQ = this.value.toLowerCase();
+    renderList();
+});
+
+// ════════════════════════════════════════════
+// LİSTE RENDER
 // ════════════════════════════════════════════
 function renderList() {
+    let posts = allPosts;
+    if (filterCat) posts = posts.filter(p => p.category === filterCat);
+    if (searchQ)   posts = posts.filter(p => (p.title||'').toLowerCase().includes(searchQ));
+
     const featured = allPosts.filter(p => p.featured).length;
     document.getElementById('posts-stats').innerHTML =
         `<div class="stat-chip">Toplam: <b>${allPosts.length}</b></div>` +
         `<div class="stat-chip">Öne çıkan: <b>${featured}</b></div>`;
 
     const list = document.getElementById('posts-list');
-    if (!allPosts.length) {
-        list.innerHTML = `<div class="empty-state"><i class="fas fa-file-alt"></i><p>Henüz yazı yok. Yeni yazı ekleyin.</p></div>`;
+    if (!posts.length) {
+        list.innerHTML = searchQ || filterCat
+            ? `<div class="empty-state"><i class="fas fa-search"></i><p>Sonuç bulunamadı.</p></div>`
+            : `<div class="empty-state"><i class="fas fa-file-alt"></i><p>Henüz yazı yok.</p></div>`;
         return;
     }
 
-    list.innerHTML = allPosts.map(p => `
-        <div class="post-row">
+    list.innerHTML = posts.map((p,i) => `
+        <div class="post-row" draggable="true" data-id="${esc(p.id)}" data-idx="${allPosts.indexOf(p)}">
             <div class="pr-title">
                 ${p.featured ? '<span class="pr-star"><i class="fas fa-star"></i></span>' : ''}
                 <div>
@@ -1114,77 +951,96 @@ function renderList() {
                     <div class="pr-id">#${esc(p.id)}</div>
                 </div>
             </div>
-            <div><span class="cat-pill">${esc(p.category || '—')}</span></div>
-            <div class="pr-date">${esc(p.date || '—')}</div>
-            <div class="pr-time">${p.readTime ? p.readTime + ' dk' : '—'}</div>
+            <div><span class="cat-pill">${esc(p.category||'—')}</span></div>
+            <div class="pr-date">${esc(p.date||'—')}</div>
+            <div class="pr-time">${p.readTime ? p.readTime+' dk' : '—'}</div>
             <div class="pr-actions">
                 <button class="btn-act edit" title="Düzenle" onclick="openEdit('${esc(p.id)}')"><i class="fas fa-pen"></i></button>
-                <button class="btn-act feat ${p.featured ? 'on' : ''}" title="${p.featured ? 'Öne çıkarıldı' : 'Öne çıkar'}" onclick="toggleFeat('${esc(p.id)}')"><i class="fas fa-star"></i></button>
+                <button class="btn-act feat ${p.featured?'on':''}" title="${p.featured?'Öne çıkarıldı':'Öne çıkar'}" onclick="toggleFeat('${esc(p.id)}')"><i class="fas fa-star"></i></button>
                 <button class="btn-act del" title="Sil" onclick="deletePost('${esc(p.id)}')"><i class="fas fa-trash"></i></button>
             </div>
         </div>
     `).join('');
+
+    initDragDrop();
 }
 
 // ════════════════════════════════════════════
-// POST ACTIONS (from list)
+// SÜRÜKLE-BIRAK SIRALAMA
+// ════════════════════════════════════════════
+function initDragDrop() {
+    const rows = document.querySelectorAll('.post-row');
+    rows.forEach(row => {
+        row.addEventListener('dragstart', e => {
+            dragSrcIdx = parseInt(row.dataset.idx, 10);
+            row.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        });
+        row.addEventListener('dragend', () => {
+            row.classList.remove('dragging');
+            document.querySelectorAll('.post-row').forEach(r => r.classList.remove('drag-over'));
+        });
+        row.addEventListener('dragover', e => {
+            e.preventDefault();
+            document.querySelectorAll('.post-row').forEach(r => r.classList.remove('drag-over'));
+            row.classList.add('drag-over');
+        });
+        row.addEventListener('drop', async e => {
+            e.preventDefault();
+            const destIdx = parseInt(row.dataset.idx, 10);
+            if (dragSrcIdx === null || dragSrcIdx === destIdx) return;
+            const moved = allPosts.splice(dragSrcIdx, 1)[0];
+            allPosts.splice(destIdx, 0, moved);
+            dragSrcIdx = null;
+            renderList();
+            try {
+                await savePosts('Yazı sırası güncellendi');
+                toast('Sıralama kaydedildi', 'success');
+                await loadPosts();
+            } catch(e2) { toast('Hata: ' + e2.message, 'error'); await loadPosts(); }
+        });
+    });
+}
+
+// ════════════════════════════════════════════
+// POST ACTIONS (liste)
 // ════════════════════════════════════════════
 async function toggleFeat(id) {
     const post = allPosts.find(p => p.id === id);
     if (!post) return;
-
     if (!post.featured) {
         allPosts.forEach(p => { p.featured = false; });
         post.featured = true;
         const idx = allPosts.indexOf(post);
-        allPosts.splice(idx, 1);
-        allPosts.unshift(post);
-    } else {
-        post.featured = false;
-    }
+        allPosts.splice(idx,1); allPosts.unshift(post);
+    } else { post.featured = false; }
     renderList();
-
-    try {
-        await savePosts(`Öne çıkarıldı: ${post.title}`);
-        toast('⭐ Güncellendi', 'success');
-        await loadPosts();
-    } catch(e) {
-        toast('Hata: ' + e.message, 'error');
-        await loadPosts();
-    }
+    try { await savePosts(`Öne çıkarıldı: ${post.title}`); toast('⭐ Güncellendi','success'); await loadPosts(); }
+    catch(e) { toast('Hata: '+e.message,'error'); await loadPosts(); }
 }
 
 function deletePost(id) {
     const post = allPosts.find(p => p.id === id);
     if (!post) return;
-    showConfirm(
-        'Yazıyı Sil',
-        `"${post.title}" yazısı kalıcı olarak silinecek. Bu işlem geri alınamaz.`,
+    showConfirm('Yazıyı Sil',
+        `"${post.title}" kalıcı olarak silinecek.`,
         async () => {
             allPosts = allPosts.filter(p => p.id !== id);
-            if (allPosts.length && !allPosts.some(p => p.featured)) {
-                allPosts[0].featured = true;
-            }
+            if (allPosts.length && !allPosts.some(p => p.featured)) allPosts[0].featured = true;
             renderList();
-            try {
-                await savePosts(`Silindi: ${post.title}`);
-                toast('Yazı silindi', 'success');
-                await loadPosts();
-            } catch(e) {
-                toast('Hata: ' + e.message, 'error');
-                await loadPosts();
-            }
+            try { await savePosts(`Silindi: ${post.title}`); toast('Yazı silindi','success'); await loadPosts(); }
+            catch(e) { toast('Hata: '+e.message,'error'); await loadPosts(); }
         }
     );
 }
 
 // ════════════════════════════════════════════
-// EDITOR — OPEN
+// EDITOR AÇMA
 // ════════════════════════════════════════════
 function openNewPost() {
     editingId = null;
     clearEditor();
-    setEditorTitle('Yeni Yazı');
+    setEdTitle('Yeni Yazı');
     document.getElementById('btn-publish').innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Yayınla';
     showPage('editor');
 }
@@ -1193,7 +1049,6 @@ function openEdit(id) {
     const post = allPosts.find(p => p.id === id);
     if (!post) return;
     editingId = id;
-
     document.getElementById('inp-title').value   = post.title   || '';
     document.getElementById('inp-excerpt').value = post.excerpt || '';
     document.getElementById('editor-content').innerHTML = post.content || '';
@@ -1202,12 +1057,10 @@ function openEdit(id) {
     document.getElementById('inp-feat').checked  = !!post.featured;
     document.getElementById('inp-img').value     = post.image || '';
     document.getElementById('inp-date').value    = trToISO(post.date) || todayISO();
-
     autoResize(document.getElementById('inp-title'));
     autoResize(document.getElementById('inp-excerpt'));
-    updateCounts();
-    previewImg();
-    setEditorTitle('Yazıyı Düzenle');
+    updateCounts(); previewImg();
+    setEdTitle('Yazıyı Düzenle');
     document.getElementById('btn-publish').innerHTML = '<i class="fas fa-save"></i> Kaydet';
     showPage('editor');
 }
@@ -1221,21 +1074,19 @@ function clearEditor() {
     document.getElementById('inp-feat').checked  = false;
     document.getElementById('inp-img').value     = '';
     document.getElementById('inp-date').value    = todayISO();
-    // reset source mode
     if (sourceMode) toggleSourceMode();
     autoResize(document.getElementById('inp-title'));
     autoResize(document.getElementById('inp-excerpt'));
-    updateCounts();
-    previewImg();
+    updateCounts(); previewImg();
 }
 
-function setEditorTitle(t) {
+function setEdTitle(t) {
     document.getElementById('ed-page-title').textContent = t;
     document.getElementById('topbar-title').textContent  = t;
 }
 
 // ════════════════════════════════════════════
-// EDITOR — SAVE
+// KAYDET
 // ════════════════════════════════════════════
 document.getElementById('btn-publish').addEventListener('click', savePost);
 document.getElementById('btn-cancel-ed').addEventListener('click', () => showPage('posts'));
@@ -1243,173 +1094,163 @@ document.getElementById('btn-cancel-ed').addEventListener('click', () => showPag
 async function savePost() {
     const title    = document.getElementById('inp-title').value.trim();
     const excerpt  = document.getElementById('inp-excerpt').value.trim();
-    const content  = sourceMode
-        ? document.getElementById('html-source').value
-        : document.getElementById('editor-content').innerHTML;
+    const content  = sourceMode ? document.getElementById('html-source').value
+                                : document.getElementById('editor-content').innerHTML;
     const category = document.getElementById('inp-cat').value;
-    const readTime = parseInt(document.getElementById('inp-rt').value, 10) || 3;
+    const readTime = parseInt(document.getElementById('inp-rt').value,10) || 3;
     const featured = document.getElementById('inp-feat').checked;
     const image    = document.getElementById('inp-img').value.trim();
     const date     = isoToTR(document.getElementById('inp-date').value);
     const rawText  = document.getElementById('editor-content').innerText || '';
 
-    if (!title)    { toast('Başlık zorunlu!', 'error'); document.getElementById('inp-title').focus(); return; }
-    if (!category) { toast('Kategori seçin!', 'error'); document.getElementById('inp-cat').focus();   return; }
-    if (!rawText.trim() && !content.trim()) { toast('İçerik boş olamaz!', 'error'); return; }
+    if (!title)              { toast('Başlık zorunlu!','error');   document.getElementById('inp-title').focus(); return; }
+    if (!category)           { toast('Kategori seçin!','error');   document.getElementById('inp-cat').focus();   return; }
+    if (!rawText.trim() && !content.trim()) { toast('İçerik boş olamaz!','error'); return; }
 
     const btn = document.getElementById('btn-publish');
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Kaydediliyor…';
 
     try {
-        // Unfeature all if new post will be featured
         if (featured) allPosts.forEach(p => { p.featured = false; });
-
         if (editingId) {
             const idx = allPosts.findIndex(p => p.id === editingId);
             if (idx === -1) throw new Error('Yazı bulunamadı.');
             const updated = { ...allPosts[idx], title, excerpt, content, category, readTime, featured, date };
             if (image) updated.image = image; else delete updated.image;
             allPosts[idx] = updated;
-            if (featured) { allPosts.splice(idx, 1); allPosts.unshift(updated); }
+            if (featured) { allPosts.splice(idx,1); allPosts.unshift(updated); }
             await savePosts(`Güncellendi: ${title}`);
-            toast('✅ Yazı güncellendi', 'success');
+            toast('✅ Yazı güncellendi','success');
         } else {
-            const post = { id: '', featured, title, category, excerpt, date, readTime, content };
+            const post = { id:'', featured, title, category, excerpt, date, readTime, content };
             if (image) post.image = image;
             if (featured) allPosts.unshift(post); else allPosts.push(post);
             await savePosts(`Yeni yazı: ${title}`);
-            toast('✅ Yazı yayınlandı', 'success');
+            toast('✅ Yazı yayınlandı','success');
         }
-
+        clearDraft();
         await loadPosts();
         showPage('posts');
     } catch(e) {
-        toast('Kaydetme hatası: ' + e.message, 'error');
+        toast('Kaydetme hatası: ' + e.message,'error');
     } finally {
         btn.disabled = false;
-        btn.innerHTML = editingId
-            ? '<i class="fas fa-save"></i> Kaydet'
-            : '<i class="fas fa-cloud-upload-alt"></i> Yayınla';
+        btn.innerHTML = editingId ? '<i class="fas fa-save"></i> Kaydet' : '<i class="fas fa-cloud-upload-alt"></i> Yayınla';
     }
 }
 
 // ════════════════════════════════════════════
-// RICH TEXT EDITOR
+// TASLAK
 // ════════════════════════════════════════════
-// Toolbar button clicks
-document.querySelectorAll('.tb-btn[data-cmd]').forEach(btn => {
-    btn.addEventListener('click', () => {
-        execCmd(btn.dataset.cmd);
-    });
+function getDraftData() {
+    return {
+        title:    document.getElementById('inp-title').value,
+        excerpt:  document.getElementById('inp-excerpt').value,
+        content:  document.getElementById('editor-content').innerHTML,
+        category: document.getElementById('inp-cat').value,
+        date:     document.getElementById('inp-date').value,
+        readTime: document.getElementById('inp-rt').value,
+        featured: document.getElementById('inp-feat').checked,
+        image:    document.getElementById('inp-img').value,
+    };
+}
+
+document.getElementById('btn-save-draft').addEventListener('click', () => {
+    localStorage.setItem('yk_draft', JSON.stringify(getDraftData()));
+    toast('Taslak kaydedildi','info');
+    checkDraft();
 });
 
-document.getElementById('fmt-sel').addEventListener('change', function() {
-    if (!this.value) return;
-    document.getElementById('editor-content').focus();
-    document.execCommand('formatBlock', false, this.value);
-    this.value = '';
-    onEditorChange();
+document.getElementById('btn-load-draft').addEventListener('click', () => {
+    const raw = localStorage.getItem('yk_draft');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    document.getElementById('inp-title').value   = d.title    || '';
+    document.getElementById('inp-excerpt').value = d.excerpt  || '';
+    document.getElementById('editor-content').innerHTML = d.content || '';
+    document.getElementById('inp-cat').value     = d.category || '';
+    document.getElementById('inp-date').value    = d.date     || todayISO();
+    document.getElementById('inp-rt').value      = d.readTime || 3;
+    document.getElementById('inp-feat').checked  = !!d.featured;
+    document.getElementById('inp-img').value     = d.image    || '';
+    autoResize(document.getElementById('inp-title'));
+    autoResize(document.getElementById('inp-excerpt'));
+    updateCounts(); previewImg();
+    toast('Taslak yüklendi','info');
 });
 
-document.getElementById('btn-quote').addEventListener('click', () => {
-    document.getElementById('editor-content').focus();
-    document.execCommand('formatBlock', false, 'blockquote');
-    onEditorChange();
+document.getElementById('btn-clear-draft').addEventListener('click', () => { clearDraft(); toast('Taslak silindi','info'); });
+
+function clearDraft() { localStorage.removeItem('yk_draft'); checkDraft(); }
+
+function checkDraft() {
+    const has = !!localStorage.getItem('yk_draft');
+    document.getElementById('draft-indicator').style.display  = has ? 'inline-flex' : 'none';
+    document.getElementById('btn-load-draft').style.display   = has ? 'inline-flex' : 'none';
+    document.getElementById('btn-clear-draft').style.display  = has ? 'inline-flex' : 'none';
+}
+
+// ════════════════════════════════════════════
+// ÖNİZLEME
+// ════════════════════════════════════════════
+document.getElementById('btn-preview').addEventListener('click', showPreview);
+document.getElementById('preview-close').addEventListener('click', () => {
+    document.getElementById('preview-modal').classList.remove('show');
+});
+document.getElementById('preview-modal').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('show');
 });
 
-document.getElementById('btn-link').addEventListener('click', () => {
-    const sel = window.getSelection();
-    const defaultText = sel && sel.toString() ? sel.toString() : '';
-    const url = prompt('Link URL girin:');
-    if (!url) return;
-    document.getElementById('editor-content').focus();
-    if (!defaultText) {
-        const text = prompt('Link metni:', url) || url;
-        document.execCommand('insertHTML', false, `<a href="${url}">${text}</a>`);
-    } else {
-        document.execCommand('createLink', false, url);
+function showPreview() {
+    const title    = document.getElementById('inp-title').value.trim() || 'Başlıksız';
+    const excerpt  = document.getElementById('inp-excerpt').value.trim();
+    const content  = sourceMode ? document.getElementById('html-source').value
+                                : document.getElementById('editor-content').innerHTML;
+    const category = document.getElementById('inp-cat').value || 'Kategori';
+    const date     = isoToTR(document.getElementById('inp-date').value) || isoToTR(todayISO());
+    const readTime = document.getElementById('inp-rt').value || '3';
+    const imgSrc   = document.getElementById('inp-img').value.trim() ||
+                     CAT_IMG[category] || DEFAULT_IMG;
+
+    document.getElementById('preview-inner').innerHTML = `
+        <div class="preview-cat">${esc(category)}</div>
+        <div class="preview-title">${esc(title)}</div>
+        <div class="preview-meta">
+            <span><i class="fas fa-calendar"></i> ${esc(date)}</span>
+            <span><i class="fas fa-clock"></i> ${esc(readTime)} dk okuma</span>
+        </div>
+        <img class="preview-img" src="${esc(imgSrc)}" alt="" onerror="this.style.display='none'">
+        <div class="preview-body">${content}</div>
+    `;
+    document.getElementById('preview-modal').classList.add('show');
+}
+
+// ════════════════════════════════════════════
+// GÖRSEL YÜKLEME
+// ════════════════════════════════════════════
+document.getElementById('img-ph').addEventListener('click', () => {
+    document.getElementById('img-file-inp').click();
+});
+
+document.getElementById('img-file-inp').addEventListener('change', async function() {
+    const file = this.files[0];
+    if (!file) return;
+    const prog = document.getElementById('img-upload-progress');
+    prog.classList.add('show');
+    try {
+        const path = await uploadImage(file);
+        document.getElementById('inp-img').value = path;
+        previewImg();
+        toast('✅ Görsel yüklendi','success');
+    } catch(e) {
+        toast('Görsel yükleme hatası: ' + e.message,'error');
+    } finally {
+        prog.classList.remove('show');
+        this.value = '';
     }
-    onEditorChange();
 });
 
-document.getElementById('editor-content').addEventListener('input', onEditorChange);
-document.getElementById('editor-content').addEventListener('keydown', function(e) {
-    if (e.key === 'Tab') { e.preventDefault(); document.execCommand('insertHTML', false, '    '); }
-});
-
-function execCmd(cmd) {
-    document.getElementById('editor-content').focus();
-    document.execCommand(cmd, false, null);
-    onEditorChange();
-}
-
-function onEditorChange() {
-    updateCounts();
-    autoReadTime();
-    if (sourceMode) {
-        document.getElementById('html-source').value = document.getElementById('editor-content').innerHTML;
-    }
-}
-
-function updateCounts() {
-    const text  = document.getElementById('editor-content').innerText || '';
-    const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-    document.getElementById('word-count').textContent = `${words} kelime`;
-    document.getElementById('char-count').textContent = `${text.length} karakter`;
-}
-
-function autoReadTime() {
-    const titleText = document.getElementById('inp-title').value || '';
-    const bodyText  = document.getElementById('editor-content').innerText || '';
-    const words = (titleText + ' ' + bodyText).trim().split(/\s+/).filter(Boolean).length;
-    const mins  = Math.max(1, Math.round(words / 200));
-    document.getElementById('inp-rt').value = mins;
-}
-
-// HTML source toggle
-document.getElementById('src-btn').addEventListener('click', toggleSourceMode);
-
-function toggleSourceMode() {
-    const editor  = document.getElementById('editor-content');
-    const source  = document.getElementById('html-source');
-    const toolbar = document.getElementById('toolbar');
-    const btn     = document.getElementById('src-btn');
-
-    if (!sourceMode) {
-        source.value = editor.innerHTML;
-        editor.style.display = 'none';
-        source.style.display = 'block';
-        toolbar.style.opacity = '.4';
-        toolbar.style.pointerEvents = 'none';
-        btn.classList.add('on');
-        sourceMode = true;
-    } else {
-        editor.innerHTML = source.value;
-        editor.style.display = '';
-        source.style.display = 'none';
-        toolbar.style.opacity = '';
-        toolbar.style.pointerEvents = '';
-        btn.classList.remove('on');
-        sourceMode = false;
-        updateCounts();
-    }
-}
-
-// Auto-resize textareas
-document.getElementById('inp-title').addEventListener('input', function() {
-    autoResize(this); autoReadTime();
-});
-document.getElementById('inp-excerpt').addEventListener('input', function() {
-    autoResize(this);
-});
-
-function autoResize(el) {
-    el.style.height = 'auto';
-    el.style.height = el.scrollHeight + 'px';
-}
-
-// Image preview
 document.getElementById('inp-img').addEventListener('input', previewImg);
 
 function previewImg() {
@@ -1417,106 +1258,141 @@ function previewImg() {
     const img = document.getElementById('img-preview');
     const ph  = document.getElementById('img-ph');
     if (url) {
-        img.src = url;
-        img.style.display = 'block';
-        ph.style.display  = 'none';
-        img.onerror = () => { img.style.display = 'none'; ph.style.display = 'flex'; };
+        img.src = url; img.style.display='block'; ph.style.display='none';
+        img.onerror = () => { img.style.display='none'; ph.style.display='flex'; };
     } else {
-        img.style.display = 'none';
-        ph.style.display  = 'flex';
+        img.style.display='none'; ph.style.display='flex';
     }
 }
 
 // ════════════════════════════════════════════
-// NAVIGATION
+// EDITOR
 // ════════════════════════════════════════════
-const PAGE_TITLES = { posts: 'Yazılar', editor: 'Yeni Yazı', settings: 'Ayarlar' };
-
-function showPage(name) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('page-' + name).classList.add('active');
-    document.querySelectorAll('.sb-item[data-page]').forEach(b => b.classList.remove('active'));
-    const match = document.querySelector(`.sb-item[data-page="${name}"]`);
-    if (match) match.classList.add('active');
-    if (name !== 'editor') {
-        document.getElementById('topbar-title').textContent = PAGE_TITLES[name] || '';
-    }
-    closeSidebar();
-    if (name === 'posts') loadPosts();
-}
-
-// Sidebar nav
-document.querySelectorAll('.sb-item[data-page]').forEach(btn => {
-    btn.addEventListener('click', () => showPage(btn.dataset.page));
+document.querySelectorAll('.tb-btn[data-cmd]').forEach(btn => {
+    btn.addEventListener('click', () => execCmd(btn.dataset.cmd));
 });
+document.getElementById('fmt-sel').addEventListener('change', function() {
+    if (!this.value) return;
+    document.getElementById('editor-content').focus();
+    document.execCommand('formatBlock',false,this.value);
+    this.value=''; onEditorChange();
+});
+document.getElementById('btn-quote').addEventListener('click', () => {
+    document.getElementById('editor-content').focus();
+    document.execCommand('formatBlock',false,'blockquote');
+    onEditorChange();
+});
+document.getElementById('btn-link').addEventListener('click', () => {
+    const sel = window.getSelection();
+    const selTxt = sel ? sel.toString() : '';
+    const url = prompt('Link URL girin:');
+    if (!url) return;
+    document.getElementById('editor-content').focus();
+    if (!selTxt) {
+        const txt = prompt('Link metni:',url) || url;
+        document.execCommand('insertHTML',false,`<a href="${url}">${txt}</a>`);
+    } else { document.execCommand('createLink',false,url); }
+    onEditorChange();
+});
+document.getElementById('editor-content').addEventListener('input', onEditorChange);
+document.getElementById('editor-content').addEventListener('keydown', e => {
+    if (e.key==='Tab') { e.preventDefault(); document.execCommand('insertHTML',false,'    '); }
+});
+function execCmd(cmd) {
+    document.getElementById('editor-content').focus();
+    document.execCommand(cmd,false,null); onEditorChange();
+}
+function onEditorChange() { updateCounts(); autoReadTime(); if(sourceMode) document.getElementById('html-source').value=document.getElementById('editor-content').innerHTML; }
+function updateCounts() {
+    const t = document.getElementById('editor-content').innerText||'';
+    document.getElementById('word-count').textContent = `${t.trim()?t.trim().split(/\s+/).length:0} kelime`;
+    document.getElementById('char-count').textContent = `${t.length} karakter`;
+}
+function autoReadTime() {
+    const t = (document.getElementById('inp-title').value+' '+document.getElementById('editor-content').innerText).trim().split(/\s+/).filter(Boolean).length;
+    document.getElementById('inp-rt').value = Math.max(1, Math.round(t/200));
+}
+document.getElementById('src-btn').addEventListener('click', toggleSourceMode);
+function toggleSourceMode() {
+    const ed=document.getElementById('editor-content'), src=document.getElementById('html-source'),
+          tb=document.getElementById('toolbar'), btn=document.getElementById('src-btn');
+    if (!sourceMode) {
+        src.value=ed.innerHTML; ed.style.display='none'; src.style.display='block';
+        tb.style.opacity='.38'; tb.style.pointerEvents='none'; btn.classList.add('on'); sourceMode=true;
+    } else {
+        ed.innerHTML=src.value; ed.style.display=''; src.style.display='none';
+        tb.style.opacity=''; tb.style.pointerEvents=''; btn.classList.remove('on'); sourceMode=false; updateCounts();
+    }
+}
+document.getElementById('inp-title').addEventListener('input',function(){autoResize(this);autoReadTime();});
+document.getElementById('inp-excerpt').addEventListener('input',function(){autoResize(this);});
+function autoResize(el){el.style.height='auto';el.style.height=el.scrollHeight+'px';}
 
-document.getElementById('nav-new').addEventListener('click', openNewPost);
-document.getElementById('topbar-new-btn').addEventListener('click', openNewPost);
-
-// Hamburger
-document.getElementById('ham-btn').addEventListener('click', () => {
+// ════════════════════════════════════════════
+// NAVİGASYON
+// ════════════════════════════════════════════
+const PAGE_TITLES={posts:'Yazılar',editor:'Yeni Yazı',settings:'Ayarlar'};
+function showPage(name){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+name).classList.add('active');
+    document.querySelectorAll('.sb-item[data-page]').forEach(b=>b.classList.remove('active'));
+    const m=document.querySelector(`.sb-item[data-page="${name}"]`);
+    if(m) m.classList.add('active');
+    if(name!=='editor') document.getElementById('topbar-title').textContent=PAGE_TITLES[name]||'';
+    closeSidebar();
+    if(name==='posts') loadPosts();
+}
+document.querySelectorAll('.sb-item[data-page]').forEach(btn=>{
+    btn.addEventListener('click',()=>showPage(btn.dataset.page));
+});
+document.getElementById('nav-new').addEventListener('click',openNewPost);
+document.getElementById('topbar-new-btn').addEventListener('click',openNewPost);
+document.getElementById('ham-btn').addEventListener('click',()=>{
     document.getElementById('sidebar').classList.toggle('open');
     document.getElementById('sb-overlay').classList.toggle('show');
 });
-
-document.getElementById('sb-overlay').addEventListener('click', closeSidebar);
-
-function closeSidebar() {
+document.getElementById('sb-overlay').addEventListener('click',closeSidebar);
+function closeSidebar(){
     document.getElementById('sidebar').classList.remove('open');
     document.getElementById('sb-overlay').classList.remove('show');
 }
 
 // ════════════════════════════════════════════
-// CONFIRM DIALOG
+// CONFIRM
 // ════════════════════════════════════════════
-function showConfirm(title, msg, cb) {
-    document.getElementById('cf-title').textContent = title;
-    document.getElementById('cf-msg').textContent   = msg;
+function showConfirm(title,msg,cb){
+    document.getElementById('cf-title').textContent=title;
+    document.getElementById('cf-msg').textContent=msg;
     document.getElementById('confirm-overlay').classList.add('show');
-    confirmCb = cb;
+    confirmCb=cb;
 }
-
-function closeConfirm() {
-    document.getElementById('confirm-overlay').classList.remove('show');
-    confirmCb = null;
-}
-
-document.getElementById('cf-cancel').addEventListener('click', closeConfirm);
-document.getElementById('cf-ok').addEventListener('click', () => {
-    closeConfirm();
-    if (confirmCb) confirmCb();
-});
-document.getElementById('confirm-overlay').addEventListener('click', function(e) {
-    if (e.target === this) closeConfirm();
-});
+function closeConfirm(){document.getElementById('confirm-overlay').classList.remove('show');confirmCb=null;}
+document.getElementById('cf-cancel').addEventListener('click',closeConfirm);
+document.getElementById('cf-ok').addEventListener('click',()=>{closeConfirm();if(confirmCb)confirmCb();});
+document.getElementById('confirm-overlay').addEventListener('click',function(e){if(e.target===this)closeConfirm();});
 
 // ════════════════════════════════════════════
 // TOAST
 // ════════════════════════════════════════════
-function toast(msg, type) {
-    type = type || 'info';
-    const wrap = document.getElementById('toast-wrap');
-    const el   = document.createElement('div');
-    el.className = 'toast ' + type;
-    const icons = { success:'fa-check-circle', error:'fa-times-circle', info:'fa-info-circle' };
-    el.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i> ${esc(msg)}`;
-    wrap.appendChild(el);
-    setTimeout(() => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(8px)';
-        setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 300);
-    }, 3500);
+function toast(msg,type){
+    type=type||'info';
+    const el=document.createElement('div');
+    el.className='toast '+type;
+    const ico={success:'fa-check-circle',error:'fa-times-circle',info:'fa-info-circle'};
+    el.innerHTML=`<i class="fas ${ico[type]||ico.info}"></i> ${esc(msg)}`;
+    document.getElementById('toast-wrap').appendChild(el);
+    setTimeout(()=>{el.style.opacity='0';el.style.transform='translateY(8px)';setTimeout(()=>{if(el.parentNode)el.parentNode.removeChild(el);},300);},3500);
 }
 
 // ════════════════════════════════════════════
-// KEYBOARD SHORTCUTS
+// KLAVYE KISAYOLLARI
 // ════════════════════════════════════════════
-document.addEventListener('keydown', e => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+document.addEventListener('keydown',e=>{
+    if((e.ctrlKey||e.metaKey)&&e.key==='s'){
         e.preventDefault();
-        if (document.getElementById('page-editor').classList.contains('active')) savePost();
+        if(document.getElementById('page-editor').classList.contains('active')) savePost();
     }
-    if (e.key === 'Escape') { closeConfirm(); closeSidebar(); }
+    if(e.key==='Escape'){closeConfirm();closeSidebar();document.getElementById('preview-modal').classList.remove('show');}
 });
 </script>
 </body>
