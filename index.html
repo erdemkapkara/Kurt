@@ -142,9 +142,22 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            background: linear-gradient(135deg, #0A1628 0%, #132840 50%, #0D1F35 100%);
-            box-shadow: 0 1px 0 rgba(13,148,136,0.3), 0 4px 24px rgba(0,0,0,0.3);
-            transition: box-shadow var(--transition);
+            background-color: var(--nav-bg);
+            box-shadow: 0 1px 0 var(--border), 0 4px 16px rgba(0,0,0,0.06);
+            transition: background-color var(--transition), box-shadow var(--transition);
+        }
+        /* Header + mobile menu her zaman beyaz — dark modda da değişmez */
+        [data-theme="dark"] #header {
+            background-color: #FFFFFF;
+            box-shadow: 0 1px 0 #E0DBD3, 0 4px 16px rgba(0,0,0,0.06);
+            --text-primary:   #1A2B3C;
+            --text-secondary: #4A5568;
+            --border:         #E0DBD3;
+        }
+        [data-theme="dark"] #mobile-menu {
+            background-color: #FFFFFF;
+            --text-primary:   #1A2B3C;
+            --border:         #E0DBD3;
         }
 
         .header-inner {
@@ -164,12 +177,12 @@
             font-size: 1.45rem;
             font-weight: 700;
             letter-spacing: 0.5px;
-            color: #F4F1EB;
+            color: var(--text-primary);
             line-height: 1;
         }
         .brand-tagline {
             font-size: 0.72rem;
-            color: rgba(244,241,235,0.62);
+            color: var(--text-secondary);
             font-style: italic;
             margin-top: 3px;
             letter-spacing: 0.3px;
@@ -181,14 +194,14 @@
             align-items: center;
         }
         .header-nav a {
-            color: rgba(244,241,235,0.82);
+            color: var(--text-primary);
             font-size: 0.9rem;
             font-weight: 500;
             padding: 0.5rem 0.85rem;
             border-radius: var(--radius);
             transition: background var(--transition), color var(--transition);
         }
-        .header-nav a:hover { background: rgba(13,148,136,0.22); color: #2DD4BF; }
+        .header-nav a:hover { background: rgba(13,148,136,0.10); color: var(--accent); }
 
         .header-actions {
             display: flex;
@@ -200,14 +213,14 @@
         .btn-icon {
             background: none;
             border: none;
-            color: rgba(244,241,235,0.82);
+            color: var(--text-primary);
             font-size: 1.15rem;
             padding: 0.5rem;
             border-radius: var(--radius);
             transition: color var(--transition), background var(--transition);
             line-height: 1;
         }
-        .btn-icon:hover { color: #2DD4BF; background: rgba(13,148,136,0.22); }
+        .btn-icon:hover { color: var(--accent); background: rgba(13,148,136,0.12); }
 
         .btn-cta {
             background: var(--accent);
@@ -235,23 +248,24 @@
         #mobile-menu {
             display: none;
             flex-direction: column;
-            background: linear-gradient(135deg, #0A1628 0%, #132840 100%);
-            border-top: 1px solid rgba(13,148,136,0.28);
+            background-color: var(--nav-bg);
+            border-top: 1px solid var(--border);
             padding: 0.5rem 5% 1.5rem;
             gap: 0.25rem;
+            transition: background-color var(--transition);
         }
         #mobile-menu.open { display: flex; }
         #mobile-menu a {
-            color: rgba(244,241,235,0.82);
+            color: var(--text-primary);
             font-size: 1rem;
             font-weight: 500;
             padding: 0.85rem 1rem;
             border-radius: var(--radius);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            border-bottom: 1px solid var(--border);
             transition: background var(--transition), color var(--transition);
         }
         #mobile-menu a:last-of-type { border-bottom: none; }
-        #mobile-menu a:hover { background: rgba(13,148,136,0.22); color: #2DD4BF; }
+        #mobile-menu a:hover { background: rgba(13,148,136,0.10); color: var(--accent); }
         #mobile-menu .btn-cta {
             margin-top: 0.5rem;
             text-align: center;
@@ -1275,83 +1289,16 @@
     </div>
 </section>
 
-<!-- NEWSLETTER -->
-<section id="newsletter">
-    <div class="newsletter-inner fade-in">
-        <h3>📬 Yeni Yazılardan Haberdar Ol</h3>
-        <p>Her ay en önemli hukuki gelişmeleri ve yeni yazıları doğrudan e-posta kutunuza gönderelim. Spam yok.</p>
-        <form class="newsletter-form" onsubmit="handleNewsletter(event)">
-            <input type="email" placeholder="E-posta adresiniz" required>
-            <button type="submit">Abone Ol</button>
-        </form>
-    </div>
-</section>
-
-<!-- FEATURES -->
-<section id="features">
-    <div class="features-inner">
+<!-- FAQ -->
+<section id="faq">
+    <div class="faq-inner">
         <div class="section-header fade-in" style="text-align:center;">
-            <div class="section-label">Neden Yargı Kalemi?</div>
-            <h2 class="section-title">Platformun Farkı</h2>
+            <div class="section-label">Pratik Bilgiler</div>
+            <h2 class="section-title">Sık Sorulan Sorular</h2>
+            <p class="section-sub">Günlük hayatta karşılaşılan hukuki durumlar ve kısa, pratik yanıtlar.</p>
         </div>
-        <div class="features-grid">
-            <div class="feature-box fade-in">
-                <div class="feature-icon-wrap"><i class="fas fa-book-open"></i></div>
-                <h3>Derinlemesine Analizler</h3>
-                <p>Tek cümlelik yanıtlar değil; kaynakları, içtihatları ve pratik çıkarımlarıyla birlikte ele alınan kapsamlı yazılar.</p>
-            </div>
-            <div class="feature-box fade-in">
-                <div class="feature-icon-wrap"><i class="fas fa-balance-scale"></i></div>
-                <h3>Pratik Rehberler</h3>
-                <p>Teoriden pratiğe: her yazı, benzer durumda olan birinin adım adım ne yapması gerektiğini net bir şekilde gösterir.</p>
-            </div>
-            <div class="feature-box fade-in">
-                <div class="feature-icon-wrap"><i class="fas fa-user-shield"></i></div>
-                <h3>Gizli Danışmanlık</h3>
-                <p>Kimliğiniz gizli kalır. Kişisel durumunuzu profesyonel, deneyimli bir gözle değerlendirin. 48 saat içinde yanıt.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- TESTIMONIALS -->
-<section id="testimonials">
-    <div class="testimonials-inner">
-        <div class="section-header fade-in" style="text-align:center;">
-            <div class="section-label">Okuyuculardan</div>
-            <h2 class="section-title">Ne Dediler?</h2>
-        </div>
-        <div class="testimonials-grid">
-            <div class="testi-card fade-in">
-                <p class="testi-text">Gözaltı yazısını okumamış olsaydım, bana söylenenleri sorgusuz sualsiz kabul edecektim. O yazı yüzünden avukat talep ettim. Fark yarattı.</p>
-                <div class="testi-author">
-                    <div class="testi-avatar">MK</div>
-                    <div>
-                        <div class="testi-name">M. Kaya</div>
-                        <div class="testi-role">İstanbul</div>
-                    </div>
-                </div>
-            </div>
-            <div class="testi-card fade-in">
-                <p class="testi-text">Adli yardım sisteminden haberim yoktu. Yazıyı okuduktan sonra başvurdum ve ücretsiz avukat talep edebildim. Bu platform gerçek anlamda eşitlik sağlıyor.</p>
-                <div class="testi-author">
-                    <div class="testi-avatar">FD</div>
-                    <div>
-                        <div class="testi-name">F. Doğan</div>
-                        <div class="testi-role">Ankara</div>
-                    </div>
-                </div>
-            </div>
-            <div class="testi-card fade-in">
-                <p class="testi-text">İşten çıkarıldığımda haklarımı bilmiyordum. Danışmanlık formu aracılığıyla aldığım yanıt, iş mahkemesinde nasıl hareket edeceğimi anlamama yardımcı oldu.</p>
-                <div class="testi-author">
-                    <div class="testi-avatar">AY</div>
-                    <div>
-                        <div class="testi-name">A. Yıldız</div>
-                        <div class="testi-role">İzmir</div>
-                    </div>
-                </div>
-            </div>
+        <div class="faq-list fade-in" id="faq-list">
+            <!-- faq.json'dan yüklenir -->
         </div>
     </div>
 </section>
@@ -1408,6 +1355,75 @@
     </div>
 </section>
 
+<!-- FEATURES -->
+<section id="features">
+    <div class="features-inner">
+        <div class="section-header fade-in" style="text-align:center;">
+            <div class="section-label">Neden Yargı Kalemi?</div>
+            <h2 class="section-title">Platformun Farkı</h2>
+        </div>
+        <div class="features-grid">
+            <div class="feature-box fade-in">
+                <div class="feature-icon-wrap"><i class="fas fa-book-open"></i></div>
+                <h3>Derinlemesine Analizler</h3>
+                <p>Tek cümlelik yanıtlar değil; kaynakları, içtihatları ve pratik çıkarımlarıyla birlikte ele alınan kapsamlı yazılar.</p>
+            </div>
+            <div class="feature-box fade-in">
+                <div class="feature-icon-wrap"><i class="fas fa-balance-scale"></i></div>
+                <h3>Pratik Rehberler</h3>
+                <p>Teoriden pratiğe: her yazı, benzer durumda olan birinin adım adım ne yapması gerektiğini net bir şekilde gösterir.</p>
+            </div>
+            <div class="feature-box fade-in">
+                <div class="feature-icon-wrap"><i class="fas fa-user-shield"></i></div>
+                <h3>Profesyonel Danışmanlık</h3>
+                <p>Kimliğiniz gizli kalır. Kişisel durumunuzu profesyonel, deneyimli bir gözle değerlendirin. 48 saat içinde yanıt.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+    <div class="testimonials-inner">
+        <div class="section-header fade-in" style="text-align:center;">
+            <div class="section-label">Okuyuculardan</div>
+            <h2 class="section-title">Ne Dediler?</h2>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testi-card fade-in">
+                <p class="testi-text">Gözaltı yazısını okumamış olsaydım, bana söylenenleri sorgusuz sualsiz kabul edecektim. O yazı yüzünden avukat talep ettim. Fark yarattı.</p>
+                <div class="testi-author">
+                    <div class="testi-avatar">MK</div>
+                    <div>
+                        <div class="testi-name">M. Kaya</div>
+                        <div class="testi-role">İstanbul</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testi-card fade-in">
+                <p class="testi-text">Adli yardım sisteminden haberim yoktu. Yazıyı okuduktan sonra başvurdum ve ücretsiz avukat talep edebildim. Bu platform gerçek anlamda eşitlik sağlıyor.</p>
+                <div class="testi-author">
+                    <div class="testi-avatar">FD</div>
+                    <div>
+                        <div class="testi-name">F. Doğan</div>
+                        <div class="testi-role">Ankara</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testi-card fade-in">
+                <p class="testi-text">İşten çıkarıldığımda haklarımı bilmiyordum. Danışmanlık formu aracılığıyla aldığım yanıt, iş mahkemesinde nasıl hareket edeceğimi anlamama yardımcı oldu.</p>
+                <div class="testi-author">
+                    <div class="testi-avatar">AY</div>
+                    <div>
+                        <div class="testi-name">A. Yıldız</div>
+                        <div class="testi-role">İzmir</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- ABOUT -->
 <section id="about">
     <div class="about-inner">
@@ -1424,48 +1440,15 @@
     </div>
 </section>
 
-<!-- FAQ -->
-<section id="faq">
-    <div class="faq-inner">
-        <div class="section-header fade-in" style="text-align:center;">
-            <div class="section-label">Pratik Bilgiler</div>
-            <h2 class="section-title">Sık Sorulan Sorular</h2>
-            <p class="section-sub">Günlük hayatta karşılaşılan hukuki durumlar ve kısa, pratik yanıtlar.</p>
-        </div>
-        <div class="faq-list fade-in">
-            <div class="faq-item">
-                <button class="faq-q">Ayıplı ürün aldım. Ne yapmalıyım? <i class="fas fa-chevron-down"></i></button>
-                <div class="faq-a"><div class="faq-a-inner"><p>Satın alma tarihinden itibaren <strong>30 gün içinde</strong> satıcıya yazılı olarak başvurun; ücretsiz onarım, yenisiyle değişim, bedel iadesi veya bedel indirimi haklarından birini talep edebilirsiniz. Satıcı kabul etmezse ikamet ettiğiniz yerdeki <strong>Tüketici Hakem Heyeti</strong>'ne başvurun — ücretsizdir ve avukata gerek yoktur.</p></div></div>
-            </div>
-            <div class="faq-item">
-                <button class="faq-q">İşten çıkarıldım. Tazminat hakkım var mı? <i class="fas fa-chevron-down"></i></button>
-                <div class="faq-a"><div class="faq-a-inner"><p>En az <strong>1 yıl</strong> çalışmış iseniz ve işveren haklı bir neden göstermeksizin sözleşmenizi feshettiyse <strong>kıdem tazminatı</strong> ve <strong>ihbar tazminatı</strong> hakkınız doğar. Fesih bildirimini aldığınız tarihten itibaren <strong>1 ay içinde</strong> arabulucuya başvurmanız, sonradan dava açmanızın ön koşuludur.</p></div></div>
-            </div>
-            <div class="faq-item">
-                <button class="faq-q">Kiracım kira ödemedi. Nasıl tahliye ederim? <i class="fas fa-chevron-down"></i></button>
-                <div class="faq-a"><div class="faq-a-inner"><p>Kiracıya noter aracılığıyla <strong>ihtarname</strong> gönderin ve 30 gün süre verin. Bu ihtar aynı kira döneminde ikinci kez tekrarlanırsa kira sözleşmesi bitiminde <strong>tahliye davası</strong> açabilirsiniz. Alternatif olarak borç için <strong>icra takibi</strong> başlatıp ödeme emri gönderilmesini de sağlayabilirsiniz.</p></div></div>
-            </div>
-            <div class="faq-item">
-                <button class="faq-q">Gözaltına alındığımda haklarım nelerdir? <i class="fas fa-chevron-down"></i></button>
-                <div class="faq-a"><div class="faq-a-inner"><p>Gözaltında <strong>susma hakkınız</strong> vardır; hiçbir soruya cevap verme zorunluluğunuz yoktur. İlk andan itibaren <strong>avukat talep etme hakkınız</strong> doğar ve bu hak size esirgenilemez. Yakınlarınızın bilgilendirilmesini isteyebilirsiniz. Normal suçlarda gözaltı süresi en fazla <strong>24 saattir</strong>.</p></div></div>
-            </div>
-            <div class="faq-item">
-                <button class="faq-q">Boşanma davası ne kadar sürer? <i class="fas fa-chevron-down"></i></button>
-                <div class="faq-a"><div class="faq-a-inner"><p><strong>Anlaşmalı boşanma:</strong> Eşlerin tüm konularda uzlaşması hâlinde genellikle <strong>1–3 ay</strong> içinde sonuçlanır. <strong>Çekişmeli boşanma:</strong> Velayet, nafaka ve mal paylaşımı gibi anlaşmazlıklar süreci uzatır; ortalama <strong>1–3 yıl</strong> sürebilir. Her iki durumda da uzman bir avukattan destek almanız süreci hızlandırır.</p></div></div>
-            </div>
-            <div class="faq-item">
-                <button class="faq-q">Sosyal medyada bana hakaret edildi. Ne yapabilirim? <i class="fas fa-chevron-down"></i></button>
-                <div class="faq-a"><div class="faq-a-inner"><p>İçeriğin <strong>ekran görüntüsünü ve URL'sini</strong> alarak belgelendirin, ardından Cumhuriyet Savcılığı'na şikayette bulunun (TCK m. 125 — hakaret suçu). Aynı zamanda <strong>manevi tazminat</strong> için hukuk davası açabilirsiniz. İçeriğin kaldırılması için platformun şikayet mekanizmasını da kullanın.</p></div></div>
-            </div>
-            <div class="faq-item">
-                <button class="faq-q">Trafik kazasında karşı taraf kusurlu. Ne yapmalıyım? <i class="fas fa-chevron-down"></i></button>
-                <div class="faq-a"><div class="faq-a-inner"><p>Kaza yerini terk etmeden <strong>polis tutanağı</strong> tutturun ve kusur oranının tutanağa geçmesini sağlayın. Fotoğraf ve tanık bilgilerini alın. Ardından karşı tarafın <strong>zorunlu trafik sigortasına</strong> hasar ihbarında bulunun. Maddi zararlar için <strong>2 yıl</strong>, bedensel zarar için <strong>10 yıl</strong> içinde dava açma hakkınız vardır.</p></div></div>
-            </div>
-            <div class="faq-item">
-                <button class="faq-q">İcra takibine uğradım. Ne yapmalıyım? <i class="fas fa-chevron-down"></i></button>
-                <div class="faq-a"><div class="faq-a-inner"><p>Ödeme emrini aldığınız tarihten itibaren <strong>7 gün</strong> içinde icra müdürlüğüne itiraz edebilirsiniz; itiraz icraı geçici olarak durdurur. Borç size ait değilse veya miktarda hata varsa derhal itiraz edin ve hukuki destek alın. <strong>Süreyi kaçırmak hakkınızı ortadan kaldırır.</strong></p></div></div>
-            </div>
-        </div>
+<!-- NEWSLETTER -->
+<section id="newsletter">
+    <div class="newsletter-inner fade-in">
+        <h3>📬 Yeni Yazılardan Haberdar Ol</h3>
+        <p>Her ay en önemli hukuki gelişmeleri ve yeni yazıları doğrudan e-posta kutunuza gönderelim. Spam yok.</p>
+        <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+            <input type="email" placeholder="E-posta adresiniz" required>
+            <button type="submit">Abone Ol</button>
+        </form>
     </div>
 </section>
 
@@ -1476,7 +1459,10 @@
             <div class="footer-brand">
                 <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.9rem;">
                     <img src="logo1.png" alt="Yargı Kalemi" style="height:68px;width:auto;flex-shrink:0;">
-                    <div class="brand-logo" style="font-size:1.3rem;">Yargı Kalemi</div>
+                    <div>
+                        <div class="brand-logo" style="font-size:1.3rem;color:#1A2B3C;">Yargı Kalemi</div>
+                        <div style="font-size:0.76rem;font-style:italic;color:#4A5568;margin-top:0.25rem;">Bilgiyle güçlenen hak arayışı.</div>
+                    </div>
                 </div>
             </div>
             <div class="footer-col">
@@ -1812,16 +1798,38 @@
     loadPosts();
 
     /* =============================================
-       FAQ ACCORDION
+       FAQ — dinamik yükleme (faq.json)
     ============================================= */
-    document.querySelectorAll('.faq-q').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const item = btn.closest('.faq-item');
-            const isOpen = item.classList.contains('open');
-            document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
-            if (!isOpen) item.classList.add('open');
+    async function loadFaq() {
+        try {
+            const res = await fetch('faq.json?_=' + Date.now());
+            if (!res.ok) return;
+            const faqs = await res.json();
+            renderFaqSection(faqs);
+        } catch(e) { console.error('FAQ yüklenemedi:', e); }
+    }
+
+    function renderFaqSection(faqs) {
+        const list = document.getElementById('faq-list');
+        if (!list || !faqs.length) return;
+        list.innerHTML = faqs.map(f =>
+            '<div class="faq-item">' +
+                '<button class="faq-q">' + f.q + ' <i class="fas fa-chevron-down"></i></button>' +
+                '<div class="faq-a"><div class="faq-a-inner"><p>' + f.a + '</p></div></div>' +
+            '</div>'
+        ).join('');
+        list.querySelectorAll('.faq-q').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const item = btn.closest('.faq-item');
+                const isOpen = item.classList.contains('open');
+                list.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+                if (!isOpen) item.classList.add('open');
+            });
         });
-    });
+        list.querySelectorAll('.faq-item').forEach(el => io.observe(el));
+    }
+
+    loadFaq();
 
     /* =============================================
        FORMS — Formspree entegrasyonu
