@@ -1477,6 +1477,7 @@ function renderTrashList(items) {
                 <div class="tr-meta">${esc(it.category||'—')} · silindi: ${it.deletedAt ? new Date(it.deletedAt).toLocaleString('tr-TR') : '—'}</div>
             </div>
             <div class="tr-acts">
+                <button class="btn-perma" title="Önizle" onclick="showTrashPreview('${it._tid}')"><i class="fas fa-eye"></i></button>
                 <button class="btn-restore" onclick="restoreFromTrash('${it._tid}')"><i class="fas fa-rotate-left"></i> Geri Yükle</button>
                 <button class="btn-perma" title="Kalıcı sil" onclick="askPermaDelete('${it._tid}')"><i class="fas fa-trash"></i></button>
             </div>
@@ -1879,6 +1880,19 @@ function collectEditorPost() {
         image:    document.getElementById('inp-img').value.trim(),
         slug:     'onizleme'
     };
+}
+
+function showTrashPreview(tid) {
+    const { items } = { items: [] };
+    readTrash().then(({ items }) => {
+        const it = items.find(x => x._tid === tid);
+        if (!it) return;
+        const html = buildPostHtml(it).replace(/\.\.\//g, '');
+        const inner = document.getElementById('preview-inner');
+        inner.innerHTML = '<iframe id="preview-frame" title="Önizleme"></iframe>';
+        document.getElementById('preview-frame').srcdoc = html;
+        document.getElementById('preview-modal').classList.add('show');
+    });
 }
 
 function showPreview() {
