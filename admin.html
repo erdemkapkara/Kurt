@@ -618,14 +618,14 @@ input:checked+.toggle-sl::before{transform:translateX(17px)}
                                 <button class="tb-btn" title="Alt Simge" data-cmd="subscript"><i class="fas fa-subscript"></i></button>
                                 <div class="tb-sep"></div>
                                 <div class="tb-color-wrap" title="Yazı Rengi">
-                                    <button class="tb-color-btn" id="btn-forecolor" onclick="document.getElementById('inp-forecolor').click()">
+                                    <button class="tb-color-btn" id="btn-forecolor" onmousedown="saveEdRange()" onclick="document.getElementById('inp-forecolor').click()">
                                         <span class="tb-color-icon"><i class="fas fa-font"></i></span>
                                         <span class="tb-color-bar" id="forecolor-bar" style="background:#1A2B3C"></span>
                                     </button>
                                     <input type="color" id="inp-forecolor" class="tb-color-inp" value="#1A2B3C">
                                 </div>
                                 <div class="tb-color-wrap" title="Vurgu Rengi">
-                                    <button class="tb-color-btn" id="btn-hicolor" onclick="document.getElementById('inp-hicolor').click()">
+                                    <button class="tb-color-btn" id="btn-hicolor" onmousedown="saveEdRange()" onclick="document.getElementById('inp-hicolor').click()">
                                         <span class="tb-color-icon"><i class="fas fa-highlighter"></i></span>
                                         <span class="tb-color-bar" id="hicolor-bar" style="background:#FEF08A"></span>
                                     </button>
@@ -2308,39 +2308,51 @@ document.getElementById('btn-code').addEventListener('click', () => {
 });
 
 // ── Yazı tipi
-document.getElementById('font-family-sel').addEventListener('change', function() {
-    if (!this.value) return;
+// ── Seçimi kaydet / geri yükle
+let savedRange = null;
+function saveEdRange() {
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount && !sel.isCollapsed) savedRange = sel.getRangeAt(0).cloneRange();
+}
+function restoreEdRange() {
+    if (!savedRange) return false;
     const ed = document.getElementById('editor-content');
     ed.focus();
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(savedRange);
+    return !sel.isCollapsed;
+}
+document.getElementById('editor-content').addEventListener('mouseup', saveEdRange);
+document.getElementById('editor-content').addEventListener('keyup', saveEdRange);
+document.getElementById('editor-content').addEventListener('selectionchange', saveEdRange);
+
+// ── Yazı tipi
+document.getElementById('font-family-sel').addEventListener('mousedown', saveEdRange);
+document.getElementById('font-family-sel').addEventListener('change', function() {
+    if (!this.value) return;
+    restoreEdRange();
     document.execCommand('styleWithCSS', false, true);
     document.execCommand('fontName', false, this.value);
     this.value = ''; onEditorChange();
 });
 
-// ── Yazı boyutu (pt)
-let savedRange = null;
-function saveEdRange() {
-    const sel = window.getSelection();
-    if (sel && sel.rangeCount) savedRange = sel.getRangeAt(0).cloneRange();
-}
-function restoreEdRange() {
-    if (!savedRange) return;
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(savedRange);
-}
-document.getElementById('editor-content').addEventListener('mouseup', saveEdRange);
-document.getElementById('editor-content').addEventListener('keyup', saveEdRange);
+// ── Yazı boyutu (pt) — input'a tıklanınca seçim kayboluyor, kayıttan restore ediyoruz
+document.getElementById('font-size-inp').addEventListener('mousedown', saveEdRange);
+document.getElementById('font-size-inp').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { e.preventDefault(); applyFontSize(this.value); this.blur(); }
+});
+document.getElementById('font-size-inp').addEventListener('change', function() {
+    applyFontSize(this.value);
+});
 
 function applyFontSize(pt) {
     const ptVal = parseInt(pt, 10);
     if (!ptVal || ptVal < 1) return;
-    const ed = document.getElementById('editor-content');
-    ed.focus();
+    if (!restoreEdRange()) return; // seçim yoksa çık
     const sel = window.getSelection();
-    if (!sel || !sel.rangeCount) return;
+    if (!sel || !sel.rangeCount || sel.isCollapsed) return;
     const range = sel.getRangeAt(0);
-    if (range.collapsed) return;
     const frag = range.extractContents();
     const span = document.createElement('span');
     span.style.fontSize = ptVal + 'pt';
@@ -2351,12 +2363,6 @@ function applyFontSize(pt) {
     sel.addRange(range);
     onEditorChange();
 }
-document.getElementById('font-size-inp').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') { e.preventDefault(); applyFontSize(this.value); }
-});
-document.getElementById('font-size-inp').addEventListener('blur', function() {
-    applyFontSize(this.value);
-});
 
 // ── Yazı rengi
 document.getElementById('inp-forecolor').addEventListener('change', function() {
