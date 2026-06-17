@@ -164,6 +164,25 @@ a{text-decoration:none;color:inherit}
 .tg-cell{width:22px;height:22px;border:1.5px solid var(--border);border-radius:3px;cursor:pointer;transition:all .12s;background:#fff}
 .tg-cell.on{background:var(--accent-light);border-color:var(--accent)}
 .tg-label{font-size:.72rem;text-align:center;margin-top:.45rem;color:var(--text-secondary);font-weight:600}
+/* Link Modal */
+#link-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.38);z-index:9100;align-items:center;justify-content:center}
+#link-modal.show{display:flex}
+.link-box{background:#fff;border-radius:10px;padding:1.4rem 1.6rem;max-width:420px;width:92%;box-shadow:0 24px 60px rgba(0,0,0,.2)}
+.link-box h4{font-size:.96rem;font-weight:700;margin-bottom:1.1rem;color:var(--text-primary);display:flex;align-items:center;gap:.5rem}
+.link-field{margin-bottom:.65rem}
+.link-field label{display:block;font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);margin-bottom:.3rem}
+.link-field input{width:100%;padding:.44rem .65rem;border:1.5px solid var(--border);border-radius:var(--radius);font-size:.87rem;transition:border-color var(--tr)}
+.link-field input:focus{border-color:var(--accent);outline:none}
+.link-field input:read-only{background:var(--bg-base);color:var(--text-secondary)}
+.link-check{display:flex;align-items:center;gap:.5rem;margin-top:.3rem;font-size:.83rem;color:var(--text-secondary);cursor:pointer}
+.link-check input{width:15px;height:15px;accent-color:var(--accent);cursor:pointer}
+.link-btns{display:flex;gap:.5rem;margin-top:1rem;justify-content:flex-end}
+.link-btn{padding:.42rem .9rem;border-radius:var(--radius);font-size:.83rem;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--text-primary);transition:all var(--tr)}
+.link-btn:hover{border-color:var(--accent);color:var(--accent)}
+.link-btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.link-btn.primary:hover{background:var(--accent-hover)}
+.link-btn.danger{border-color:#FECACA;color:#DC2626}
+.link-btn.danger:hover{background:#FEF2F2}
 /* Find & Replace */
 #find-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.38);z-index:9000;align-items:flex-start;justify-content:center;padding-top:120px}
 #find-modal.show{display:flex}
@@ -852,6 +871,30 @@ input:checked+.toggle-sl::before{transform:translateX(17px)}
             </div>
         </div>
     </main>
+</div>
+
+<!-- LINK MODAL -->
+<div id="link-modal">
+    <div class="link-box">
+        <h4><i class="fas fa-link" style="color:var(--accent)"></i> Link Ekle / Düzenle</h4>
+        <div class="link-field">
+            <label>Metin</label>
+            <input type="text" id="link-inp-text" placeholder="Link metni (seçiliyse otomatik gelir)">
+        </div>
+        <div class="link-field">
+            <label>URL</label>
+            <input type="url" id="link-inp-url" placeholder="https://...">
+        </div>
+        <label class="link-check">
+            <input type="checkbox" id="link-new-tab" checked>
+            Yeni sekmede aç (_blank)
+        </label>
+        <div class="link-btns">
+            <button class="link-btn danger" id="link-remove-btn" style="margin-right:auto;display:none"><i class="fas fa-unlink"></i> Linki Kaldır</button>
+            <button class="link-btn" id="link-cancel-btn">İptal</button>
+            <button class="link-btn primary" id="link-ok-btn"><i class="fas fa-check"></i> Uygula</button>
+        </div>
+    </div>
 </div>
 
 <!-- FIND & REPLACE MODAL -->
@@ -2285,16 +2328,8 @@ document.getElementById('btn-quote').addEventListener('click', () => {
 
 // ── Link
 document.getElementById('btn-link').addEventListener('click', () => {
-    const sel = window.getSelection();
-    const selTxt = sel ? sel.toString() : '';
-    const url = prompt('Link URL girin:');
-    if (!url) return;
-    document.getElementById('editor-content').focus();
-    if (!selTxt) {
-        const txt = prompt('Link metni:', url) || url;
-        document.execCommand('insertHTML', false, `<a href="${url}">${txt}</a>`);
-    } else { document.execCommand('createLink', false, url); }
-    onEditorChange();
+    saveEdRange();
+    openLinkModal('editor-content');
 });
 
 // ── Satır içi kod
@@ -2442,6 +2477,113 @@ document.getElementById('inp-hicolor').addEventListener('change', function() {
         document.execCommand('insertHTML', false, html);
         onEditorChange();
     }
+})();
+
+// ── Link Modal
+(function() {
+    let _targetEdId = 'editor-content';
+    let _linkRange   = null;
+    let _editingAnchor = null;
+
+    window.openLinkModal = function(editorId) {
+        _targetEdId = editorId;
+        _editingAnchor = null;
+
+        // Seçili metin ve mevcut link'i bul
+        const sel = window.getSelection();
+        let selText = '';
+        let existingUrl = '';
+
+        if (sel && sel.rangeCount) {
+            _linkRange = sel.getRangeAt(0).cloneRange();
+            selText = sel.toString();
+            // Seçim bir <a> içindeyse düzenleme moduna geç
+            let node = sel.anchorNode;
+            while (node && node !== document) {
+                if (node.nodeName === 'A') { _editingAnchor = node; existingUrl = node.href; selText = selText || node.textContent; break; }
+                node = node.parentNode;
+            }
+        }
+
+        document.getElementById('link-inp-text').value = selText;
+        document.getElementById('link-inp-url').value  = existingUrl;
+        document.getElementById('link-new-tab').checked = true;
+        document.getElementById('link-remove-btn').style.display = _editingAnchor ? 'inline-flex' : 'none';
+        document.getElementById('link-modal').classList.add('show');
+        setTimeout(() => {
+            const urlInp = document.getElementById('link-inp-url');
+            urlInp.focus(); urlInp.select();
+        }, 60);
+    };
+
+    function closeLinkModal() {
+        document.getElementById('link-modal').classList.remove('show');
+        _linkRange = null; _editingAnchor = null;
+    }
+
+    function applyLink() {
+        const url  = document.getElementById('link-inp-url').value.trim();
+        const text = document.getElementById('link-inp-text').value.trim();
+        const newTab = document.getElementById('link-new-tab').checked;
+        if (!url) { document.getElementById('link-inp-url').focus(); return; }
+
+        const ed = document.getElementById(_targetEdId);
+        ed.focus();
+
+        if (_editingAnchor) {
+            // Var olan linki güncelle
+            _editingAnchor.href = url;
+            if (text) _editingAnchor.textContent = text;
+            if (newTab) _editingAnchor.target = '_blank'; else _editingAnchor.removeAttribute('target');
+        } else {
+            // Yeni link ekle
+            if (_linkRange) {
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(_linkRange);
+            }
+            const displayText = text || url;
+            const target = newTab ? ' target="_blank" rel="noopener noreferrer"' : '';
+            const selNow = window.getSelection();
+            if (selNow && !selNow.isCollapsed) {
+                document.execCommand('createLink', false, url);
+                // target ve rel ekle
+                const a = ed.querySelector(`a[href="${CSS.escape(url)}"]`) ||
+                          (selNow.anchorNode && selNow.anchorNode.closest && selNow.anchorNode.closest('a'));
+                if (a && newTab) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+            } else {
+                document.execCommand('insertHTML', false,
+                    `<a href="${url}"${target}>${displayText}</a>`);
+            }
+        }
+
+        if (_targetEdId === 'editor-content') onEditorChange();
+        closeLinkModal();
+    }
+
+    function removeLink() {
+        if (!_editingAnchor) return;
+        const ed = document.getElementById(_targetEdId);
+        ed.focus();
+        const sel = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(_editingAnchor);
+        sel.removeAllRanges(); sel.addRange(range);
+        document.execCommand('unlink', false, null);
+        if (_targetEdId === 'editor-content') onEditorChange();
+        closeLinkModal();
+    }
+
+    document.getElementById('link-ok-btn').addEventListener('click', applyLink);
+    document.getElementById('link-cancel-btn').addEventListener('click', closeLinkModal);
+    document.getElementById('link-remove-btn').addEventListener('click', removeLink);
+    document.getElementById('link-inp-url').addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); applyLink(); }
+        if (e.key === 'Escape') closeLinkModal();
+    });
+    document.getElementById('link-modal').addEventListener('click', e => {
+        if (e.target === document.getElementById('link-modal')) closeLinkModal();
+    });
 })();
 
 // ── Bul & Değiştir
@@ -2670,7 +2812,7 @@ document.addEventListener('keydown',e=>{
         e.preventDefault();
         if(document.getElementById('page-editor').classList.contains('active')) savePost();
     }
-    if(e.key==='Escape'){closeConfirm();closeFaqModal();closeSidebar();document.getElementById('preview-modal').classList.remove('show');document.getElementById('drafts-modal').classList.remove('show');document.getElementById('find-modal').classList.remove('show');}
+    if(e.key==='Escape'){closeConfirm();closeFaqModal();closeSidebar();document.getElementById('preview-modal').classList.remove('show');document.getElementById('drafts-modal').classList.remove('show');document.getElementById('find-modal').classList.remove('show');document.getElementById('link-modal').classList.remove('show');}
 });
 
 // ════════════════════════════════════════════
@@ -2742,15 +2884,7 @@ document.querySelectorAll('.tb-btn[data-faq-cmd]').forEach(btn => {
     });
 });
 document.getElementById('faq-btn-link').addEventListener('click', () => {
-    const sel = window.getSelection();
-    const selTxt = sel ? sel.toString() : '';
-    const url = prompt('Link URL girin:');
-    if (!url) return;
-    document.getElementById('faq-inp-a-ed').focus();
-    if (!selTxt) {
-        const txt = prompt('Link metni:', url) || url;
-        document.execCommand('insertHTML', false, `<a href="${url}">${txt}</a>`);
-    } else { document.execCommand('createLink', false, url); }
+    openLinkModal('faq-inp-a-ed');
 });
 document.getElementById('faq-inp-fc').addEventListener('change', function() {
     document.getElementById('faq-inp-a-ed').focus();
