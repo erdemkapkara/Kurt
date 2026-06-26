@@ -3,26 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Yargı Kalemi — Hukuk Blog & Danışmanlık Platformu</title>
+    <title>Yargı Kalemi — Hukuk Blogu</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/png" href="logo1.png">
 
     <!-- SEO -->
-    <meta name="description" content="Hukuki haklarınızı anlatan profesyonel bir platform. Ceza, aile, tüketici ve idare hukuku alanlarında uzman yazılar, pratik rehberler ve kişisel hukuki danışmanlık.">
-    <meta name="keywords" content="yargı kalemi, hukuk blogu, hukuki danışmanlık, ceza hukuku, aile hukuku, tüketici hakları, işçi hakları, tahliye davası, boşanma, icra takibi">
+    <meta name="description" content="Hukuki haklarınızı anlatan profesyonel bir hukuk blogu. Ceza, aile, tüketici ve idare hukuku alanlarında uzman yazılar ve pratik rehberler.">
+    <meta name="keywords" content="yargı kalemi, hukuk blogu, ceza hukuku, aile hukuku, tüketici hakları, işçi hakları, tahliye davası, boşanma, icra takibi">
     <meta name="author" content="Yargı Kalemi">
     <meta name="robots" content="index, follow">
     <meta name="language" content="Turkish">
-    <meta property="og:title" content="Yargı Kalemi — Hukuk Blog & Danışmanlık Platformu">
-    <meta property="og:description" content="Hukuki haklarınızı anlatan profesyonel bir platform. Uzman yazılar, pratik rehberler ve kişisel danışmanlık.">
+    <meta property="og:title" content="Yargı Kalemi — Hukuk Blogu">
+    <meta property="og:description" content="Hukuki haklarınızı anlatan profesyonel bir hukuk blogu. Uzman yazılar ve pratik rehberler.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://yargikalemi.github.io">
     <meta property="og:image" content="https://yargikalemi.github.io/logo1.png">
     <meta property="og:locale" content="tr_TR">
     <meta property="og:site_name" content="Yargı Kalemi">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Yargı Kalemi — Hukuk Blog & Danışmanlık">
+    <meta name="twitter:title" content="Yargı Kalemi — Hukuk Blogu">
     <meta name="twitter:description" content="Hukuki haklarınızı anlatan profesyonel bir platform. Uzman yazılar ve pratik rehberler.">
     <meta name="twitter:image" content="https://yargikalemi.github.io/logo1.png">
     <link rel="canonical" href="https://yargikalemi.github.io">
@@ -788,18 +788,8 @@
         .testi-role { font-size: 0.78rem; color: var(--text-muted); }
 
         /* =============================================
-           CONSULTATION
+           FORM (Soru-Cevap & bülten ortak stilleri)
         ============================================= */
-        #consultation {
-            padding: 4.5rem 5%;
-            background: var(--bg-card);
-            transition: background var(--transition);
-        }
-        .consultation-inner {
-            max-width: 760px;
-            margin: 0 auto;
-        }
-        .consultation-inner .section-header { text-align: center; }
         .form-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -1205,7 +1195,6 @@
         <nav class="header-nav">
             <a href="#posts">Yazılar</a>
             <a href="#faq">Pratik Bilgiler</a>
-            <a href="#consultation">Danışmanlık</a>
             <a href="#features">Platform</a>
             <a href="#about">Hakkında</a>
         </nav>
@@ -1213,17 +1202,16 @@
         <div class="header-actions">
             <button class="btn-icon" id="theme-btn" title="Tema değiştir"><i class="fas fa-moon"></i></button>
             <button class="btn-icon" id="hamburger" title="Menü"><i class="fas fa-bars"></i></button>
-            <button class="btn-cta" onclick="scrollToSection('#consultation')">Danışmanlık Al</button>
+            <button class="btn-cta" onclick="scrollToSection('#posts')">Yazıları Oku</button>
         </div>
     </div>
 
     <div id="mobile-menu">
         <a href="#posts" onclick="closeMobileMenu()">Yazılar</a>
         <a href="#faq" onclick="closeMobileMenu()">Pratik Bilgiler</a>
-        <a href="#consultation" onclick="closeMobileMenu()">Danışmanlık</a>
         <a href="#features" onclick="closeMobileMenu()">Platform</a>
         <a href="#about" onclick="closeMobileMenu()">Hakkında</a>
-        <button class="btn-cta" onclick="scrollToSection('#consultation'); closeMobileMenu();">Danışmanlık Al</button>
+        <button class="btn-cta" onclick="scrollToSection('#posts'); closeMobileMenu();">Yazıları Oku</button>
     </div>
 </div>
 
@@ -1234,7 +1222,7 @@
         <p>Kürsü deneyimi ve hukuki birikimle hazırlanmış açık, yalın ve erişilebilir içerikler.</p>
         <div class="hero-btns">
             <button class="btn-outline" onclick="scrollToSection('#posts')">Yazıları Oku</button>
-            <button class="btn-filled" onclick="scrollToSection('#consultation')">Danışmanlık Al</button>
+            <button class="btn-filled" onclick="scrollToSection('#faq')">Pratik Bilgiler</button>
         </div>
     </div>
 </section>
@@ -1303,57 +1291,6 @@
     </div>
 </section>
 
-<!-- CONSULTATION -->
-<section id="consultation">
-    <div class="consultation-inner">
-        <div class="section-header fade-in">
-            <div class="section-label">Kişisel Destek</div>
-            <h2 class="section-title">Hukuki Sorunlarınız İçin<br>Profesyonel Bir Bakış Açısı</h2>
-            <p class="section-sub">Yıllarca dava dosyalarına bakan bir hakim tecrübesinden yararlanın. Kimliğiniz gizli kalır.</p>
-        </div>
-        <div class="form-card fade-in">
-            <form id="consult-form" onsubmit="handleConsult(event)">
-                <input type="hidden" name="_subject" value="Yeni Danışmanlık Talebi — Yargı Kalemi">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Ad (Opsiyonel)</label>
-                        <input type="text" name="ad" placeholder="Adınız">
-                    </div>
-                    <div class="form-group">
-                        <label>E-posta *</label>
-                        <input type="email" name="email" id="c-email" placeholder="ornek@mail.com" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Konu Türü *</label>
-                    <select name="konu" required>
-                        <option value="">Seçiniz...</option>
-                        <option>Ceza Hukuku</option>
-                        <option>Ticaret Hukuku</option>
-                        <option>Tüketici Hukuku</option>
-                        <option>Medeni Hukuk</option>
-                        <option>Aile Hukuku</option>
-                        <option>Ceza Muhakemeleri Hukuku</option>
-                        <option>İdare Hukuku</option>
-                        <option>Borçlar Hukuku</option>
-                        <option>KVKK</option>
-                        <option>Gayrimenkul / Kira</option>
-                        <option>İcra ve İflas</option>
-                        <option>Anayasa Mahkemesi</option>
-                        <option>AİHM</option>
-                        <option>Diğer</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Mesajınız *</label>
-                    <textarea name="mesaj" id="c-msg" placeholder="Durumunuzu kısaca anlatınız..." required></textarea>
-                </div>
-                <div class="form-note"><i class="fas fa-shield-alt"></i> Mesajınız gizli tutulur. Yanıt süresi: 24-48 saat içinde.</div>
-                <button type="submit" class="form-submit">Danışmanlık Talebi Gönder</button>
-            </form>
-        </div>
-    </div>
-</section>
 
 <!-- FEATURES -->
 <section id="features">
@@ -1374,9 +1311,9 @@
                 <p>Teoriden pratiğe: her yazı, benzer durumda olan birinin adım adım ne yapması gerektiğini net bir şekilde gösterir.</p>
             </div>
             <div class="feature-box fade-in">
-                <div class="feature-icon-wrap"><i class="fas fa-user-shield"></i></div>
-                <h3>Profesyonel Danışmanlık</h3>
-                <p>Kimliğiniz gizli kalır. Kişisel durumunuzu profesyonel, deneyimli bir gözle değerlendirin. 48 saat içinde yanıt.</p>
+                <div class="feature-icon-wrap"><i class="fas fa-comments"></i></div>
+                <h3>Sorularınıza Yanıt</h3>
+                <p>Yazıların altından merak ettiğinizi sorun. Seçili sorular, deneyimli bir gözle hazırlanan yanıtlarla yazının altında yayımlanır.</p>
             </div>
         </div>
     </div>
@@ -1411,7 +1348,7 @@
                 </div>
             </div>
             <div class="testi-card fade-in">
-                <p class="testi-text">İşten çıkarıldığımda haklarımı bilmiyordum. Danışmanlık formu aracılığıyla aldığım yanıt, iş mahkemesinde nasıl hareket edeceğimi anlamama yardımcı oldu.</p>
+                <p class="testi-text">İşten çıkarıldığımda haklarımı bilmiyordum. Buradaki işçi hakları yazısı, iş mahkemesinde nasıl hareket edeceğimi anlamama yardımcı oldu.</p>
                 <div class="testi-author">
                     <div class="testi-avatar">AY</div>
                     <div>
@@ -1480,7 +1417,7 @@
                     <li><a href="#about">Hakkında</a></li>
                     <li><a href="#features">Nasıl Çalışır?</a></li>
                     <li><a href="#testimonials">Yorumlar</a></li>
-                    <li><a href="#consultation">Danışmanlık</a></li>
+                    <li><a href="#faq">Pratik Bilgiler</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -1493,7 +1430,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p class="footer-legal">Bu site hukuki danışmanlık hizmeti değildir; yalnızca bilgi amaçlıdır. Özel danışmanlık için formu doldurunuz.</p>
+            <p class="footer-legal">Bu site hukuki danışmanlık hizmeti vermez; yalnızca genel bilgilendirme amaçlıdır. Somut durumunuz için bir avukata danışınız.</p>
             <span class="footer-copy">© 2025 Yargı Kalemi — Tüm Hakları Saklıdır</span>
         </div>
     </div>
@@ -1838,70 +1775,7 @@
        Formspree'den ücretsiz hesap aç → formspree.io
        Aşağıdaki ID'leri kendi form ID'lerinle değiştir
     ============================================= */
-    const FORMSPREE_DANISMANLIK = 'https://formspree.io/f/xwvjaebn';
     const FORMSPREE_BULTEN      = 'https://formspree.io/f/xdavynzj';
-    // GitHub fine-grained PAT: sadece yargikalemi/yargikalemi.github.io, Contents: Read+Write
-    // github.com/settings/tokens?type=beta adresinden oluştur, buraya yapıştır
-    const CONSULT_WRITE_TOKEN = ['github_pat_11CF64QPI0rtsUP3OnwqVt','fL9RYCrm2udsAlBudVwLn6SJWySLYqWuC4VNwuW8v7945LTHYVKQtjauRls'].join('_');
-
-    async function handleConsult(e) {
-        e.preventDefault();
-        const form = e.target;
-        const btn = form.querySelector('.form-submit');
-        const original = btn.textContent;
-        // Form verilerini erken topla (form temizlenmeden önce)
-        const entry = {
-            id: String(Date.now()),
-            date: new Date().toISOString(),
-            name: (form.querySelector('[name="ad"]') || {}).value || '',
-            email: (form.querySelector('[name="email"]') || {}).value || '',
-            topic: (form.querySelector('[name="konu"]') || {}).value || '',
-            message: (form.querySelector('[name="mesaj"]') || {}).value || '',
-            read: false
-        };
-        btn.textContent = 'Gönderiliyor...';
-        btn.disabled = true;
-        try {
-            const res = await fetch(FORMSPREE_DANISMANLIK, {
-                method: 'POST',
-                body: new FormData(form),
-                headers: { 'Accept': 'application/json' }
-            });
-            if (res.ok) {
-                document.getElementById('consult-form').innerHTML =
-                    '<p style="text-align:center;padding:2.5rem 0;color:var(--accent);font-weight:700;font-size:1.1rem;">' +
-                    '✓ Talebiniz alındı!<br>' +
-                    '<span style="font-weight:400;font-size:0.93rem;color:var(--text-secondary);">24-48 saat içinde e-posta adresinize yanıt verilecektir.</span></p>';
-                if (CONSULT_WRITE_TOKEN) {
-                    try { await saveConsultToGH(entry); } catch {}
-                }
-            } else {
-                throw new Error();
-            }
-        } catch {
-            btn.textContent = original;
-            btn.disabled = false;
-            alert('Bir hata oluştu. Lütfen tekrar deneyin.');
-        }
-    }
-
-    async function saveConsultToGH(entry) {
-        const apiUrl = 'https://api.github.com/repos/yargikalemi/yargikalemi.github.io/contents/consultations.json';
-        const headers = { 'Authorization': 'token ' + CONSULT_WRITE_TOKEN, 'Content-Type': 'application/json' };
-        let sha = '', list = [];
-        const getRes = await fetch(apiUrl, { headers });
-        if (getRes.ok) {
-            const d = await getRes.json();
-            sha = d.sha;
-            try { list = JSON.parse(atob(d.content.replace(/\s/g, ''))); } catch {}
-        }
-        list.push(entry);
-        const body = JSON.stringify(list, null, 2);
-        const encoded = btoa(unescape(encodeURIComponent(body)));
-        const payload = { message: 'Yeni danışmanlık talebi', content: encoded };
-        if (sha) payload.sha = sha;
-        await fetch(apiUrl, { method: 'PUT', headers, body: JSON.stringify(payload) });
-    }
 
     async function handleNewsletter(e) {
         e.preventDefault();
