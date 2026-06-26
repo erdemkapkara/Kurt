@@ -608,9 +608,14 @@
             flex-grow: 1;
             margin-bottom: 1rem;
             display: -webkit-box;
-            -webkit-line-clamp: 5;
+            -webkit-line-clamp: 4;
             -webkit-box-orient: vertical;
             overflow: hidden;
+        }
+        .card-cta {
+            color: var(--accent);
+            font-weight: 600;
+            white-space: nowrap;
         }
         .card-footer {
             padding: 0.9rem 1.4rem;
@@ -1617,10 +1622,10 @@
                 '<div class="card-body">' +
                     '<div class="card-cat">' + post.category + '</div>' +
                     '<h3>' + post.title + '</h3>' +
-                    '<p class="card-excerpt">' + post.excerpt + '</p>' +
+                    '<p class="card-excerpt">' + post.excerpt + ' <span class="card-cta">Devamını Oku...</span></p>' +
                 '</div>' +
                 '<div class="card-footer">' +
-                    '<div class="card-meta">' + post.date + ' · ' + post.readTime + '<span class="card-reads" data-slug="' + (post.slug || '') + '"></span></div>' +
+                    '<div class="card-meta">' + post.date + ' · ' + (typeof post.readTime === 'string' ? post.readTime : post.readTime + ' dk') + '<span class="card-reads" data-slug="' + (post.slug || '') + '"></span></div>' +
                     '<div class="card-shares">' +
                         '<button class="share-ico" onclick="share(this.closest(\'.post-card\').dataset.title,\'twitter\',this.closest(\'.post-card\').dataset.slug);event.stopPropagation();" title="Twitter"><i class="fab fa-twitter"></i></button>' +
                         '<button class="share-ico" onclick="share(this.closest(\'.post-card\').dataset.title,\'whatsapp\',this.closest(\'.post-card\').dataset.slug);event.stopPropagation();" title="WhatsApp"><i class="fab fa-whatsapp"></i></button>' +
