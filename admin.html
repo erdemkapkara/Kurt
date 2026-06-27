@@ -516,7 +516,8 @@ input:checked+.toggle-sl::before{transform:translateX(17px)}
             <button class="sb-item" id="nav-new"><i class="fas fa-plus-circle"></i> Yeni Yazı</button>
             <button class="sb-item" data-page="trash"><i class="fas fa-trash-can"></i> Çöp Kutusu <span id="trash-badge" class="nav-badge" style="display:none">0</span></button>
             <button class="sb-item" data-page="faq"><i class="fas fa-circle-question"></i> Sık Sorulan Sorular</button>
-            <button class="sb-item" data-page="qa"><i class="fas fa-comments"></i> Soru-Cevap</button>
+            <button class="sb-item" data-page="yorumlar"><i class="fas fa-comment-dots"></i> Yorumlar</button>
+            <button class="sb-item" data-page="qa"><i class="fas fa-circle-question"></i> Soru-Cevap</button>
             <div class="sb-label" style="margin-top:.6rem">Sistem</div>
             <button class="sb-item" data-page="settings"><i class="fas fa-cog"></i> Ayarlar</button>
             <a class="sb-item" href="/" target="_blank"><i class="fas fa-external-link-alt"></i> Siteyi Gör</a>
@@ -800,13 +801,25 @@ input:checked+.toggle-sl::before{transform:translateX(17px)}
         </div>
 
         <!-- ══ SORU-CEVAP ══ -->
+        <!-- ══ YORUMLAR ══ -->
+        <div class="page" id="page-yorumlar">
+            <div class="page-hdr">
+                <h1 class="page-title">Yorumlar</h1>
+                <button class="btn-new" id="btn-new-yorum"><i class="fas fa-plus"></i> Yorum Ekle</button>
+            </div>
+            <div class="qa-pending-note">
+                <i class="fas fa-envelope"></i> Okuyucu yorumları e-posta adresine ulaşır. Onaylamak istediğini aşağıdan "Yorum Ekle" butonuyla ekle — yazının altında yayımlanır.
+            </div>
+            <div id="yorum-admin-list"><div class="loading"><div class="spinner"></div> Yükleniyor…</div></div>
+        </div>
+        <!-- ══ SORU-CEVAP ══ -->
         <div class="page" id="page-qa">
             <div class="page-hdr">
                 <h1 class="page-title">Soru-Cevap</h1>
                 <button class="btn-new" id="btn-new-qa"><i class="fas fa-plus"></i> Yeni Soru-Cevap</button>
             </div>
             <div class="qa-pending-note">
-                <i class="fas fa-envelope"></i> Okuyucu soruları e-posta adresine ulaşır. Yayımlamak istediğin soruyu, ait olduğu yazıyı seçip cevabınla birlikte buraya ekle — yazının altında görünür.
+                <i class="fas fa-envelope"></i> Okuyucu soruları e-posta adresine ulaşır. Soruyu ait olduğu yazıyla birlikte ekle, cevabını yaz — yazının altında görünür. E-posta adresi girdiyseniz listede mailto bağlantısı çıkar.
             </div>
             <div id="qa-admin-list"><div class="loading"><div class="spinner"></div> Yükleniyor…</div></div>
         </div>
@@ -979,6 +992,40 @@ input:checked+.toggle-sl::before{transform:translateX(17px)}
 </div>
 
 <!-- SORU-CEVAP MODAL -->
+<!-- Yorum Ekle Modal -->
+<div id="yorum-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:8000;align-items:center;justify-content:center">
+    <div class="faq-modal-box">
+        <div class="faq-modal-hdr">
+            <h3 id="yorum-modal-title">Yorum Ekle</h3>
+            <button class="faq-modal-close-btn" onclick="closeYorumModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="field">
+            <label class="field-label">Hangi yazı</label>
+            <select class="field-input" id="yorum-inp-post"></select>
+        </div>
+        <div class="field" style="margin-top:.8rem;display:flex;align-items:center;gap:.6rem">
+            <input type="checkbox" id="yorum-inp-anon" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
+            <label for="yorum-inp-anon" class="field-label" style="margin:0;cursor:pointer">Anonim yorum</label>
+        </div>
+        <div class="field" style="margin-top:.8rem" id="yorum-name-field">
+            <label class="field-label">Yorum Sahibi (Ad Soyad)</label>
+            <input type="text" class="field-input" id="yorum-inp-author" placeholder="örn. Ahmet Yılmaz">
+        </div>
+        <div class="field" style="margin-top:.8rem">
+            <label class="field-label">E-posta <span style="font-weight:400;color:var(--text-muted)">(yalnızca admin görür)</span></label>
+            <input type="email" class="field-input" id="yorum-inp-email" placeholder="ornek@mail.com">
+        </div>
+        <div class="field" style="margin-top:.8rem">
+            <label class="field-label">Yorum Metni</label>
+            <textarea class="field-input" id="yorum-inp-text" rows="5" placeholder="Okuyucunun yorumu…" style="resize:vertical"></textarea>
+        </div>
+        <div class="faq-modal-ftr">
+            <button class="btn-cf-cancel" onclick="closeYorumModal()">İptal</button>
+            <button class="btn-primary" id="yorum-modal-save" onclick="saveYorumItem()"><i class="fas fa-save"></i> Yayımla</button>
+        </div>
+    </div>
+</div>
+<!-- Soru-Cevap Modal -->
 <div id="qa-modal">
     <div class="faq-modal-box">
         <div class="faq-modal-hdr">
@@ -992,6 +1039,10 @@ input:checked+.toggle-sl::before{transform:translateX(17px)}
         <div class="field" style="margin-top:.8rem">
             <label class="field-label">Soran (opsiyonel)</label>
             <input type="text" class="field-input" id="qa-inp-asker" placeholder="örn. Ahmet Y. — boş bırakılırsa gösterilmez">
+        </div>
+        <div class="field" style="margin-top:.8rem">
+            <label class="field-label">E-posta <span style="font-weight:400;color:var(--text-muted)">(yalnızca admin — mailto linki için)</span></label>
+            <input type="email" class="field-input" id="qa-inp-email" placeholder="ornek@mail.com">
         </div>
         <div class="field" style="margin-top:.8rem">
             <label class="field-label">Soru</label>
@@ -1165,7 +1216,42 @@ footer a{color:var(--accent);font-weight:600;text-decoration:none}
 .qa-btn:hover{background:var(--accent-h)}
 .qa-btn:disabled{opacity:.6;cursor:default}
 .qa-note{font-size:.78rem;color:var(--text3);margin-top:.85rem;display:flex;align-items:center;gap:.4rem}
-@media(max-width:640px){.wrap{padding:2rem 1.1rem 3.5rem}h1.post-title{font-size:1.7rem}.post-body{font-size:.98rem}.hdr-in{padding:0 1rem}.qa-form{padding:1.1rem}.qa-h{font-size:1.25rem}.qa-item{padding:.95rem 1.05rem}.qa-form input,.qa-form textarea{font-size:16px}.share-row{gap:.45rem}.sbtn{flex:1;justify-content:center}}
+/* ── Yorumlar ── */
+.cmts-sec{margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--border)}
+.cmts-h{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--text);margin-bottom:1.1rem;display:flex;align-items:center;gap:.55rem}
+.cmts-badge{background:var(--accent);color:#fff;font-size:.72rem;font-weight:700;border-radius:99px;padding:.1rem .52rem;vertical-align:middle}
+.cmt-item{display:flex;gap:.9rem;margin-bottom:1.2rem;align-items:flex-start}
+.cmt-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent) 0%,#0a8279 100%);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.05rem;flex-shrink:0}
+.cmt-bubble{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:.85rem 1.1rem;flex:1}
+.cmt-meta{font-size:.75rem;color:var(--text3);margin-bottom:.35rem;display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.cmt-author{font-weight:700;color:var(--text2)}
+.cmt-text{font-size:.93rem;color:var(--text2);line-height:1.72}
+/* ── Interact (Yorum/Soru formu) ── */
+.interact-wrap{margin-top:2.5rem;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.interact-hd{background:linear-gradient(135deg,var(--accent) 0%,#0a8279 100%);padding:1.3rem 1.6rem;display:flex;align-items:center;gap:.9rem}
+.interact-hd-ico{width:44px;height:44px;background:rgba(255,255,255,.18);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:#fff;flex-shrink:0}
+.interact-hd-txt h3{color:#fff;font-family:'Playfair Display',serif;font-size:1.12rem;font-weight:700;margin:0}
+.interact-hd-txt p{color:rgba(255,255,255,.75);font-size:.8rem;margin:.15rem 0 0}
+.interact-body{padding:1.4rem 1.6rem;background:var(--bg-card)}
+.itabs{display:flex;gap:.5rem;margin-bottom:1.4rem;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:.28rem}
+.itab{flex:1;padding:.52rem .7rem;border-radius:6px;border:none;background:none;color:var(--text2);font-size:.86rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:.4rem}
+.itab.active{background:var(--bg-card);color:var(--accent);box-shadow:0 1px 5px rgba(0,0,0,.09)}
+.ipane{display:none}.ipane.active{display:block}
+.if-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.if-grp{margin-bottom:.85rem}
+.if-lbl{display:block;font-size:.82rem;font-weight:600;color:var(--text2);margin-bottom:.32rem}
+.if-inp{width:100%;padding:.68rem .9rem;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.92rem;color:var(--text);outline:none;transition:border-color .2s;box-sizing:border-box}
+.if-inp:focus{border-color:var(--accent)}
+.if-ta{resize:vertical;min-height:95px}
+.anon-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem;cursor:pointer;user-select:none;padding:.6rem .7rem;background:var(--bg);border:1px solid var(--border);border-radius:8px}
+.anon-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+.anon-row span{font-size:.84rem;color:var(--text2);font-weight:500}
+.if-submit{background:var(--accent);color:#fff;border:none;padding:.7rem 1.6rem;border-radius:8px;font-size:.9rem;font-weight:700;cursor:pointer;transition:background .2s;font-family:inherit}
+.if-submit:hover{background:var(--accent-h)}
+.if-submit:disabled{opacity:.6;cursor:default}
+.if-note{font-size:.77rem;color:var(--text3);margin-top:.8rem;display:flex;align-items:flex-start;gap:.4rem;line-height:1.55}
+.if-ok{color:var(--accent);font-weight:700;padding:.6rem 0;font-size:.95rem}
+@media(max-width:640px){.wrap{padding:2rem 1.1rem 3.5rem}h1.post-title{font-size:1.7rem}.post-body{font-size:.98rem}.hdr-in{padding:0 1rem}.qa-h{font-size:1.25rem}.qa-item{padding:.95rem 1.05rem}.if-row{grid-template-columns:1fr}.if-inp,.if-ta{font-size:16px}.interact-hd{padding:1.1rem 1.3rem}.interact-body{padding:1.1rem 1.3rem}.share-row{gap:.45rem}.sbtn{flex:1;justify-content:center}}
 </style>
 </head>
 <body>
@@ -1196,29 +1282,84 @@ footer a{color:var(--accent);font-weight:600;text-decoration:none}
       </div>
       <div class="copy-ok" id="copy-ok">✓ Bağlantı kopyalandı!</div>
     </div>
+    <!-- Onaylı Yorumlar -->
+    <section class="cmts-sec" id="cmts-sec" style="display:none">
+      <h2 class="cmts-h"><i class="fas fa-comment-dots" style="color:var(--accent);font-size:1.1rem"></i> Yorumlar <span class="cmts-badge" id="cmt-count">0</span></h2>
+      <div id="cmts-list"></div>
+    </section>
+    <!-- Onaylı Soru-Cevap -->
     <section class="qa-sec">
       <h2 class="qa-h" id="qa-h" style="display:none">Soru &amp; Cevap</h2>
       <div id="qa-list"></div>
-      <div class="qa-form">
-        <div class="qa-form-head">
-          <div class="qa-form-ico"><i class="fas fa-comments"></i></div>
-          <div>
-            <h3 class="qa-form-title">Bir sorunuz mu var?</h3>
-            <div class="qa-form-sub">Merak ettiklerinizi sorun, yanıtlayalım.</div>
-          </div>
+    </section>
+    <!-- Yorum / Soru formu -->
+    <div class="interact-wrap">
+      <div class="interact-hd">
+        <div class="interact-hd-ico"><i class="fas fa-pen-to-square"></i></div>
+        <div class="interact-hd-txt">
+          <h3>Katıl</h3>
+          <p>Yorumunuzu paylaşın veya soru sorun.</p>
         </div>
-        <div class="qa-form-body">
-          <form id="qa-form">
-            <label>Adınız (opsiyonel)</label>
-            <input type="text" name="ad" placeholder="Adınız" maxlength="60">
-            <label>Sorunuz *</label>
-            <textarea name="soru" placeholder="Bu yazıyla ilgili merak ettiğinizi yazın…" required maxlength="1500"></textarea>
-            <button type="submit" class="qa-btn">Gönder</button>
-            <div class="qa-note"><i class="fas fa-shield-alt"></i> Sorular incelenir; uygun görülenler yanıtıyla birlikte bu sayfada yayımlanır.</div>
+      </div>
+      <div class="interact-body">
+        <div class="itabs">
+          <button class="itab active" onclick="switchTab('yorum',this)"><i class="fas fa-comment"></i> Yorum Yaz</button>
+          <button class="itab" onclick="switchTab('soru',this)"><i class="fas fa-circle-question"></i> Soru Sor</button>
+        </div>
+        <!-- Yorum pane -->
+        <div class="ipane active" id="ipane-yorum">
+          <form id="yorum-form">
+            <label class="anon-row" id="anon-row">
+              <input type="checkbox" id="anon-cb" name="anonim">
+              <span>Anonim olarak yorum yap</span>
+            </label>
+            <div id="name-fields">
+              <div class="if-row">
+                <div class="if-grp">
+                  <label class="if-lbl">Adınız *</label>
+                  <input class="if-inp" type="text" name="ad" placeholder="Adınız" maxlength="60">
+                </div>
+                <div class="if-grp">
+                  <label class="if-lbl">Soyadınız *</label>
+                  <input class="if-inp" type="text" name="soyad" placeholder="Soyadınız" maxlength="60">
+                </div>
+              </div>
+            </div>
+            <div class="if-grp">
+              <label class="if-lbl">E-posta * <span style="font-weight:400;color:var(--text3)">(yayımlanmaz)</span></label>
+              <input class="if-inp" type="email" name="email" placeholder="ornek@mail.com" maxlength="120">
+            </div>
+            <div class="if-grp">
+              <label class="if-lbl">Yorumunuz *</label>
+              <textarea class="if-inp if-ta" name="yorum" placeholder="Düşüncelerinizi paylaşın…" required maxlength="2000"></textarea>
+            </div>
+            <button type="submit" class="if-submit">Yorum Gönder</button>
+            <div class="if-note"><i class="fas fa-shield-alt"></i> Yorumlar incelenir; uygun bulunanlar yayımlanır.</div>
+          </form>
+        </div>
+        <!-- Soru pane -->
+        <div class="ipane" id="ipane-soru">
+          <form id="soru-form">
+            <div class="if-row">
+              <div class="if-grp">
+                <label class="if-lbl">Adınız <span style="font-weight:400;color:var(--text3)">(opsiyonel)</span></label>
+                <input class="if-inp" type="text" name="ad" placeholder="Adınız" maxlength="60">
+              </div>
+              <div class="if-grp">
+                <label class="if-lbl">E-posta <span style="font-weight:400;color:var(--text3)">(opsiyonel)</span></label>
+                <input class="if-inp" type="email" name="email" placeholder="ornek@mail.com" maxlength="120">
+              </div>
+            </div>
+            <div class="if-grp">
+              <label class="if-lbl">Sorunuz *</label>
+              <textarea class="if-inp if-ta" name="soru" placeholder="Bu yazıyla ilgili merak ettiğinizi yazın…" required maxlength="1500"></textarea>
+            </div>
+            <button type="submit" class="if-submit">Soru Gönder</button>
+            <div class="if-note"><i class="fas fa-envelope"></i> Sorunuz yanıtlanırsa bu sayfada yayımlanır.</div>
           </form>
         </div>
       </div>
-    </section>
+    </div>
     <a href="../index.html#posts" class="back-all"><i class="fas fa-arrow-left"></i> Tüm Yazılara Dön</a>
   </div>
 </main>
@@ -1240,30 +1381,99 @@ function cp(){navigator.clipboard.writeText(PU).then(function(){var el=document.
 var POST_SLUG=${JSON.stringify(slug)};
 var QA_ENDPOINT='https://formspree.io/f/xwvjaebn';
 function qaEsc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmtDate(d){try{return new Date(d).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'});}catch(e){return '';}}
+/* Tab geçişi */
+function switchTab(tab,btn){
+  document.querySelectorAll('.itab').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  document.querySelectorAll('.ipane').forEach(function(p){p.classList.remove('active');});
+  document.getElementById('ipane-'+tab).classList.add('active');
+}
+/* Anonim toggle */
+document.getElementById('anon-cb').addEventListener('change',function(){
+  document.getElementById('name-fields').style.display=this.checked?'none':'';
+});
+/* Yorumlar + S-C yükle */
 (function(){
   fetch('../comments.json?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():[];}).then(function(all){
-    var items=(all||[]).filter(function(c){return c.postSlug===POST_SLUG;});
-    if(!items.length)return;
-    document.getElementById('qa-h').style.display='block';
-    document.getElementById('qa-list').innerHTML=items.map(function(c){
-      return '<div class="qa-item">'+
-        '<div class="qa-q"><span class="qa-ico">S:</span><span>'+qaEsc(c.question)+'</span></div>'+
-        '<div class="qa-a"><span class="qa-ico">C:</span><span>'+qaEsc(c.answer)+'</span></div>'+
-        (c.askerName?'<div class="qa-asker">— '+qaEsc(c.askerName)+'</div>':'')+
-      '</div>';
-    }).join('');
+    var mine=(all||[]).filter(function(c){return c.postSlug===POST_SLUG;});
+    /* Yorumlar */
+    var yorumlar=mine.filter(function(c){return c.type==='yorum';});
+    if(yorumlar.length){
+      var sec=document.getElementById('cmts-sec');
+      sec.style.display='';
+      document.getElementById('cmt-count').textContent=yorumlar.length;
+      document.getElementById('cmts-list').innerHTML=yorumlar.map(function(c){
+        var init=c.anonymous?'?':(c.authorName||'A').charAt(0).toUpperCase();
+        var name=c.anonymous?'Anonim':(c.authorName||'Okuyucu');
+        return '<div class="cmt-item">'+
+          '<div class="cmt-avatar">'+init+'</div>'+
+          '<div class="cmt-bubble">'+
+            '<div class="cmt-meta"><span class="cmt-author">'+qaEsc(name)+'</span><span>·</span><span>'+qaEsc(fmtDate(c.date))+'</span></div>'+
+            '<div class="cmt-text">'+qaEsc(c.text)+'</div>'+
+          '</div>'+
+        '</div>';
+      }).join('');
+    }
+    /* Soru-Cevap */
+    var sorular=mine.filter(function(c){return !c.type||c.type==='soru';});
+    if(sorular.length){
+      document.getElementById('qa-h').style.display='block';
+      document.getElementById('qa-list').innerHTML=sorular.map(function(c){
+        return '<div class="qa-item">'+
+          '<div class="qa-q"><span class="qa-ico">S:</span><span>'+qaEsc(c.question)+'</span></div>'+
+          '<div class="qa-a"><span class="qa-ico">C:</span><span>'+qaEsc(c.answer)+'</span></div>'+
+          (c.askerName?'<div class="qa-asker">— '+qaEsc(c.askerName)+'</div>':'')+
+        '</div>';
+      }).join('');
+    }
   }).catch(function(){});
 })();
-document.getElementById('qa-form').addEventListener('submit',function(ev){
+/* Yorum formu */
+document.getElementById('yorum-form').addEventListener('submit',function(ev){
   ev.preventDefault();
-  var f=ev.target,btn=f.querySelector('.qa-btn'),orig=btn.textContent;
+  var f=ev.target,btn=f.querySelector('.if-submit');
+  var isAnon=document.getElementById('anon-cb').checked;
+  var ad=f.querySelector('[name=ad]')?f.querySelector('[name=ad]').value.trim():'';
+  var soyad=f.querySelector('[name=soyad]')?f.querySelector('[name=soyad]').value.trim():'';
+  var email=f.querySelector('[name=email]').value.trim();
+  var yorum=f.querySelector('[name=yorum]').value.trim();
+  if(!isAnon&&(!ad||!soyad)){alert('Lütfen adınızı ve soyadınızı girin.');return;}
+  if(!email||!email.includes('@')){alert('Lütfen geçerli bir e-posta adresi girin.');return;}
+  if(!yorum){return;}
   btn.textContent='Gönderiliyor…';btn.disabled=true;
-  var fd=new FormData(f);
-  fd.append('yazi',PT);fd.append('slug',POST_SLUG);fd.append('_subject','Yeni Soru — '+PT);
+  var fd=new FormData();
+  fd.append('_subject','Yeni Yorum — '+PT);
+  fd.append('tip','yorum');
+  fd.append('slug',POST_SLUG);
+  fd.append('yazi',PT);
+  fd.append('ad',isAnon?'Anonim':(ad+' '+soyad));
+  fd.append('email',email);
+  fd.append('yorum',yorum);
   fetch(QA_ENDPOINT,{method:'POST',body:fd,headers:{'Accept':'application/json'}}).then(function(r){
-    if(r.ok){f.innerHTML='<p style="color:var(--accent);font-weight:700;padding:.6rem 0">✓ Sorunuz alındı. Uygun görülürse yanıtıyla birlikte bu sayfada yayımlanacaktır.</p>';}
+    if(r.ok){f.innerHTML='<p class="if-ok">✓ Yorumunuz alındı. İncelendikten sonra yayımlanacaktır.</p>';}
     else{throw new Error();}
-  }).catch(function(){btn.textContent=orig;btn.disabled=false;alert('Bir hata oluştu, lütfen tekrar deneyin.');});
+  }).catch(function(){btn.textContent='Yorum Gönder';btn.disabled=false;alert('Bir hata oluştu, lütfen tekrar deneyin.');});
+});
+/* Soru formu */
+document.getElementById('soru-form').addEventListener('submit',function(ev){
+  ev.preventDefault();
+  var f=ev.target,btn=f.querySelector('.if-submit');
+  var soru=f.querySelector('[name=soru]').value.trim();
+  if(!soru){return;}
+  btn.textContent='Gönderiliyor…';btn.disabled=true;
+  var fd=new FormData();
+  fd.append('_subject','Yeni Soru — '+PT);
+  fd.append('tip','soru');
+  fd.append('slug',POST_SLUG);
+  fd.append('yazi',PT);
+  fd.append('ad',f.querySelector('[name=ad]').value.trim());
+  fd.append('email',f.querySelector('[name=email]').value.trim());
+  fd.append('soru',soru);
+  fetch(QA_ENDPOINT,{method:'POST',body:fd,headers:{'Accept':'application/json'}}).then(function(r){
+    if(r.ok){f.innerHTML='<p class="if-ok">✓ Sorunuz alındı. Yanıtlanırsa bu sayfada yayımlanacaktır.</p>';}
+    else{throw new Error();}
+  }).catch(function(){btn.textContent='Soru Gönder';btn.disabled=false;alert('Bir hata oluştu, lütfen tekrar deneyin.');});
 });
 <\/script>
 </body>
@@ -2918,7 +3128,7 @@ function updateExcerptCount(){
 // ════════════════════════════════════════════
 // NAVİGASYON
 // ════════════════════════════════════════════
-const PAGE_TITLES={posts:'Yazılar',editor:'Yeni Yazı',settings:'Ayarlar',trash:'Çöp Kutusu',faq:'Sık Sorulan Sorular',qa:'Soru-Cevap'};
+const PAGE_TITLES={posts:'Yazılar',editor:'Yeni Yazı',settings:'Ayarlar',trash:'Çöp Kutusu',faq:'Sık Sorulan Sorular',yorumlar:'Yorumlar',qa:'Soru-Cevap'};
 function showPage(name, skipReload){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.getElementById('page-'+name).classList.add('active');
@@ -2930,6 +3140,7 @@ function showPage(name, skipReload){
     if(name==='posts'){ if(skipReload) renderList(); else loadPosts(); }
     if(name==='trash') loadTrashPage();
     if(name==='faq') loadFaqPage();
+    if(name==='yorumlar') loadYorumlarPage();
     if(name==='qa') loadQAPage();
 }
 document.querySelectorAll('.sb-item[data-page]').forEach(btn=>{
@@ -3157,6 +3368,146 @@ async function writeComments(items, sha, msg) {
     commentsSHA = d.content.sha;
 }
 
+// ════════════════════════════════════════════
+// YORUMLAR (comments.json, type:"yorum")
+// ════════════════════════════════════════════
+let editingYorumId = null;
+
+async function loadYorumlarPage() {
+    const list = document.getElementById('yorum-admin-list');
+    list.innerHTML = '<div class="loading"><div class="spinner"></div> Yükleniyor…</div>';
+    try {
+        const { items, sha } = await readComments();
+        allComments = items; commentsSHA = sha;
+        renderYorumAdmin();
+    } catch(e) {
+        list.innerHTML = `<div style="color:#DC2626;font-size:.84rem;padding:1rem">Yüklenemedi: ${esc(e.message)}</div>`;
+    }
+}
+
+function renderYorumAdmin() {
+    const list = document.getElementById('yorum-admin-list');
+    const yorumlar = allComments.filter(c => c.type === 'yorum');
+    if (!yorumlar.length) {
+        list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:.88rem">Henüz onaylanmış yorum yok. E-posta ile gelen yorumları "Yorum Ekle" düğmesiyle ekle.</div>';
+        return;
+    }
+    const sorted = [...yorumlar].sort((a,b) => new Date(b.date||0) - new Date(a.date||0));
+    list.innerHTML = sorted.map((c, i) =>
+        `<div class="faq-admin-item" data-id="${esc(c.id)}">
+            <div class="faq-admin-num">${i+1}</div>
+            <div class="faq-admin-info">
+                <span class="qa-post-tag">${esc(c.postTitle || c.postSlug || 'Yazı')}</span>
+                <div class="faq-admin-q">${c.anonymous ? '<em>Anonim</em>' : esc(c.authorName||'')}${c.authorEmail ? ` · <a href="mailto:${esc(c.authorEmail)}" style="color:var(--accent);font-size:.8rem" title="E-posta gönder"><i class="fas fa-envelope"></i> ${esc(c.authorEmail)}</a>` : ''}</div>
+                <div class="faq-admin-a">${esc((c.text||'').slice(0,140))}</div>
+            </div>
+            <div class="faq-admin-acts">
+                <button class="btn-edit-faq" onclick="openEditYorum('${esc(c.id)}')" title="Düzenle"><i class="fas fa-pencil"></i></button>
+                <button class="btn-del-faq" onclick="deleteYorumItem('${esc(c.id)}')" title="Sil"><i class="fas fa-trash"></i></button>
+            </div>
+        </div>`
+    ).join('');
+}
+
+function populateYorumPostSelect(selectedSlug) {
+    const sel = document.getElementById('yorum-inp-post');
+    const opts = allPosts.map(p => {
+        const slug = p.slug || slugify(p.title);
+        return `<option value="${esc(slug)}"${slug===selectedSlug?' selected':''}>${esc(p.title)}</option>`;
+    }).join('');
+    sel.innerHTML = opts || '<option value="">Önce yazı ekleyin</option>';
+}
+
+function openNewYorum() {
+    editingYorumId = null;
+    document.getElementById('yorum-modal-title').textContent = 'Yorum Ekle';
+    populateYorumPostSelect('');
+    document.getElementById('yorum-inp-anon').checked = false;
+    document.getElementById('yorum-name-field').style.display = '';
+    document.getElementById('yorum-inp-author').value = '';
+    document.getElementById('yorum-inp-email').value = '';
+    document.getElementById('yorum-inp-text').value = '';
+    document.getElementById('yorum-modal').style.display = 'flex';
+}
+
+function openEditYorum(id) {
+    const c = allComments.find(x => x.id === id);
+    if (!c) return;
+    editingYorumId = id;
+    document.getElementById('yorum-modal-title').textContent = 'Yorumu Düzenle';
+    populateYorumPostSelect(c.postSlug);
+    const isAnon = !!c.anonymous;
+    document.getElementById('yorum-inp-anon').checked = isAnon;
+    document.getElementById('yorum-name-field').style.display = isAnon ? 'none' : '';
+    document.getElementById('yorum-inp-author').value = c.authorName || '';
+    document.getElementById('yorum-inp-email').value = c.authorEmail || '';
+    document.getElementById('yorum-inp-text').value = c.text || '';
+    document.getElementById('yorum-modal').style.display = 'flex';
+}
+
+function closeYorumModal() {
+    document.getElementById('yorum-modal').style.display = 'none';
+}
+
+document.getElementById('yorum-inp-anon').addEventListener('change', function() {
+    document.getElementById('yorum-name-field').style.display = this.checked ? 'none' : '';
+});
+
+async function saveYorumItem() {
+    const slug     = document.getElementById('yorum-inp-post').value;
+    const isAnon   = document.getElementById('yorum-inp-anon').checked;
+    const author   = document.getElementById('yorum-inp-author').value.trim();
+    const email    = document.getElementById('yorum-inp-email').value.trim();
+    const text     = document.getElementById('yorum-inp-text').value.trim();
+    if (!slug) { toast('Bir yazı seçin', 'error'); return; }
+    if (!text) { toast('Yorum metni boş olamaz', 'error'); return; }
+    if (!isAnon && !author) { toast('Yorum sahibinin adını girin veya anonim seçin', 'error'); return; }
+    const post  = allPosts.find(p => (p.slug || slugify(p.title)) === slug);
+    const title = post ? post.title : slug;
+    const btn = document.getElementById('yorum-modal-save');
+    btn.disabled = true;
+    try {
+        const entry = { type: 'yorum', postSlug: slug, postTitle: title, anonymous: isAnon, authorName: isAnon ? '' : author, authorEmail: email, text, date: new Date().toISOString() };
+        if (editingYorumId) {
+            const idx = allComments.findIndex(x => x.id === editingYorumId);
+            if (idx >= 0) allComments[idx] = { ...allComments[idx], ...entry };
+        } else {
+            allComments.push({ id: String(Date.now()), ...entry });
+        }
+        await writeComments(allComments, commentsSHA, (editingYorumId ? 'Yorum güncellendi: ' : 'Yorum eklendi: ') + text.slice(0,40));
+        closeYorumModal();
+        renderYorumAdmin();
+        toast(editingYorumId ? 'Güncellendi' : 'Yorum yayımlandı', 'success');
+    } catch(e) {
+        toast('Hata: ' + e.message, 'error');
+        const res = await readComments(); allComments = res.items; commentsSHA = res.sha;
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+function deleteYorumItem(id) {
+    const c = allComments.find(x => x.id === id);
+    if (!c) return;
+    showConfirm('Yorumu Sil', `"${(c.text||'').slice(0,60)}" yorumu yayından kaldırılacak.`, async () => {
+        allComments = allComments.filter(x => x.id !== id);
+        try {
+            await writeComments(allComments, commentsSHA, 'Yorum silindi');
+            renderYorumAdmin();
+            toast('Silindi', 'success');
+        } catch(e) {
+            toast('Hata: ' + e.message, 'error');
+            const res = await readComments(); allComments = res.items; commentsSHA = res.sha; renderYorumAdmin();
+        }
+    });
+}
+
+document.getElementById('btn-new-yorum').addEventListener('click', openNewYorum);
+document.getElementById('yorum-modal').addEventListener('click', function(e){ if(e.target===this) closeYorumModal(); });
+
+// ════════════════════════════════════════════
+// SORU-CEVAP (comments.json, type:"soru" | no type)
+// ════════════════════════════════════════════
 async function loadQAPage() {
     const list = document.getElementById('qa-admin-list');
     list.innerHTML = '<div class="loading"><div class="spinner"></div> Yükleniyor…</div>';
@@ -3171,17 +3522,19 @@ async function loadQAPage() {
 
 function renderQAAdmin() {
     const list = document.getElementById('qa-admin-list');
-    if (!allComments.length) {
+    const sorular = allComments.filter(c => !c.type || c.type === 'soru');
+    if (!sorular.length) {
         list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:.88rem">Henüz yayımlanmış soru-cevap yok. Yeni Soru-Cevap düğmesiyle ekleyebilirsin.</div>';
         return;
     }
-    const sorted = [...allComments].sort((a,b) => new Date(b.date||0) - new Date(a.date||0));
+    const sorted = [...sorular].sort((a,b) => new Date(b.date||0) - new Date(a.date||0));
     list.innerHTML = sorted.map((c, i) =>
         `<div class="faq-admin-item" data-id="${esc(c.id)}">
             <div class="faq-admin-num">${i+1}</div>
             <div class="faq-admin-info">
                 <span class="qa-post-tag">${esc(c.postTitle || c.postSlug || 'Yazı')}</span>
-                <div class="faq-admin-q">${esc(c.question)}</div>
+                <div class="faq-admin-q">${esc(c.askerName||'')}${c.authorEmail ? ` · <a href="mailto:${esc(c.authorEmail)}?subject=${encodeURIComponent('Re: '+c.question)}" style="color:var(--accent);font-size:.8rem" title="Cevap gönder"><i class="fas fa-reply"></i> Cevap Gönder</a>` : ''}</div>
+                <div class="faq-admin-q" style="font-weight:400">${esc((c.question||'').slice(0,120))}</div>
                 <div class="faq-admin-a">${esc((c.answer||'').slice(0,110))}</div>
             </div>
             <div class="faq-admin-acts">
@@ -3206,6 +3559,7 @@ function openNewQA() {
     document.getElementById('qa-modal-title').textContent = 'Yeni Soru-Cevap';
     populateQAPostSelect('');
     document.getElementById('qa-inp-asker').value = '';
+    document.getElementById('qa-inp-email').value = '';
     document.getElementById('qa-inp-q').value = '';
     document.getElementById('qa-inp-a').value = '';
     document.getElementById('qa-modal').classList.add('show');
@@ -3218,6 +3572,7 @@ function openEditQA(id) {
     document.getElementById('qa-modal-title').textContent = 'Soru-Cevabı Düzenle';
     populateQAPostSelect(c.postSlug);
     document.getElementById('qa-inp-asker').value = c.askerName || '';
+    document.getElementById('qa-inp-email').value = c.authorEmail || '';
     document.getElementById('qa-inp-q').value = c.question || '';
     document.getElementById('qa-inp-a').value = c.answer || '';
     document.getElementById('qa-modal').classList.add('show');
@@ -3230,6 +3585,7 @@ function closeQAModal() {
 async function saveQAItem() {
     const slug   = document.getElementById('qa-inp-post').value;
     const asker  = document.getElementById('qa-inp-asker').value.trim();
+    const email  = document.getElementById('qa-inp-email').value.trim();
     const q      = document.getElementById('qa-inp-q').value.trim();
     const a      = document.getElementById('qa-inp-a').value.trim();
     if (!slug) { toast('Bir yazı seçin', 'error'); return; }
@@ -3241,9 +3597,9 @@ async function saveQAItem() {
     try {
         if (editingQAId) {
             const idx = allComments.findIndex(x => x.id === editingQAId);
-            if (idx >= 0) allComments[idx] = { ...allComments[idx], postSlug: slug, postTitle: title, askerName: asker, question: q, answer: a };
+            if (idx >= 0) allComments[idx] = { ...allComments[idx], type: 'soru', postSlug: slug, postTitle: title, askerName: asker, authorEmail: email, question: q, answer: a };
         } else {
-            allComments.push({ id: String(Date.now()), postSlug: slug, postTitle: title, askerName: asker, question: q, answer: a, date: new Date().toISOString() });
+            allComments.push({ id: String(Date.now()), type: 'soru', postSlug: slug, postTitle: title, askerName: asker, authorEmail: email, question: q, answer: a, date: new Date().toISOString() });
         }
         await writeComments(allComments, commentsSHA, (editingQAId ? 'Soru-cevap güncellendi: ' : 'Soru-cevap eklendi: ') + q.slice(0,40));
         closeQAModal();

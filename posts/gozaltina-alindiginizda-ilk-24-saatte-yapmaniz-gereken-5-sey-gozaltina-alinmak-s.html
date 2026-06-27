@@ -99,28 +99,49 @@ footer a{color:var(--accent);font-weight:600;text-decoration:none}
 #go-top{position:fixed;bottom:1.6rem;right:1.6rem;width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;border:none;cursor:pointer;font-size:.9rem;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(13,148,136,.35);z-index:100;transition:all .2s}
 #go-top.vis{display:flex}
 #go-top:hover{background:var(--accent-h);transform:translateY(-2px)}
-@media(max-width:640px){.wrap{padding:2rem 1.1rem 3.5rem}h1.post-title{font-size:1.7rem}.post-body{font-size:.98rem}.hdr-in{padding:0 1rem}.qa-form{padding:1.1rem}.qa-h{font-size:1.25rem}.qa-item{padding:.95rem 1.05rem}.qa-form input,.qa-form textarea{font-size:16px}.share-row{gap:.45rem}.sbtn{flex:1;justify-content:center}}
-.qa-sec{margin-top:3.5rem;padding-top:2rem;border-top:1px solid var(--border)}
+@media(max-width:640px){.wrap{padding:2rem 1.1rem 3.5rem}h1.post-title{font-size:1.7rem}.post-body{font-size:.98rem}.hdr-in{padding:0 1rem}.qa-h{font-size:1.25rem}.qa-item{padding:.95rem 1.05rem}.if-row{grid-template-columns:1fr}.if-inp,.if-ta{font-size:16px}.interact-hd{padding:1.1rem 1.3rem}.interact-body{padding:1.1rem 1.3rem}.share-row{gap:.45rem}.sbtn{flex:1;justify-content:center}}
+.qa-sec{margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--border)}
 .qa-h{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:1.25rem}
 .qa-item{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.05rem 1.25rem;margin-bottom:.9rem}
 .qa-q{display:flex;gap:.55rem;font-weight:600;color:var(--text);margin-bottom:.6rem;line-height:1.6}
 .qa-a{display:flex;gap:.55rem;color:var(--text2);line-height:1.75;white-space:pre-wrap}
 .qa-ico{color:var(--accent);font-weight:800;flex-shrink:0}
 .qa-asker{font-size:.78rem;color:var(--text3);margin-top:.55rem;padding-left:1.3rem}
-.qa-form{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:1.6rem}
-.qa-form-head{background:linear-gradient(135deg,var(--accent) 0%,#0a8279 100%);padding:1.4rem 1.6rem;display:flex;align-items:center;gap:1rem}
-.qa-form-ico{width:50px;height:50px;background:rgba(255,255,255,.18);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.45rem;color:#fff;flex-shrink:0}
-.qa-form-title{color:#fff;font-family:'Playfair Display',serif;font-size:1.18rem;font-weight:700;margin:0;line-height:1.3}
-.qa-form-sub{color:rgba(255,255,255,.78);font-size:.81rem;margin-top:.25rem}
-.qa-form-body{padding:1.4rem 1.6rem}
-.qa-form label{display:block;font-size:.83rem;font-weight:600;color:var(--text2);margin-bottom:.35rem}
-.qa-form input,.qa-form textarea{width:100%;padding:.7rem .9rem;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.92rem;color:var(--text);outline:none;margin-bottom:.9rem;transition:border-color .2s}
-.qa-form input:focus,.qa-form textarea:focus{border-color:var(--accent)}
-.qa-form textarea{resize:vertical;min-height:90px}
-.qa-btn{background:var(--accent);color:#fff;border:none;padding:.7rem 1.5rem;border-radius:8px;font-size:.9rem;font-weight:700;cursor:pointer;transition:background .2s;margin-top:.25rem}
-.qa-btn:hover{background:var(--accent-h)}
-.qa-btn:disabled{opacity:.6;cursor:default}
-.qa-note{font-size:.78rem;color:var(--text3);margin-top:.85rem;display:flex;align-items:center;gap:.4rem}
+/* ── Yorumlar ── */
+.cmts-sec{margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--border)}
+.cmts-h{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--text);margin-bottom:1.1rem;display:flex;align-items:center;gap:.55rem}
+.cmts-badge{background:var(--accent);color:#fff;font-size:.72rem;font-weight:700;border-radius:99px;padding:.1rem .52rem;vertical-align:middle}
+.cmt-item{display:flex;gap:.9rem;margin-bottom:1.2rem;align-items:flex-start}
+.cmt-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent) 0%,#0a8279 100%);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.05rem;flex-shrink:0}
+.cmt-bubble{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:.85rem 1.1rem;flex:1}
+.cmt-meta{font-size:.75rem;color:var(--text3);margin-bottom:.35rem;display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.cmt-author{font-weight:700;color:var(--text2)}
+.cmt-text{font-size:.93rem;color:var(--text2);line-height:1.72}
+/* ── Interact (Yorum/Soru formu) ── */
+.interact-wrap{margin-top:2.5rem;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.interact-hd{background:linear-gradient(135deg,var(--accent) 0%,#0a8279 100%);padding:1.3rem 1.6rem;display:flex;align-items:center;gap:.9rem}
+.interact-hd-ico{width:44px;height:44px;background:rgba(255,255,255,.18);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:#fff;flex-shrink:0}
+.interact-hd-txt h3{color:#fff;font-family:'Playfair Display',serif;font-size:1.12rem;font-weight:700;margin:0}
+.interact-hd-txt p{color:rgba(255,255,255,.75);font-size:.8rem;margin:.15rem 0 0}
+.interact-body{padding:1.4rem 1.6rem;background:var(--bg-card)}
+.itabs{display:flex;gap:.5rem;margin-bottom:1.4rem;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:.28rem}
+.itab{flex:1;padding:.52rem .7rem;border-radius:6px;border:none;background:none;color:var(--text2);font-size:.86rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:.4rem}
+.itab.active{background:var(--bg-card);color:var(--accent);box-shadow:0 1px 5px rgba(0,0,0,.09)}
+.ipane{display:none}.ipane.active{display:block}
+.if-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.if-grp{margin-bottom:.85rem}
+.if-lbl{display:block;font-size:.82rem;font-weight:600;color:var(--text2);margin-bottom:.32rem}
+.if-inp{width:100%;padding:.68rem .9rem;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.92rem;color:var(--text);outline:none;transition:border-color .2s;box-sizing:border-box}
+.if-inp:focus{border-color:var(--accent)}
+.if-ta{resize:vertical;min-height:95px}
+.anon-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem;cursor:pointer;user-select:none;padding:.6rem .7rem;background:var(--bg);border:1px solid var(--border);border-radius:8px}
+.anon-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+.anon-row span{font-size:.84rem;color:var(--text2);font-weight:500}
+.if-submit{background:var(--accent);color:#fff;border:none;padding:.7rem 1.6rem;border-radius:8px;font-size:.9rem;font-weight:700;cursor:pointer;transition:background .2s;font-family:inherit}
+.if-submit:hover{background:var(--accent-h)}
+.if-submit:disabled{opacity:.6;cursor:default}
+.if-note{font-size:.77rem;color:var(--text3);margin-top:.8rem;display:flex;align-items:flex-start;gap:.4rem;line-height:1.55}
+.if-ok{color:var(--accent);font-weight:700;padding:.6rem 0;font-size:.95rem}
 </style>
 </head>
 <body>
@@ -152,29 +173,84 @@ footer a{color:var(--accent);font-weight:600;text-decoration:none}
       </div>
       <div class="copy-ok" id="copy-ok">✓ Bağlantı kopyalandı!</div>
     </div>
+    <!-- Onaylı Yorumlar -->
+    <section class="cmts-sec" id="cmts-sec" style="display:none">
+      <h2 class="cmts-h"><i class="fas fa-comment-dots" style="color:var(--accent);font-size:1.1rem"></i> Yorumlar <span class="cmts-badge" id="cmt-count">0</span></h2>
+      <div id="cmts-list"></div>
+    </section>
+    <!-- Onaylı Soru-Cevap -->
     <section class="qa-sec">
       <h2 class="qa-h" id="qa-h" style="display:none">Soru &amp; Cevap</h2>
       <div id="qa-list"></div>
-      <div class="qa-form">
-        <div class="qa-form-head">
-          <div class="qa-form-ico"><i class="fas fa-comments"></i></div>
-          <div>
-            <h3 class="qa-form-title">Bir sorunuz mu var?</h3>
-            <div class="qa-form-sub">Merak ettiklerinizi sorun, yan&#305;tlayal&#305;m.</div>
-          </div>
+    </section>
+    <!-- Yorum / Soru formu -->
+    <div class="interact-wrap">
+      <div class="interact-hd">
+        <div class="interact-hd-ico"><i class="fas fa-pen-to-square"></i></div>
+        <div class="interact-hd-txt">
+          <h3>Katıl</h3>
+          <p>Yorumunuzu paylaşın veya soru sorun.</p>
         </div>
-        <div class="qa-form-body">
-          <form id="qa-form">
-            <label>Ad&#305;n&#305;z (opsiyonel)</label>
-            <input type="text" name="ad" placeholder="Ad&#305;n&#305;z" maxlength="60">
-            <label>Sorunuz *</label>
-            <textarea name="soru" placeholder="Bu yaz&#305;yla ilgili merak etti&#287;inizni yaz&#305;n&#8230;" required maxlength="1500"></textarea>
-            <button type="submit" class="qa-btn">G&#246;nder</button>
-            <div class="qa-note"><i class="fas fa-shield-alt"></i> Sorular incelenir; uygun g&#246;r&#252;lenler yan&#305;t&#305;yla birlikte bu sayfada yay&#305;mlan&#305;r.</div>
+      </div>
+      <div class="interact-body">
+        <div class="itabs">
+          <button class="itab active" onclick="switchTab('yorum',this)"><i class="fas fa-comment"></i> Yorum Yaz</button>
+          <button class="itab" onclick="switchTab('soru',this)"><i class="fas fa-circle-question"></i> Soru Sor</button>
+        </div>
+        <!-- Yorum pane -->
+        <div class="ipane active" id="ipane-yorum">
+          <form id="yorum-form">
+            <label class="anon-row" id="anon-row">
+              <input type="checkbox" id="anon-cb" name="anonim">
+              <span>Anonim olarak yorum yap</span>
+            </label>
+            <div id="name-fields">
+              <div class="if-row">
+                <div class="if-grp">
+                  <label class="if-lbl">Ad&#305;n&#305;z *</label>
+                  <input class="if-inp" type="text" name="ad" placeholder="Ad&#305;n&#305;z" maxlength="60">
+                </div>
+                <div class="if-grp">
+                  <label class="if-lbl">Soyad&#305;n&#305;z *</label>
+                  <input class="if-inp" type="text" name="soyad" placeholder="Soyad&#305;n&#305;z" maxlength="60">
+                </div>
+              </div>
+            </div>
+            <div class="if-grp">
+              <label class="if-lbl">E-posta * <span style="font-weight:400;color:var(--text3)">(yay&#305;mlanmaz)</span></label>
+              <input class="if-inp" type="email" name="email" placeholder="ornek@mail.com" maxlength="120">
+            </div>
+            <div class="if-grp">
+              <label class="if-lbl">Yorumunuz *</label>
+              <textarea class="if-inp if-ta" name="yorum" placeholder="D&#252;&#351;&#252;ncelerinizi payla&#351;&#305;n&#8230;" required maxlength="2000"></textarea>
+            </div>
+            <button type="submit" class="if-submit">Yorum G&#246;nder</button>
+            <div class="if-note"><i class="fas fa-shield-alt"></i> Yorumlar incelenir; uygun bulunanlar yay&#305;mlan&#305;r.</div>
+          </form>
+        </div>
+        <!-- Soru pane -->
+        <div class="ipane" id="ipane-soru">
+          <form id="soru-form">
+            <div class="if-row">
+              <div class="if-grp">
+                <label class="if-lbl">Ad&#305;n&#305;z <span style="font-weight:400;color:var(--text3)">(opsiyonel)</span></label>
+                <input class="if-inp" type="text" name="ad" placeholder="Ad&#305;n&#305;z" maxlength="60">
+              </div>
+              <div class="if-grp">
+                <label class="if-lbl">E-posta <span style="font-weight:400;color:var(--text3)">(opsiyonel)</span></label>
+                <input class="if-inp" type="email" name="email" placeholder="ornek@mail.com" maxlength="120">
+              </div>
+            </div>
+            <div class="if-grp">
+              <label class="if-lbl">Sorunuz *</label>
+              <textarea class="if-inp if-ta" name="soru" placeholder="Bu yaz&#305;yla ilgili merak etti&#287;inizni yaz&#305;n&#8230;" required maxlength="1500"></textarea>
+            </div>
+            <button type="submit" class="if-submit">Soru G&#246;nder</button>
+            <div class="if-note"><i class="fas fa-envelope"></i> Sorunuz yan&#305;tlan&#305;rsa bu sayfada yay&#305;mlan&#305;r.</div>
           </form>
         </div>
       </div>
-    </section>
+    </div>
     <a href="../index.html#posts" class="back-all"><i class="fas fa-arrow-left"></i> Tüm Yazılara Dön</a>
   </div>
 </main>
@@ -195,9 +271,100 @@ function cp(){navigator.clipboard.writeText(PU).then(function(){var el=document.
 var POST_SLUG="gozaltina-alindiginizda-ilk-24-saatte-yapmaniz-gereken-5-sey-gozaltina-alinmak-s";
 var QA_ENDPOINT='https://formspree.io/f/xwvjaebn';
 function qaEsc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmtDate(d){try{return new Date(d).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'});}catch(e){return '';}}
+/* Tab geçişi */
+function switchTab(tab,btn){
+  document.querySelectorAll('.itab').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  document.querySelectorAll('.ipane').forEach(function(p){p.classList.remove('active');});
+  document.getElementById('ipane-'+tab).classList.add('active');
+}
+/* Anonim toggle */
+document.getElementById('anon-cb').addEventListener('change',function(){
+  document.getElementById('name-fields').style.display=this.checked?'none':'';
+});
+/* Yorumlar + S-C yükle */
 (function(){
   fetch('../comments.json?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():[];}).then(function(all){
-    var items=(all||[]).filter(function(c){return c.postSlug===POST_SLUG;});
+    var mine=(all||[]).filter(function(c){return c.postSlug===POST_SLUG;});
+    /* Yorumlar */
+    var yorumlar=mine.filter(function(c){return c.type==='yorum';});
+    if(yorumlar.length){
+      var sec=document.getElementById('cmts-sec');
+      sec.style.display='';
+      document.getElementById('cmt-count').textContent=yorumlar.length;
+      document.getElementById('cmts-list').innerHTML=yorumlar.map(function(c){
+        var init=c.anonymous?'?':(c.authorName||'A').charAt(0).toUpperCase();
+        var name=c.anonymous?'Anonim':(c.authorName||'Okuyucu');
+        return '<div class="cmt-item">'+
+          '<div class="cmt-avatar">'+init+'</div>'+
+          '<div class="cmt-bubble">'+
+            '<div class="cmt-meta"><span class="cmt-author">'+qaEsc(name)+'</span><span>·</span><span>'+qaEsc(fmtDate(c.date))+'</span></div>'+
+            '<div class="cmt-text">'+qaEsc(c.text)+'</div>'+
+          '</div>'+
+        '</div>';
+      }).join('');
+    }
+    /* Soru-Cevap */
+    var sorular=mine.filter(function(c){return !c.type||c.type==='soru';});
+    if(sorular.length){
+      document.getElementById('qa-h').style.display='block';
+      document.getElementById('qa-list').innerHTML=sorular.map(function(c){
+        return '<div class="qa-item">'+
+          '<div class="qa-q"><span class="qa-ico">S:</span><span>'+qaEsc(c.question)+'</span></div>'+
+          '<div class="qa-a"><span class="qa-ico">C:</span><span>'+qaEsc(c.answer)+'</span></div>'+
+          (c.askerName?'<div class="qa-asker">— '+qaEsc(c.askerName)+'</div>':'')+
+        '</div>';
+      }).join('');
+    }
+  }).catch(function(){});
+})();
+/* Yorum formu */
+document.getElementById('yorum-form').addEventListener('submit',function(ev){
+  ev.preventDefault();
+  var f=ev.target,btn=f.querySelector('.if-submit');
+  var isAnon=document.getElementById('anon-cb').checked;
+  var ad=f.querySelector('[name=ad]')?f.querySelector('[name=ad]').value.trim():'';
+  var soyad=f.querySelector('[name=soyad]')?f.querySelector('[name=soyad]').value.trim():'';
+  var email=f.querySelector('[name=email]').value.trim();
+  var yorum=f.querySelector('[name=yorum]').value.trim();
+  if(!isAnon&&(!ad||!soyad)){alert('L\xfctfen adınızı ve soyadınızı girin.');return;}
+  if(!email||!email.includes('@')){alert('L\xfctfen ge\xe7erli bir e-posta adresi girin.');return;}
+  if(!yorum){return;}
+  btn.textContent='G\xf6nderiliyor…';btn.disabled=true;
+  var fd=new FormData();
+  fd.append('_subject','Yeni Yorum — '+PT);
+  fd.append('tip','yorum');
+  fd.append('slug',POST_SLUG);
+  fd.append('yazi',PT);
+  fd.append('ad',isAnon?'Anonim':(ad+' '+soyad));
+  fd.append('email',email);
+  fd.append('yorum',yorum);
+  fetch(QA_ENDPOINT,{method:'POST',body:fd,headers:{'Accept':'application/json'}}).then(function(r){
+    if(r.ok){f.innerHTML='<p class="if-ok">✓ Yorumunuz alındı. İncelendikten sonra yayımlanacaktır.</p>';}
+    else{throw new Error();}
+  }).catch(function(){btn.textContent='Yorum G\xf6nder';btn.disabled=false;alert('Bir hata oluştu, l\xfctfen tekrar deneyin.');});
+});
+/* Soru formu */
+document.getElementById('soru-form').addEventListener('submit',function(ev){
+  ev.preventDefault();
+  var f=ev.target,btn=f.querySelector('.if-submit');
+  var soru=f.querySelector('[name=soru]').value.trim();
+  if(!soru){return;}
+  btn.textContent='G\xf6nderiliyor…';btn.disabled=true;
+  var fd=new FormData();
+  fd.append('_subject','Yeni Soru — '+PT);
+  fd.append('tip','soru');
+  fd.append('slug',POST_SLUG);
+  fd.append('yazi',PT);
+  fd.append('ad',f.querySelector('[name=ad]').value.trim());
+  fd.append('email',f.querySelector('[name=email]').value.trim());
+  fd.append('soru',soru);
+  fetch(QA_ENDPOINT,{method:'POST',body:fd,headers:{'Accept':'application/json'}}).then(function(r){
+    if(r.ok){f.innerHTML='<p class="if-ok">✓ Sorunuz alındı. Yanıtlanırsa bu sayfada yayımlanacaktır.</p>';}
+    else{throw new Error();}
+  }).catch(function(){btn.textContent='Soru G\xf6nder';btn.disabled=false;alert('Bir hata oluştu, l\xfctfen tekrar deneyin.');});
+});
     if(!items.length)return;
     document.getElementById('qa-h').style.display='block';
     document.getElementById('qa-list').innerHTML=items.map(function(c){
