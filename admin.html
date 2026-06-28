@@ -395,6 +395,21 @@ input:checked+.toggle-sl::before{transform:translateX(17px)}
 .top-title{flex:1;min-width:0;font-size:.86rem;color:var(--text-primary);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .top-views{font-size:.82rem;font-weight:700;color:var(--accent);flex-shrink:0}
 .top-views small{color:var(--text-muted);font-weight:500}
+.top-summary{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;padding-bottom:.8rem;margin-bottom:.6rem;border-bottom:1px solid var(--border);font-size:.82rem;color:var(--text-secondary)}
+.top-summary b{color:var(--accent);font-size:.95rem}
+.top-row2{display:flex;align-items:center;gap:.85rem;padding:.7rem 0;border-bottom:1px solid var(--border)}
+.top-row2:last-child{border-bottom:none}
+.top-main{flex:1;min-width:0}
+.top-title-row{display:flex;align-items:center;gap:.55rem;margin-bottom:.4rem;min-width:0}
+.top-main .top-title{flex:0 1 auto;min-width:0;font-size:.88rem;color:var(--text-primary);font-weight:600;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-main .top-title:hover{color:var(--accent);text-decoration:underline}
+.top-cat{flex-shrink:0;font-size:.68rem;font-weight:700;color:var(--accent);background:var(--accent-light);border-radius:99px;padding:.1rem .5rem}
+.top-bar{height:7px;background:var(--bg-base);border-radius:99px;overflow:hidden}
+.top-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),#0a8279);border-radius:99px;min-width:3px;transition:width .5s ease}
+.top-stats{display:flex;gap:1rem;flex-shrink:0}
+.top-stat{text-align:right;min-width:48px}
+.top-stat-n{display:block;font-size:.95rem;font-weight:800;color:var(--text-primary);line-height:1.1}
+.top-stat-l{display:block;font-size:.66rem;color:var(--text-muted)}
 #faq-modal,#qa-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:8000;align-items:center;justify-content:center}
 #faq-modal.show,#qa-modal.show{display:flex}
 .faq-modal-box{background:#fff;border-radius:10px;padding:1.6rem;max-width:560px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.25)}
@@ -4024,26 +4039,50 @@ async function loadTrafficStats() {
             </div>
         </div>`;
 
-    // En çok okunan yazılar (her yazının sayacını çek)
-    topEl.innerHTML = '<div class="loading"><div class="spinner"></div> Yazı sayaçları çekiliyor…</div>';
+    // En çok okunan sayfalar (ana sayfa + her yazının sayacını çek)
+    topEl.innerHTML = '<div class="loading"><div class="spinner"></div> Sayfa sayaçları çekiliyor…</div>';
     const posts = window._statsPosts || [];
-    const results = await Promise.all(posts.map(async p => {
-        const slug = p.slug || slugify(p.title);
-        try { const c = await gcCount('/posts/' + slug + '.html'); return { title: p.title, views: c.count, unique: c.unique }; }
-        catch(e) { return { title: p.title, views: 0, unique: 0 }; }
+    const pages = [{ title: 'Ana Sayfa', category: 'Site', path: '/', url: '/' }].concat(
+        posts.map(p => {
+            const slug = p.slug || slugify(p.title);
+            return { title: p.title, category: p.category || 'Genel', path: '/posts/' + slug + '.html', url: '/posts/' + slug + '.html' };
+        })
+    );
+    const results = await Promise.all(pages.map(async pg => {
+        try { const c = await gcCount(pg.path); return { ...pg, views: c.count, unique: c.unique }; }
+        catch(e) { return { ...pg, views: 0, unique: 0 }; }
     }));
-    const top = results.filter(r => r.views > 0).sort((a,b) => b.views - a.views).slice(0, 8);
-    if (!top.length) {
-        topEl.innerHTML = '<div style="color:var(--text-muted);font-size:.85rem">Henüz yazı bazında görüntülenme verisi yok (veriler birikince dolacak).</div>';
+    const ranked = results.filter(r => r.views > 0).sort((a,b) => b.views - a.views);
+    if (!ranked.length) {
+        topEl.innerHTML = '<div style="color:var(--text-muted);font-size:.85rem">Henüz sayfa bazında görüntülenme verisi yok (ziyaretler biriktikçe dolacak).</div>';
         return;
     }
-    topEl.innerHTML = top.map((r, i) =>
-        `<div class="top-row">
+    const maxV = ranked[0].views;
+    const sumViews = ranked.reduce((a,r) => a + r.views, 0);
+    const sumUniq  = ranked.reduce((a,r) => a + r.unique, 0);
+    const head =
+        `<div class="top-summary">
+            <span><b>${ranked.length}</b> sayfa okunmuş</span>
+            <span><b>${fmtNum(sumViews)}</b> toplam görüntülenme</span>
+            <span><b>${fmtNum(sumUniq)}</b> tekil okuyucu</span>
+        </div>`;
+    const rows = ranked.map((r, i) =>
+        `<div class="top-row2">
             <div class="top-rank">${i+1}</div>
-            <div class="top-title" title="${esc(r.title)}">${esc(r.title)}</div>
-            <div class="top-views">${fmtNum(r.views)} <small>görüntülenme</small></div>
+            <div class="top-main">
+                <div class="top-title-row">
+                    <a class="top-title" href="${esc(r.url)}" target="_blank" rel="noopener" title="${esc(r.title)}">${esc(r.title)}</a>
+                    <span class="top-cat">${esc(r.category)}</span>
+                </div>
+                <div class="top-bar"><div class="top-bar-fill" style="width:${Math.round((r.views/maxV)*100)}%"></div></div>
+            </div>
+            <div class="top-stats">
+                <div class="top-stat"><span class="top-stat-n">${fmtNum(r.views)}</span><span class="top-stat-l">görüntülenme</span></div>
+                <div class="top-stat"><span class="top-stat-n">${fmtNum(r.unique)}</span><span class="top-stat-l">tekil</span></div>
+            </div>
         </div>`
     ).join('');
+    topEl.innerHTML = head + rows;
 }
 
 document.getElementById('stats-refresh').addEventListener('click', loadStatsPage);
