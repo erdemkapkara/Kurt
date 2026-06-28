@@ -94,7 +94,6 @@
             /* dikey ritim — tüm bölümler tek ölçekten */
             --section-py:       clamp(3.5rem, 6vw, 5.5rem);
             --section-gap:      clamp(2rem, 4vw, 2.75rem);
-            --bg-teal:          #E6F3F2;
             /* hero/about renk çifti */
             --bright-text:      #1A2B3C;
             --bright-text-sub:  rgba(26,43,60,0.68);
@@ -123,7 +122,6 @@
             /* hero/about renk çifti */
             --bright-text:      #E8E4DC;
             --bright-text-sub:  rgba(232,228,220,0.68);
-            --bg-teal:          #0C2233;
         }
 
         /* =============================================
@@ -801,12 +799,10 @@
            FEATURES BAND
         ============================================= */
         #features {
-            background: var(--bg-dark);
+            background: var(--bg-base);
             padding: var(--section-py) 5%;
             transition: background var(--transition);
         }
-        #features .section-title { color: var(--nav-text); }
-        #features .section-label { color: var(--accent); }
         .features-inner { max-width: 1280px; margin: 0 auto; }
         .features-grid {
             display: grid;
@@ -814,17 +810,17 @@
             gap: 2rem;
         }
         .feature-box {
-            background: rgba(255,255,255,0.07);
-            border: 1px solid rgba(255,255,255,0.11);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 2.2rem 1.8rem;
             text-align: center;
             transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
         }
-        .feature-box:hover { background: rgba(255,255,255,0.11); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        .feature-box:hover { box-shadow: var(--shadow-md); }
         .feature-icon-wrap {
             width: 56px; height: 56px;
-            background: rgba(13,148,136,0.22);
+            background: rgba(13,148,136,0.12);
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             margin: 0 auto 1.2rem;
@@ -834,10 +830,10 @@
         .feature-box h3 {
             font-family: 'Playfair Display', serif;
             font-size: 1.2rem;
-            color: var(--nav-text);
+            color: var(--text-primary);
             margin-bottom: 0.7rem;
         }
-        .feature-box p { font-size: 0.9rem; color: var(--nav-text-sub); line-height: 1.65; }
+        .feature-box p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.65; }
 
         /* =============================================
            FORM (Soru-Cevap & bülten ortak stilleri)
@@ -910,7 +906,7 @@
         ============================================= */
         #about {
             padding: var(--section-py) 5%;
-            background: var(--bg-base);
+            background: var(--bg-card);
             transition: background var(--transition);
         }
         .about-inner {
@@ -1158,7 +1154,7 @@
         ============================================= */
         #faq {
             padding: var(--section-py) 5%;
-            background: var(--bg-teal);
+            background: var(--bg-card);
             transition: background var(--transition);
         }
         .faq-inner { max-width: 780px; margin: 0 auto; }
