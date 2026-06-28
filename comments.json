@@ -10,5 +10,17 @@
     "question": "DENEME",
     "answer": "",
     "date": "2026-06-28T19:35:43.000Z"
+  },
+  {
+    "id": "1782677818889",
+    "type": "soru",
+    "status": "pending",
+    "postSlug": "",
+    "postTitle": "Genel Soru (Ana Sayfa)",
+    "askerName": "Deneme",
+    "authorEmail": "deneme@gmail.com",
+    "question": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "answer": "",
+    "date": "2026-06-28T20:16:58.889Z"
   }
 ]
