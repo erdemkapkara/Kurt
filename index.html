@@ -759,7 +759,15 @@
             padding-left: 0.1rem;
         }
         .ask-qa-a-ico { color: var(--accent); flex-shrink: 0; margin-top: 1px; font-style: normal; font-weight: 700; }
-        .ask-qa-asker { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.6rem; padding-left: 1.2rem; }
+        .ask-qa-meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center; margin-top: 0.7rem; padding-left: 1.2rem; }
+        .ask-qa-asker { font-size: 0.78rem; color: var(--text-muted); }
+        .ask-qa-src {
+            font-size: 0.76rem; font-weight: 600; color: var(--accent);
+            text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;
+            padding: 0.2rem 0.6rem; border: 1px solid var(--border); border-radius: 99px;
+            transition: background var(--transition), border-color var(--transition);
+        }
+        .ask-qa-src:hover { background: rgba(13,148,136,0.08); border-color: var(--accent); }
 
         /* =============================================
            NEWSLETTER
@@ -1891,25 +1899,32 @@
     const ASK_ENDPOINT          = INBOX_ENDPOINT || FORMSPREE_SORU;
 
     function askQaEsc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function askCleanTitle(t) { return String(t||'').replace(/\s*—\s*Yargı Kalemi\s*$/, '').trim(); }
 
     (function loadAskQA() {
         fetch('comments.json?_=' + Date.now(), { cache: 'no-store' })
             .then(function(r) { return r.ok ? r.json() : []; })
             .then(function(all) {
+                // Yayımlanmış tüm soru-cevaplar (genel + yazıya bağlı). Sıra = comments.json dizi sırası (admin sürükle-bırak).
                 var items = (all || []).filter(function(c) {
                     return (!c.type || c.type === 'soru') &&
                            c.status === 'published' &&
-                           (!c.postSlug || c.postSlug === '') &&
                            c.answer;
-                }).sort(function(a, b) { return new Date(b.date||0) - new Date(a.date||0); });
+                });
                 if (!items.length) return;
                 var list = document.getElementById('ask-qa-list');
                 list.innerHTML = items.map(function(c) {
-                    var asker = c.askerName ? '<div class="ask-qa-asker">— ' + askQaEsc(c.askerName) + '</div>' : '';
+                    var asker = c.askerName ? '<span class="ask-qa-asker">— ' + askQaEsc(c.askerName) + '</span>' : '';
+                    var src = '';
+                    if (c.postSlug) {
+                        var t = askCleanTitle(c.postTitle || c.postSlug);
+                        src = '<a class="ask-qa-src" href="posts/' + encodeURIComponent(c.postSlug) + '.html"><i class="fas fa-file-lines"></i> ' + askQaEsc(t) + '</a>';
+                    }
+                    var meta = (asker || src) ? '<div class="ask-qa-meta">' + asker + src + '</div>' : '';
                     return '<div class="ask-qa-item">' +
                         '<div class="ask-qa-q"><span class="ask-qa-q-ico"><i class="fas fa-circle-question"></i></span><span>' + askQaEsc(c.question) + '</span></div>' +
                         '<div class="ask-qa-a"><span class="ask-qa-a-ico">C:</span><span>' + askQaEsc(c.answer) + '</span></div>' +
-                        asker +
+                        meta +
                     '</div>';
                 }).join('');
                 list.style.display = '';

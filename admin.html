@@ -359,6 +359,16 @@ input:checked+.toggle-sl::before{transform:translateX(17px)}
 .btn-edit-faq:hover{background:var(--accent-light);border-color:var(--accent)}
 .btn-del-faq{color:var(--text-muted)}
 .btn-del-faq:hover{background:#FEF2F2;color:#DC2626;border-color:#FECACA}
+/* ── SÜRÜKLE-BIRAK SORU-CEVAP ── */
+.qa-drag-card{display:flex;align-items:flex-start;gap:.55rem;padding:.8rem 1rem;background:#fff;border:1px solid var(--border);border-radius:8px;margin-bottom:.5rem;transition:box-shadow .15s,border-color .15s,opacity .12s}
+.qa-drag-card.dragging{opacity:.4;border-color:var(--accent)}
+.qa-drag-card.drop-above{box-shadow:0 -3px 0 0 var(--accent)}
+.qa-drag-card.drop-below{box-shadow:0 3px 0 0 var(--accent)}
+.qa-drag-handle{cursor:grab;color:#C0C7D0;padding:.25rem .1rem;font-size:.95rem;flex-shrink:0;line-height:1.4}
+.qa-drag-handle:active{cursor:grabbing}
+.qa-src{display:inline-flex;align-items:center;gap:.3rem;font-size:.7rem;font-weight:700;padding:.16rem .55rem;border-radius:99px;background:var(--accent-light);color:var(--accent);margin-bottom:.4rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qa-src.general{background:#EEF2FF;color:#4F46E5}
+.qa-hint{font-size:.78rem;color:var(--text-muted);margin-bottom:.7rem;display:flex;align-items:center;gap:.4rem}
 #faq-modal,#qa-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:8000;align-items:center;justify-content:center}
 #faq-modal.show,#qa-modal.show{display:flex}
 .faq-modal-box{background:#fff;border-radius:10px;padding:1.6rem;max-width:560px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.25)}
@@ -829,11 +839,15 @@ input:checked+.toggle-sl::before{transform:translateX(17px)}
         <div class="page" id="page-qa">
             <div class="page-hdr">
                 <h1 class="page-title">Soru-Cevap</h1>
-                <button class="btn-new" id="btn-new-qa"><i class="fas fa-plus"></i> Yeni Soru-Cevap</button>
+                <div style="display:flex;gap:.5rem">
+                    <button class="btn-new" id="qa-save-order" style="display:none;background:#059669" onclick="saveQAOrder()"><i class="fas fa-check"></i> Sıralamayı Kaydet</button>
+                    <button class="btn-new" id="btn-new-qa"><i class="fas fa-plus"></i> Yeni Soru-Cevap</button>
+                </div>
             </div>
             <div class="qa-pending-note">
-                <i class="fas fa-check-circle"></i> Yayımlanmış soru-cevaplar. Bekleyen okuyucu soruları <b>Gelen Kutusu</b>'nda görünür; orada cevaplayıp yayımlarsın. Buradan manuel soru-cevap da ekleyebilirsin.
+                <i class="fas fa-check-circle"></i> Yayımlanmış soru-cevaplar. Bekleyen okuyucu soruları <b>Gelen Kutusu</b>'nda görünür; orada cevaplayıp yayımlarsın. Her kartta sorunun <b>hangi yazıdan</b> geldiği etikette yazar.
             </div>
+            <div class="qa-hint"><i class="fas fa-grip-vertical"></i> Kartları sürükleyerek sıralayabilirsin. Bu sıra hem yazı altında hem ana sayfada geçerlidir. Değişiklikten sonra <b>Sıralamayı Kaydet</b>'e bas.</div>
             <div id="qa-admin-list"><div class="loading"><div class="spinner"></div> Yükleniyor…</div></div>
         </div>
 
@@ -3538,50 +3552,138 @@ document.getElementById('yorum-modal').addEventListener('click', function(e){ if
 // ════════════════════════════════════════════
 // SORU-CEVAP (comments.json, type:"soru" | no type)
 // ════════════════════════════════════════════
+let qaList = [];
+let qaDragId = null;
+let qaDirty = false;
+
 async function loadQAPage() {
     const list = document.getElementById('qa-admin-list');
     list.innerHTML = '<div class="loading"><div class="spinner"></div> Yükleniyor…</div>';
     try {
         const { items, sha } = await readComments();
         allComments = items; commentsSHA = sha;
+        refreshQAList();
         renderQAAdmin();
     } catch(e) {
         list.innerHTML = `<div style="color:#DC2626;font-size:.84rem;padding:1rem">Yüklenemedi: ${esc(e.message)}</div>`;
     }
 }
 
+// Yayımlanmış soru-cevapları comments.json DİZİ SIRASIYLA al (sürükle-bırak sırası bu)
+function refreshQAList() {
+    qaList = allComments.filter(c => (!c.type || c.type === 'soru') && c.status !== 'pending');
+    qaDirty = false;
+}
+
+function cleanPostTitle(t) {
+    return String(t || '').replace(/\s*—\s*Yargı Kalemi\s*$/, '').trim();
+}
+
+function toggleQaSaveBar() {
+    const b = document.getElementById('qa-save-order');
+    if (b) b.style.display = qaDirty ? '' : 'none';
+}
+
 function renderQAAdmin() {
     const list = document.getElementById('qa-admin-list');
-    const sorular = allComments.filter(c => (!c.type || c.type === 'soru') && c.status !== 'pending');
-    if (!sorular.length) {
+    if (!qaList.length) {
         list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:.88rem">Henüz yayımlanmış soru-cevap yok. Gelen Kutusu\'ndan cevaplayabilir veya "Yeni Soru-Cevap" ile ekleyebilirsin.</div>';
+        toggleQaSaveBar();
         return;
     }
-    const sorted = [...sorular].sort((a,b) => new Date(b.date||0) - new Date(a.date||0));
-    list.innerHTML = sorted.map((c, i) =>
-        `<div class="faq-admin-item" data-id="${esc(c.id)}">
-            <div class="faq-admin-num">${i+1}</div>
-            <div class="faq-admin-info">
-                <span class="qa-post-tag">${esc(c.postTitle || c.postSlug || 'Yazı')}</span>
-                <div class="faq-admin-q">${esc(c.askerName||'')}${c.authorEmail ? ` · <a href="mailto:${esc(c.authorEmail)}?subject=${encodeURIComponent('Re: '+c.question)}" style="color:var(--accent);font-size:.8rem" title="Cevap gönder"><i class="fas fa-reply"></i> Cevap Gönder</a>` : ''}</div>
-                <div class="faq-admin-q" style="font-weight:400">${esc((c.question||'').slice(0,120))}</div>
-                <div class="faq-admin-a">${esc((c.answer||'').slice(0,110))}</div>
+    list.innerHTML = qaList.map(c => {
+        const isGen = !c.postSlug;
+        const title = isGen ? 'Genel · Ana Sayfa' : cleanPostTitle(c.postTitle || c.postSlug);
+        const srcCls = isGen ? 'qa-src general' : 'qa-src';
+        const ico = isGen ? 'fa-house' : 'fa-file-lines';
+        const asker = c.askerName
+            ? `<div style="font-size:.72rem;color:var(--text-muted);margin-top:.3rem">— ${esc(c.askerName)}${c.authorEmail ? ` · <a href="mailto:${esc(c.authorEmail)}?subject=${encodeURIComponent('Re: '+(c.question||''))}" style="color:var(--accent)"><i class="fas fa-reply"></i> Yanıtla</a>` : ''}</div>`
+            : '';
+        return `<div class="qa-drag-card" draggable="true" data-id="${esc(c.id)}"
+            ondragstart="qaDragStart(event,'${esc(c.id)}')" ondragover="qaDragOver(event)" ondragleave="qaDragLeave(event)" ondrop="qaDrop(event,'${esc(c.id)}')" ondragend="qaDragEnd(event)">
+            <div class="qa-drag-handle" title="Sürükle"><i class="fas fa-grip-vertical"></i></div>
+            <div class="faq-admin-info" style="flex:1">
+                <span class="${srcCls}" title="${esc(isGen ? 'Ana sayfada sorulmuş genel soru' : title)}"><i class="fas ${ico}"></i> ${esc(title)}</span>
+                <div class="faq-admin-q" style="white-space:normal">${esc((c.question||'').slice(0,140))}</div>
+                <div class="faq-admin-a" style="white-space:normal">${esc((c.answer||'').slice(0,130))}</div>
+                ${asker}
             </div>
             <div class="faq-admin-acts">
                 <button class="btn-edit-faq" onclick="openEditQA('${esc(c.id)}')" title="Düzenle"><i class="fas fa-pencil"></i></button>
                 <button class="btn-del-faq" onclick="deleteQAItem('${esc(c.id)}')" title="Sil"><i class="fas fa-trash"></i></button>
             </div>
-        </div>`
-    ).join('');
+        </div>`;
+    }).join('');
+    toggleQaSaveBar();
+}
+
+function qaDragStart(e, id) {
+    qaDragId = id;
+    e.dataTransfer.effectAllowed = 'move';
+    try { e.dataTransfer.setData('text/plain', id); } catch(_) {}
+    e.currentTarget.classList.add('dragging');
+}
+function qaDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const card = e.currentTarget;
+    const r = card.getBoundingClientRect();
+    const before = (e.clientY - r.top) < r.height / 2;
+    card.classList.toggle('drop-above', before);
+    card.classList.toggle('drop-below', !before);
+}
+function qaDragLeave(e) {
+    e.currentTarget.classList.remove('drop-above', 'drop-below');
+}
+function qaDrop(e, targetId) {
+    e.preventDefault();
+    const card = e.currentTarget;
+    const r = card.getBoundingClientRect();
+    const before = (e.clientY - r.top) < r.height / 2;
+    card.classList.remove('drop-above', 'drop-below');
+    if (!qaDragId || qaDragId === targetId) return;
+    const from = qaList.findIndex(x => x.id === qaDragId);
+    if (from < 0) return;
+    const [moved] = qaList.splice(from, 1);
+    let to = qaList.findIndex(x => x.id === targetId);
+    if (to < 0) { qaList.splice(from, 0, moved); return; }
+    qaList.splice(before ? to : to + 1, 0, moved);
+    qaDirty = true;
+    renderQAAdmin();
+}
+function qaDragEnd() {
+    document.querySelectorAll('.qa-drag-card').forEach(c => c.classList.remove('dragging','drop-above','drop-below'));
+}
+
+async function saveQAOrder() {
+    // Diğer öğeleri (yorum, bekleyenler) koru; yayımlanmış S-C'yi yeni sırayla başa al
+    const others = allComments.filter(c => !((!c.type || c.type === 'soru') && c.status !== 'pending'));
+    allComments = [...qaList, ...others];
+    const btn = document.getElementById('qa-save-order');
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Kaydediliyor…';
+    try {
+        await writeComments(allComments, commentsSHA, 'Soru-cevap sırası güncellendi');
+        qaDirty = false;
+        toggleQaSaveBar();
+        toast('Sıralama kaydedildi', 'success');
+    } catch(e) {
+        toast('Hata: ' + e.message, 'error');
+        const res = await readComments(); allComments = res.items; commentsSHA = res.sha;
+        refreshQAList(); renderQAAdmin();
+    } finally {
+        btn.disabled = false; btn.innerHTML = '<i class="fas fa-check"></i> Sıralamayı Kaydet';
+    }
 }
 
 function populateQAPostSelect(selectedSlug) {
     const sel = document.getElementById('qa-inp-post');
+    const genSel = (!selectedSlug) ? ' selected' : '';
+    const genOpt = `<option value=""${genSel}>🏠 Genel · Ana Sayfa (yazıya bağlı değil)</option>`;
     const opts = allPosts.map(p => {
         const slug = p.slug || slugify(p.title);
         return `<option value="${esc(slug)}"${slug===selectedSlug?' selected':''}>${esc(p.title)}</option>`;
     }).join('');
-    sel.innerHTML = opts || '<option value="">Önce yazı ekleyin</option>';
+    sel.innerHTML = genOpt + opts;
 }
 
 function openNewQA() {
@@ -3618,10 +3720,10 @@ async function saveQAItem() {
     const email  = document.getElementById('qa-inp-email').value.trim();
     const q      = document.getElementById('qa-inp-q').value.trim();
     const a      = document.getElementById('qa-inp-a').value.trim();
-    if (!slug) { toast('Bir yazı seçin', 'error'); return; }
     if (!q || !a) { toast('Soru ve cevap boş olamaz', 'error'); return; }
-    const post   = allPosts.find(p => (p.slug || slugify(p.title)) === slug);
-    const title  = post ? post.title : slug;
+    // slug boş = Genel (Ana Sayfa) sorusu
+    const post   = slug ? allPosts.find(p => (p.slug || slugify(p.title)) === slug) : null;
+    const title  = slug ? (post ? post.title : slug) : '';
     const btn = document.getElementById('qa-modal-save');
     btn.disabled = true;
     try {
@@ -3633,6 +3735,7 @@ async function saveQAItem() {
         }
         await writeComments(allComments, commentsSHA, (editingQAId ? 'Soru-cevap güncellendi: ' : 'Soru-cevap eklendi: ') + q.slice(0,40));
         closeQAModal();
+        refreshQAList();
         renderQAAdmin();
         if (document.getElementById('page-inbox').classList.contains('active')) renderInbox();
         updateInboxBadge();
@@ -3652,11 +3755,13 @@ function deleteQAItem(id) {
         allComments = allComments.filter(x => x.id !== id);
         try {
             await writeComments(allComments, commentsSHA, 'Soru-cevap silindi: ' + (c.question||'').slice(0,40));
+            refreshQAList();
             renderQAAdmin();
+            updateInboxBadge();
             toast('Silindi', 'success');
         } catch(e) {
             toast('Hata: ' + e.message, 'error');
-            const res = await readComments(); allComments = res.items; commentsSHA = res.sha; renderQAAdmin();
+            const res = await readComments(); allComments = res.items; commentsSHA = res.sha; refreshQAList(); renderQAAdmin();
         }
     });
 }
@@ -3693,14 +3798,17 @@ function renderInbox() {
         const who = isYorum ? (c.anonymous ? '<em>Anonim</em>' : esc(c.authorName||'İsimsiz')) : (esc(c.askerName||'İsimsiz'));
         const body = isYorum ? esc(c.text||'') : esc(c.question||'');
         const mail = c.authorEmail ? ` · <a href="mailto:${esc(c.authorEmail)}" style="color:var(--accent);font-size:.8rem"><i class="fas fa-envelope"></i> ${esc(c.authorEmail)}</a>` : '';
-        const tag = `<span class="qa-post-tag">${isYorum?'<i class="fas fa-comment"></i> Yorum':'<i class="fas fa-circle-question"></i> Soru'} · ${esc(c.postTitle || c.postSlug || 'Genel')}</span>`;
+        const typeTag = `<span class="qa-post-tag">${isYorum?'<i class="fas fa-comment"></i> Yorum':'<i class="fas fa-circle-question"></i> Soru'}</span>`;
+        const isGen = !c.postSlug;
+        const srcLabel = isGen ? 'Genel · Ana Sayfa' : cleanPostTitle(c.postTitle || c.postSlug);
+        const srcTag = `<span class="${isGen?'qa-src general':'qa-src'}" title="${esc(isGen?'Ana sayfadan sorulmuş':srcLabel)}"><i class="fas ${isGen?'fa-house':'fa-file-lines'}"></i> ${esc(srcLabel)}</span>`;
         const act = isYorum
             ? `<button class="btn-edit-faq" style="color:var(--accent)" onclick="approveYorum('${esc(c.id)}')" title="Onayla ve yayımla"><i class="fas fa-check"></i> Onayla</button>`
             : `<button class="btn-edit-faq" style="color:var(--accent)" onclick="answerInboxQuestion('${esc(c.id)}')" title="Cevapla ve yayımla"><i class="fas fa-reply"></i> Cevapla</button>`;
         return `<div class="faq-admin-item" data-id="${esc(c.id)}">
             <div class="faq-admin-num"><i class="fas fa-clock" style="color:#D97706"></i></div>
             <div class="faq-admin-info">
-                ${tag}
+                <div style="display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;margin-bottom:.35rem">${typeTag}${srcTag}</div>
                 <div class="faq-admin-q">${who}${mail} · <span style="color:var(--text-muted);font-weight:400">${esc(fmtInboxDate(c.date))}</span></div>
                 <div class="faq-admin-a" style="white-space:pre-wrap">${body}</div>
             </div>
