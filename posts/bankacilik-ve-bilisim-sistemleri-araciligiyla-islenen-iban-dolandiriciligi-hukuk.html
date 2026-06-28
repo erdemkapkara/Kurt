@@ -474,7 +474,7 @@ doğurabileceğini bilmelidir. </font></font>
               <textarea class="if-inp if-ta" name="yorum" placeholder="D&#252;&#351;&#252;ncelerinizi payla&#351;&#305;n&#8230;" required maxlength="2000"></textarea>
             </div>
             <button type="submit" class="if-submit">Yorum G&#246;nder</button>
-            <div class="if-note"><i class="fas fa-shield-alt"></i> Yorumlar incelenir; uygun bulunanlar yay&#305;mlan&#305;r.</div>
+            <div class="if-note"><i class="fas fa-heart"></i> Yorumunuz bize ulaşır; okuyup değerlendirdikten sonra yazının altında paylaşırız.</div>
           </form>
         </div>
         <!-- Soru pane -->
@@ -495,7 +495,7 @@ doğurabileceğini bilmelidir. </font></font>
               <textarea class="if-inp if-ta" name="soru" placeholder="Bu yaz&#305;yla ilgili merak etti&#287;inizni yaz&#305;n&#8230;" required maxlength="1500"></textarea>
             </div>
             <button type="submit" class="if-submit">Soru G&#246;nder</button>
-            <div class="if-note"><i class="fas fa-envelope"></i> Sorunuz yan&#305;tlan&#305;rsa bu sayfada yay&#305;mlan&#305;r.</div>
+            <div class="if-note"><i class="fas fa-comments"></i> Sorunuz bize ulaşır; uygun görülürse yanıtıyla birlikte bu sayfada paylaşılır.</div>
           </form>
         </div>
       </div>
@@ -520,6 +520,8 @@ function shr(p){var u=encodeURIComponent(PU),t=encodeURIComponent(PT);var m={tw:
 function cp(){navigator.clipboard.writeText(PU).then(function(){var el=document.getElementById('copy-ok');el.classList.add('show');setTimeout(function(){el.classList.remove('show');},2500);});}
 var POST_SLUG="bankacilik-ve-bilisim-sistemleri-araciligiyla-islenen-iban-dolandiriciligi-hukuk";
 var QA_ENDPOINT='https://formspree.io/f/xwvjaebn';
+var INBOX_ENDPOINT='';
+var SUBMIT_ENDPOINT=INBOX_ENDPOINT||QA_ENDPOINT;
 function qaEsc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function fmtDate(d){try{return new Date(d).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'});}catch(e){return '';}}
 /* Tab geçişi */
@@ -536,7 +538,7 @@ document.getElementById('anon-cb').addEventListener('change',function(){
 /* Yorumlar + S-C yükle */
 (function(){
   fetch('../comments.json?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():[];}).then(function(all){
-    var mine=(all||[]).filter(function(c){return c.postSlug===POST_SLUG;});
+    var mine=(all||[]).filter(function(c){return c.postSlug===POST_SLUG&&c.status!=='pending';});
     /* Yorumlar */
     var yorumlar=mine.filter(function(c){return c.type==='yorum';});
     if(yorumlar.length){
@@ -590,8 +592,8 @@ document.getElementById('yorum-form').addEventListener('submit',function(ev){
   fd.append('ad',isAnon?'Anonim':(ad+' '+soyad));
   fd.append('email',email);
   fd.append('yorum',yorum);
-  fetch(QA_ENDPOINT,{method:'POST',body:fd,headers:{'Accept':'application/json'}}).then(function(r){
-    if(r.ok){f.innerHTML='<p class="if-ok">✓ Yorumunuz alındı. İncelendikten sonra yayımlanacaktır.</p>';}
+  fetch(SUBMIT_ENDPOINT,{method:'POST',body:fd,headers:{'Accept':'application/json'}}).then(function(r){
+    if(r.ok){f.innerHTML='<p class="if-ok">✓ Yorumunuz bize ulaştı, teşekkürler! Değerlendirdikten sonra yazının altında paylaşılacaktır.</p>';}
     else{throw new Error();}
   }).catch(function(){btn.textContent='Yorum G\xf6nder';btn.disabled=false;alert('Bir hata oluştu, l\xfctfen tekrar deneyin.');});
 });
@@ -610,32 +612,10 @@ document.getElementById('soru-form').addEventListener('submit',function(ev){
   fd.append('ad',f.querySelector('[name=ad]').value.trim());
   fd.append('email',f.querySelector('[name=email]').value.trim());
   fd.append('soru',soru);
-  fetch(QA_ENDPOINT,{method:'POST',body:fd,headers:{'Accept':'application/json'}}).then(function(r){
-    if(r.ok){f.innerHTML='<p class="if-ok">✓ Sorunuz alındı. Yanıtlanırsa bu sayfada yayımlanacaktır.</p>';}
+  fetch(SUBMIT_ENDPOINT,{method:'POST',body:fd,headers:{'Accept':'application/json'}}).then(function(r){
+    if(r.ok){f.innerHTML='<p class="if-ok">✓ Sorunuz bize ulaştı, teşekkürler! Uygun görülürse yanıtıyla birlikte bu sayfada paylaşılacaktır.</p>';}
     else{throw new Error();}
   }).catch(function(){btn.textContent='Soru G\xf6nder';btn.disabled=false;alert('Bir hata oluştu, l\xfctfen tekrar deneyin.');});
-});
-    if(!items.length)return;
-    document.getElementById('qa-h').style.display='block';
-    document.getElementById('qa-list').innerHTML=items.map(function(c){
-      return '<div class="qa-item">'+
-        '<div class="qa-q"><span class="qa-ico">S:</span><span>'+qaEsc(c.question)+'</span></div>'+
-        '<div class="qa-a"><span class="qa-ico">C:</span><span>'+qaEsc(c.answer)+'</span></div>'+
-        (c.askerName?'<div class="qa-asker">— '+qaEsc(c.askerName)+'</div>':'')+
-      '</div>';
-    }).join('');
-  }).catch(function(){});
-})();
-document.getElementById('qa-form').addEventListener('submit',function(ev){
-  ev.preventDefault();
-  var f=ev.target,btn=f.querySelector('.qa-btn'),orig=btn.textContent;
-  btn.textContent='Gönderiliyor…';btn.disabled=true;
-  var fd=new FormData(f);
-  fd.append('yazi',PT);fd.append('slug',POST_SLUG);fd.append('_subject','Yeni Soru — '+PT);
-  fetch(QA_ENDPOINT,{method:'POST',body:fd,headers:{'Accept':'application/json'}}).then(function(r){
-    if(r.ok){f.innerHTML='<p style="color:var(--accent);font-weight:700;padding:.6rem 0">✓ Sorunuz alındı. Uygun görülürse yanıtıyla birlikte bu sayfada yayımlanacaktır.</p>';}
-    else{throw new Error();}
-  }).catch(function(){btn.textContent=orig;btn.disabled=false;alert('Bir hata oluştu, lütfen tekrar deneyin.');});
 });
 </script>
 </body>

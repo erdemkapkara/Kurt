@@ -514,6 +514,7 @@ input:checked+.toggle-sl::before{transform:translateX(17px)}
             <div class="sb-label">İçerik</div>
             <button class="sb-item active" data-page="posts"><i class="fas fa-newspaper"></i> Yazılar</button>
             <button class="sb-item" id="nav-new"><i class="fas fa-plus-circle"></i> Yeni Yazı</button>
+            <button class="sb-item" data-page="inbox"><i class="fas fa-inbox"></i> Gelen Kutusu <span id="inbox-badge" class="nav-badge" style="display:none">0</span></button>
             <button class="sb-item" data-page="trash"><i class="fas fa-trash-can"></i> Çöp Kutusu <span id="trash-badge" class="nav-badge" style="display:none">0</span></button>
             <button class="sb-item" data-page="faq"><i class="fas fa-circle-question"></i> Sık Sorulan Sorular</button>
             <button class="sb-item" data-page="yorumlar"><i class="fas fa-comment-dots"></i> Yorumlar</button>
@@ -802,13 +803,25 @@ input:checked+.toggle-sl::before{transform:translateX(17px)}
 
         <!-- ══ SORU-CEVAP ══ -->
         <!-- ══ YORUMLAR ══ -->
+        <!-- ══ GELEN KUTUSU ══ -->
+        <div class="page" id="page-inbox">
+            <div class="page-hdr">
+                <h1 class="page-title">Gelen Kutusu</h1>
+                <button class="btn-new" id="btn-refresh-inbox" style="background:var(--card2,#eef2f7);color:var(--text)"><i class="fas fa-rotate"></i> Yenile</button>
+            </div>
+            <div class="qa-pending-note">
+                <i class="fas fa-inbox"></i> Ziyaretçilerin gönderdiği bekleyen soru ve yorumlar burada. <b>Onayla</b> dersen sitede yayımlanır, <b>Sil</b> dersen tamamen kalkar. Soruları cevabıyla birlikte yayımlayabilirsin.
+            </div>
+            <div id="inbox-admin-list"><div class="loading"><div class="spinner"></div> Yükleniyor…</div></div>
+        </div>
+        <!-- ══ YORUMLAR ══ -->
         <div class="page" id="page-yorumlar">
             <div class="page-hdr">
                 <h1 class="page-title">Yorumlar</h1>
                 <button class="btn-new" id="btn-new-yorum"><i class="fas fa-plus"></i> Yorum Ekle</button>
             </div>
             <div class="qa-pending-note">
-                <i class="fas fa-envelope"></i> Okuyucu yorumları e-posta adresine ulaşır. Onaylamak istediğini aşağıdan "Yorum Ekle" butonuyla ekle — yazının altında yayımlanır.
+                <i class="fas fa-check-circle"></i> Yayımlanmış yorumlar. Bekleyen okuyucu yorumları <b>Gelen Kutusu</b>'nda görünür; oradan onaylarsın. Buradan manuel yorum da ekleyebilirsin.
             </div>
             <div id="yorum-admin-list"><div class="loading"><div class="spinner"></div> Yükleniyor…</div></div>
         </div>
@@ -819,7 +832,7 @@ input:checked+.toggle-sl::before{transform:translateX(17px)}
                 <button class="btn-new" id="btn-new-qa"><i class="fas fa-plus"></i> Yeni Soru-Cevap</button>
             </div>
             <div class="qa-pending-note">
-                <i class="fas fa-envelope"></i> Okuyucu soruları e-posta adresine ulaşır. Soruyu ait olduğu yazıyla birlikte ekle, cevabını yaz — yazının altında görünür. E-posta adresi girdiyseniz listede mailto bağlantısı çıkar.
+                <i class="fas fa-check-circle"></i> Yayımlanmış soru-cevaplar. Bekleyen okuyucu soruları <b>Gelen Kutusu</b>'nda görünür; orada cevaplayıp yayımlarsın. Buradan manuel soru-cevap da ekleyebilirsin.
             </div>
             <div id="qa-admin-list"><div class="loading"><div class="spinner"></div> Yükleniyor…</div></div>
         </div>
@@ -1340,7 +1353,7 @@ footer a{color:var(--accent);font-weight:600;text-decoration:none}
               <textarea class="if-inp if-ta" name="yorum" placeholder="Düşüncelerinizi paylaşın…" required maxlength="2000"></textarea>
             </div>
             <button type="submit" class="if-submit">Yorum Gönder</button>
-            <div class="if-note"><i class="fas fa-shield-alt"></i> Yorumlar incelenir; uygun bulunanlar yayımlanır.</div>
+            <div class="if-note"><i class="fas fa-heart"></i> Yorumunuz bize ulaşır; okuyup değerlendirdikten sonra yazının altında paylaşırız.</div>
           </form>
         </div>
         <!-- Soru pane -->
@@ -1361,7 +1374,7 @@ footer a{color:var(--accent);font-weight:600;text-decoration:none}
               <textarea class="if-inp if-ta" name="soru" placeholder="Bu yazıyla ilgili merak ettiğinizi yazın…" required maxlength="1500"></textarea>
             </div>
             <button type="submit" class="if-submit">Soru Gönder</button>
-            <div class="if-note"><i class="fas fa-envelope"></i> Sorunuz yanıtlanırsa bu sayfada yayımlanır.</div>
+            <div class="if-note"><i class="fas fa-comments"></i> Sorunuz bize ulaşır; uygun görülürse yanıtıyla birlikte bu sayfada paylaşılır.</div>
           </form>
         </div>
       </div>
@@ -1387,6 +1400,8 @@ function shr(p){var u=encodeURIComponent(PU),t=encodeURIComponent(PT);var m={tw:
 function cp(){navigator.clipboard.writeText(PU).then(function(){var el=document.getElementById('copy-ok');el.classList.add('show');setTimeout(function(){el.classList.remove('show');},2500);});}
 var POST_SLUG=${JSON.stringify(slug)};
 var QA_ENDPOINT='https://formspree.io/f/xwvjaebn';
+var INBOX_ENDPOINT='';
+var SUBMIT_ENDPOINT=INBOX_ENDPOINT||QA_ENDPOINT;
 function qaEsc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function fmtDate(d){try{return new Date(d).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'});}catch(e){return '';}}
 /* Tab geçişi */
@@ -1403,7 +1418,7 @@ document.getElementById('anon-cb').addEventListener('change',function(){
 /* Yorumlar + S-C yükle */
 (function(){
   fetch('../comments.json?_='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():[];}).then(function(all){
-    var mine=(all||[]).filter(function(c){return c.postSlug===POST_SLUG;});
+    var mine=(all||[]).filter(function(c){return c.postSlug===POST_SLUG&&c.status!=='pending';});
     /* Yorumlar */
     var yorumlar=mine.filter(function(c){return c.type==='yorum';});
     if(yorumlar.length){
@@ -1457,8 +1472,8 @@ document.getElementById('yorum-form').addEventListener('submit',function(ev){
   fd.append('ad',isAnon?'Anonim':(ad+' '+soyad));
   fd.append('email',email);
   fd.append('yorum',yorum);
-  fetch(QA_ENDPOINT,{method:'POST',body:fd,headers:{'Accept':'application/json'}}).then(function(r){
-    if(r.ok){f.innerHTML='<p class="if-ok">✓ Yorumunuz alındı. İncelendikten sonra yayımlanacaktır.</p>';}
+  fetch(SUBMIT_ENDPOINT,{method:'POST',body:fd,headers:{'Accept':'application/json'}}).then(function(r){
+    if(r.ok){f.innerHTML='<p class="if-ok">✓ Yorumunuz bize ulaştı, teşekkürler! Değerlendirdikten sonra yazının altında paylaşılacaktır.</p>';}
     else{throw new Error();}
   }).catch(function(){btn.textContent='Yorum Gönder';btn.disabled=false;alert('Bir hata oluştu, lütfen tekrar deneyin.');});
 });
@@ -1477,8 +1492,8 @@ document.getElementById('soru-form').addEventListener('submit',function(ev){
   fd.append('ad',f.querySelector('[name=ad]').value.trim());
   fd.append('email',f.querySelector('[name=email]').value.trim());
   fd.append('soru',soru);
-  fetch(QA_ENDPOINT,{method:'POST',body:fd,headers:{'Accept':'application/json'}}).then(function(r){
-    if(r.ok){f.innerHTML='<p class="if-ok">✓ Sorunuz alındı. Yanıtlanırsa bu sayfada yayımlanacaktır.</p>';}
+  fetch(SUBMIT_ENDPOINT,{method:'POST',body:fd,headers:{'Accept':'application/json'}}).then(function(r){
+    if(r.ok){f.innerHTML='<p class="if-ok">✓ Sorunuz bize ulaştı, teşekkürler! Uygun görülürse yanıtıyla birlikte bu sayfada paylaşılacaktır.</p>';}
     else{throw new Error();}
   }).catch(function(){btn.textContent='Soru Gönder';btn.disabled=false;alert('Bir hata oluştu, lütfen tekrar deneyin.');});
 });
@@ -1742,6 +1757,10 @@ async function launchApp() {
         }
     } catch(e) {}
     await loadPosts();
+    updateInboxBadgeInitial();
+}
+async function updateInboxBadgeInitial(){
+    try { const { items } = await readComments(); allComments = items; updateInboxBadge(); } catch(e){}
 }
 
 // ════════════════════════════════════════════
@@ -3136,7 +3155,7 @@ function updateExcerptCount(){
 // ════════════════════════════════════════════
 // NAVİGASYON
 // ════════════════════════════════════════════
-const PAGE_TITLES={posts:'Yazılar',editor:'Yeni Yazı',settings:'Ayarlar',trash:'Çöp Kutusu',faq:'Sık Sorulan Sorular',yorumlar:'Yorumlar',qa:'Soru-Cevap'};
+const PAGE_TITLES={posts:'Yazılar',editor:'Yeni Yazı',settings:'Ayarlar',trash:'Çöp Kutusu',faq:'Sık Sorulan Sorular',inbox:'Gelen Kutusu',yorumlar:'Yorumlar',qa:'Soru-Cevap'};
 function showPage(name, skipReload){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.getElementById('page-'+name).classList.add('active');
@@ -3148,6 +3167,7 @@ function showPage(name, skipReload){
     if(name==='posts'){ if(skipReload) renderList(); else loadPosts(); }
     if(name==='trash') loadTrashPage();
     if(name==='faq') loadFaqPage();
+    if(name==='inbox') loadInboxPage();
     if(name==='yorumlar') loadYorumlarPage();
     if(name==='qa') loadQAPage();
 }
@@ -3395,9 +3415,9 @@ async function loadYorumlarPage() {
 
 function renderYorumAdmin() {
     const list = document.getElementById('yorum-admin-list');
-    const yorumlar = allComments.filter(c => c.type === 'yorum');
+    const yorumlar = allComments.filter(c => c.type === 'yorum' && c.status !== 'pending');
     if (!yorumlar.length) {
-        list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:.88rem">Henüz onaylanmış yorum yok. E-posta ile gelen yorumları "Yorum Ekle" düğmesiyle ekle.</div>';
+        list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:.88rem">Henüz yayımlanmış yorum yok. Gelen Kutusu\'ndan onaylayabilir veya "Yorum Ekle" ile manuel ekleyebilirsin.</div>';
         return;
     }
     const sorted = [...yorumlar].sort((a,b) => new Date(b.date||0) - new Date(a.date||0));
@@ -3475,7 +3495,7 @@ async function saveYorumItem() {
     const btn = document.getElementById('yorum-modal-save');
     btn.disabled = true;
     try {
-        const entry = { type: 'yorum', postSlug: slug, postTitle: title, anonymous: isAnon, authorName: isAnon ? '' : author, authorEmail: email, text, date: new Date().toISOString() };
+        const entry = { type: 'yorum', status: 'published', postSlug: slug, postTitle: title, anonymous: isAnon, authorName: isAnon ? '' : author, authorEmail: email, text, date: new Date().toISOString() };
         if (editingYorumId) {
             const idx = allComments.findIndex(x => x.id === editingYorumId);
             if (idx >= 0) allComments[idx] = { ...allComments[idx], ...entry };
@@ -3485,6 +3505,8 @@ async function saveYorumItem() {
         await writeComments(allComments, commentsSHA, (editingYorumId ? 'Yorum güncellendi: ' : 'Yorum eklendi: ') + text.slice(0,40));
         closeYorumModal();
         renderYorumAdmin();
+        if (document.getElementById('page-inbox').classList.contains('active')) renderInbox();
+        updateInboxBadge();
         toast(editingYorumId ? 'Güncellendi' : 'Yorum yayımlandı', 'success');
     } catch(e) {
         toast('Hata: ' + e.message, 'error');
@@ -3530,9 +3552,9 @@ async function loadQAPage() {
 
 function renderQAAdmin() {
     const list = document.getElementById('qa-admin-list');
-    const sorular = allComments.filter(c => !c.type || c.type === 'soru');
+    const sorular = allComments.filter(c => (!c.type || c.type === 'soru') && c.status !== 'pending');
     if (!sorular.length) {
-        list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:.88rem">Henüz yayımlanmış soru-cevap yok. Yeni Soru-Cevap düğmesiyle ekleyebilirsin.</div>';
+        list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:.88rem">Henüz yayımlanmış soru-cevap yok. Gelen Kutusu\'ndan cevaplayabilir veya "Yeni Soru-Cevap" ile ekleyebilirsin.</div>';
         return;
     }
     const sorted = [...sorular].sort((a,b) => new Date(b.date||0) - new Date(a.date||0));
@@ -3605,13 +3627,15 @@ async function saveQAItem() {
     try {
         if (editingQAId) {
             const idx = allComments.findIndex(x => x.id === editingQAId);
-            if (idx >= 0) allComments[idx] = { ...allComments[idx], type: 'soru', postSlug: slug, postTitle: title, askerName: asker, authorEmail: email, question: q, answer: a };
+            if (idx >= 0) allComments[idx] = { ...allComments[idx], type: 'soru', status: 'published', postSlug: slug, postTitle: title, askerName: asker, authorEmail: email, question: q, answer: a };
         } else {
-            allComments.push({ id: String(Date.now()), type: 'soru', postSlug: slug, postTitle: title, askerName: asker, authorEmail: email, question: q, answer: a, date: new Date().toISOString() });
+            allComments.push({ id: String(Date.now()), type: 'soru', status: 'published', postSlug: slug, postTitle: title, askerName: asker, authorEmail: email, question: q, answer: a, date: new Date().toISOString() });
         }
         await writeComments(allComments, commentsSHA, (editingQAId ? 'Soru-cevap güncellendi: ' : 'Soru-cevap eklendi: ') + q.slice(0,40));
         closeQAModal();
         renderQAAdmin();
+        if (document.getElementById('page-inbox').classList.contains('active')) renderInbox();
+        updateInboxBadge();
         toast(editingQAId ? 'Güncellendi' : 'Yayımlandı', 'success');
     } catch(e) {
         toast('Hata: ' + e.message, 'error');
@@ -3639,6 +3663,103 @@ function deleteQAItem(id) {
 
 document.getElementById('btn-new-qa').addEventListener('click', openNewQA);
 document.getElementById('qa-modal').addEventListener('click', function(e){ if(e.target===this) closeQAModal(); });
+
+// ════════════════════════════════════════════
+// GELEN KUTUSU (comments.json, status:"pending")
+// ════════════════════════════════════════════
+async function loadInboxPage() {
+    const list = document.getElementById('inbox-admin-list');
+    list.innerHTML = '<div class="loading"><div class="spinner"></div> Yükleniyor…</div>';
+    try {
+        const { items, sha } = await readComments();
+        allComments = items; commentsSHA = sha;
+        renderInbox();
+        updateInboxBadge();
+    } catch(e) {
+        list.innerHTML = `<div style="color:#DC2626;font-size:.84rem;padding:1rem">Yüklenemedi: ${esc(e.message)}</div>`;
+    }
+}
+
+function renderInbox() {
+    const list = document.getElementById('inbox-admin-list');
+    const pending = allComments.filter(c => c.status === 'pending')
+        .sort((a,b) => new Date(b.date||0) - new Date(a.date||0));
+    if (!pending.length) {
+        list.innerHTML = '<div style="text-align:center;padding:2.5rem;color:var(--text-muted);font-size:.9rem"><i class="fas fa-check-circle" style="font-size:1.6rem;display:block;margin-bottom:.6rem;color:var(--accent)"></i>Bekleyen bir şey yok. Tümü değerlendirildi.</div>';
+        return;
+    }
+    list.innerHTML = pending.map(c => {
+        const isYorum = c.type === 'yorum';
+        const who = isYorum ? (c.anonymous ? '<em>Anonim</em>' : esc(c.authorName||'İsimsiz')) : (esc(c.askerName||'İsimsiz'));
+        const body = isYorum ? esc(c.text||'') : esc(c.question||'');
+        const mail = c.authorEmail ? ` · <a href="mailto:${esc(c.authorEmail)}" style="color:var(--accent);font-size:.8rem"><i class="fas fa-envelope"></i> ${esc(c.authorEmail)}</a>` : '';
+        const tag = `<span class="qa-post-tag">${isYorum?'<i class="fas fa-comment"></i> Yorum':'<i class="fas fa-circle-question"></i> Soru'} · ${esc(c.postTitle || c.postSlug || 'Genel')}</span>`;
+        const act = isYorum
+            ? `<button class="btn-edit-faq" style="color:var(--accent)" onclick="approveYorum('${esc(c.id)}')" title="Onayla ve yayımla"><i class="fas fa-check"></i> Onayla</button>`
+            : `<button class="btn-edit-faq" style="color:var(--accent)" onclick="answerInboxQuestion('${esc(c.id)}')" title="Cevapla ve yayımla"><i class="fas fa-reply"></i> Cevapla</button>`;
+        return `<div class="faq-admin-item" data-id="${esc(c.id)}">
+            <div class="faq-admin-num"><i class="fas fa-clock" style="color:#D97706"></i></div>
+            <div class="faq-admin-info">
+                ${tag}
+                <div class="faq-admin-q">${who}${mail} · <span style="color:var(--text-muted);font-weight:400">${esc(fmtInboxDate(c.date))}</span></div>
+                <div class="faq-admin-a" style="white-space:pre-wrap">${body}</div>
+            </div>
+            <div class="faq-admin-acts">
+                ${act}
+                <button class="btn-del-faq" onclick="deleteInboxItem('${esc(c.id)}')" title="Sil"><i class="fas fa-trash"></i></button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function fmtInboxDate(d){ try{ return new Date(d).toLocaleString('tr-TR',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'}); }catch(e){ return ''; } }
+
+function updateInboxBadge() {
+    const n = allComments.filter(c => c.status === 'pending').length;
+    const b = document.getElementById('inbox-badge');
+    if (!b) return;
+    if (n > 0) { b.textContent = n; b.style.display = ''; }
+    else b.style.display = 'none';
+}
+
+async function approveYorum(id) {
+    const idx = allComments.findIndex(x => x.id === id);
+    if (idx < 0) return;
+    allComments[idx] = { ...allComments[idx], status: 'published' };
+    if (!allComments[idx].date) allComments[idx].date = new Date().toISOString();
+    try {
+        await writeComments(allComments, commentsSHA, 'Yorum onaylandı: ' + id);
+        renderInbox(); updateInboxBadge();
+        toast('Yorum yayımlandı', 'success');
+    } catch(e) {
+        toast('Hata: ' + e.message, 'error');
+        const res = await readComments(); allComments = res.items; commentsSHA = res.sha; renderInbox(); updateInboxBadge();
+    }
+}
+
+function answerInboxQuestion(id) {
+    // Soru-Cevap modalını bekleyen soruyla aç; kaydedince status:'published' olur ve yayımlanır.
+    openEditQA(id);
+}
+
+function deleteInboxItem(id) {
+    const c = allComments.find(x => x.id === id);
+    if (!c) return;
+    const preview = (c.text || c.question || '').slice(0, 60);
+    showConfirm('Gönderiyi Sil', `"${preview}" tamamen silinecek.`, async () => {
+        allComments = allComments.filter(x => x.id !== id);
+        try {
+            await writeComments(allComments, commentsSHA, 'Gelen kutusu öğesi silindi');
+            renderInbox(); updateInboxBadge();
+            toast('Silindi', 'success');
+        } catch(e) {
+            toast('Hata: ' + e.message, 'error');
+            const res = await readComments(); allComments = res.items; commentsSHA = res.sha; renderInbox(); updateInboxBadge();
+        }
+    });
+}
+
+document.getElementById('btn-refresh-inbox').addEventListener('click', loadInboxPage);
 
 </script>
 </body>

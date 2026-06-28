@@ -688,6 +688,60 @@
         }
 
         /* =============================================
+           ASK — Genel Soru Sor
+        ============================================= */
+        #ask {
+            padding: var(--section-py) 5%;
+            background: var(--bg-base);
+            transition: background var(--transition);
+        }
+        .ask-inner { max-width: 680px; margin: 0 auto; }
+        .ask-inner .section-header { text-align: center; margin-bottom: 0.4rem; }
+        .ask-lead {
+            text-align: center;
+            font-size: 0.96rem;
+            color: var(--text-secondary);
+            max-width: 560px;
+            margin: 0 auto 1.6rem;
+            line-height: 1.65;
+        }
+        .ask-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: clamp(1.4rem, 4vw, 2.3rem);
+            box-shadow: var(--shadow-md);
+        }
+        .ask-row { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-bottom: 0.85rem; }
+        .ask-field { flex: 1; min-width: 200px; }
+        .ask-field label {
+            display: block; font-size: 0.8rem; font-weight: 600;
+            color: var(--text-muted); margin-bottom: 0.35rem;
+        }
+        .ask-field input, .ask-card textarea {
+            width: 100%; padding: 0.75rem 0.95rem;
+            border: 1.5px solid var(--border); border-radius: 9px;
+            background: var(--bg-base); color: var(--text-primary);
+            font-family: inherit; font-size: 0.92rem; outline: none;
+            transition: border-color var(--transition);
+        }
+        .ask-field input:focus, .ask-card textarea:focus { border-color: var(--accent); }
+        .ask-card textarea { min-height: 120px; resize: vertical; line-height: 1.6; }
+        .ask-submit {
+            margin-top: 1rem; background: var(--accent); color: #fff; border: none;
+            padding: 0.8rem 1.8rem; border-radius: 9px; font-weight: 700;
+            font-size: 0.93rem; cursor: pointer; font-family: inherit;
+            transition: background var(--transition), transform var(--transition);
+        }
+        .ask-submit:hover { background: var(--accent-hover); transform: translateY(-2px); }
+        .ask-submit:disabled { opacity: 0.6; cursor: default; transform: none; }
+        .ask-note {
+            font-size: 0.8rem; color: var(--text-muted); margin-top: 0.95rem;
+            display: flex; gap: 0.45rem; align-items: flex-start; line-height: 1.55;
+        }
+        .ask-ok { color: var(--accent); font-weight: 700; font-size: 1rem; padding: 0.6rem 0; }
+
+        /* =============================================
            NEWSLETTER
         ============================================= */
         #newsletter {
@@ -1271,6 +1325,36 @@
     </div>
 </section>
 
+<!-- ASK — Genel Soru Sor -->
+<section id="ask">
+    <div class="ask-inner">
+        <div class="section-header fade-in">
+            <div class="section-label" style="text-align:center;">Aklınızda mı kaldı?</div>
+            <h2 class="section-title" style="text-align:center;">Soru Sorun</h2>
+        </div>
+        <p class="ask-lead fade-in">Bir hukuki konuda merak ettiğiniz bir şey mi var? Sorunuzu bırakın; uygun görülen sorular, yanıtıyla birlikte ilgili yazıda paylaşılabilir.</p>
+        <form class="ask-card fade-in" id="ask-form" onsubmit="handleAsk(event)">
+            <div class="ask-row">
+                <div class="ask-field">
+                    <label for="ask-name">Adınız <span style="font-weight:400;">(opsiyonel)</span></label>
+                    <input type="text" id="ask-name" name="ad" maxlength="80" placeholder="Adınız">
+                </div>
+                <div class="ask-field">
+                    <label for="ask-email">E-posta <span style="font-weight:400;">(opsiyonel)</span></label>
+                    <input type="email" id="ask-email" name="email" maxlength="120" placeholder="ornek@mail.com">
+                </div>
+            </div>
+            <div class="ask-field">
+                <label for="ask-q">Sorunuz *</label>
+                <textarea id="ask-q" name="soru" maxlength="1500" required placeholder="Merak ettiğiniz hukuki konuyu yazın…"></textarea>
+            </div>
+            <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;" aria-hidden="true">
+            <button type="submit" class="ask-submit">Soruyu Gönder</button>
+            <div class="ask-note"><i class="fas fa-circle-info" style="margin-top:2px;color:var(--accent);"></i> Bu form bireysel danışmanlık değildir; genel bilgilendirme amaçlıdır. Acil ve kişiye özel durumlarda bir avukata başvurun.</div>
+        </form>
+    </div>
+</section>
+
 <!-- FAQ -->
 <section id="faq">
     <div class="faq-inner">
@@ -1322,9 +1406,10 @@
             <p class="about-vision">"Bilgiyle güçlenen hak arayışı."</p>
         </div>
         <div class="about-mission fade-in">
-            <p>Hukuki sorunlar çoğu zaman insanı belirsizlik içinde bırakır. Hakkını korumak isteyen pek çok kişi, nereden başlayacağını veya hangi yolu izleyeceğini kestiremediği için kendisini bir çıkmaz sokağın içinde bulabilir.</p>
-            <p>Bu platform; kürsüde geçen yılların kazandırdığı bilgi, birikim ve tecrübeyi herkes için erişilebilir kılmak amacıyla kuruldu. Amacımız; hukukun çoğu zaman karmaşık görünen dünyasını, sade ve anlaşılır bir dille erişilebilir hale getirmektir. Bireylerin hukuki meselelerini daha iyi değerlendirmesine, kararlarını daha sağlam temellere dayandırmasına ve hak arayışında daha güçlü adımlar atmasına katkı sunmayı hedefliyoruz.</p>
-            <p>Çünkü hak arayışında en güçlü dayanak doğru bilgidir; doğru bilgi ise tecrübeyle anlam kazanır.</p>
+            <p>Hukuki sorunlar çoğu zaman insanı belirsizlik içinde bırakır. Hakkını korumak isteyen pek çok kişi, nereden başlayacağını ya da hangi yolu izleyeceğini kestiremediği için kendisini bir çıkmazda hissedebilir.</p>
+            <p>Yargı Kalemi, otuz yılı aşkın bir hukuk yolculuğunun —kürsüde ve dosyalar arasında geçen yılların, sayısız dava ve uyuşmazlığın kazandırdığı birikimin— sade, anlaşılır bir dille paylaşıldığı bağımsız bir hukuk blogudur. Amacımız; hukukun çoğu zaman karmaşık görünen dünyasını herkes için erişilebilir kılmak, bireylerin meselelerini daha sağlıklı değerlendirmesine ve hak arayışında daha bilinçli adımlar atmasına katkı sunmaktır.</p>
+            <p>Bu platform bir bilgi kaynağıdır; kişiye özel hukuki danışmanlık vermez, dava ya da iş takibi yapmaz. Buradaki yazılar genel bilgilendirme amacı taşır ve avukat–müvekkil ilişkisi doğurmaz. Somut bir sorununuzda mutlaka bir avukata başvurmanız önerilir.</p>
+            <p>Çünkü hak arayışında en güçlü dayanak doğru bilgidir; doğru bilgi ise ancak tecrübeyle gerçek anlamını kazanır.</p>
         </div>
     </div>
 </section>
@@ -1779,6 +1864,37 @@
        Aşağıdaki ID'leri kendi form ID'lerinle değiştir
     ============================================= */
     const FORMSPREE_BULTEN      = 'https://formspree.io/f/xdavynzj';
+    const FORMSPREE_SORU        = 'https://formspree.io/f/xwvjaebn';
+    const INBOX_ENDPOINT        = ''; // Cloudflare Worker adresi (kurulumdan sonra doldurulur)
+    const ASK_ENDPOINT          = INBOX_ENDPOINT || FORMSPREE_SORU;
+
+    async function handleAsk(e) {
+        e.preventDefault();
+        const f = e.target;
+        const btn = f.querySelector('.ask-submit');
+        const soru = f.querySelector('[name=soru]').value.trim();
+        if (!soru) return;
+        btn.textContent = 'Gönderiliyor…';
+        btn.disabled = true;
+        const fd = new FormData();
+        fd.append('tip', 'soru');
+        fd.append('slug', '');
+        fd.append('yazi', 'Genel Soru (Ana Sayfa)');
+        fd.append('ad', f.querySelector('[name=ad]').value.trim());
+        fd.append('email', f.querySelector('[name=email]').value.trim());
+        fd.append('soru', soru);
+        fd.append('website', f.querySelector('[name=website]').value);
+        fd.append('_subject', 'Yeni Soru (Ana Sayfa) — Yargı Kalemi');
+        try {
+            const res = await fetch(ASK_ENDPOINT, { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } });
+            if (!res.ok) throw new Error();
+            f.innerHTML = '<p class="ask-ok">✓ Sorunuz bize ulaştı, teşekkürler! Uygun görülürse yanıtıyla birlikte sitede paylaşılacaktır.</p>';
+        } catch {
+            btn.textContent = 'Soruyu Gönder';
+            btn.disabled = false;
+            alert('Bir hata oluştu, lütfen tekrar deneyin.');
+        }
+    }
 
     async function handleNewsletter(e) {
         e.preventDefault();
